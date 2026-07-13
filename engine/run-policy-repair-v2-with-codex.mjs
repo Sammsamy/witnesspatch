@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execFile as execFileCallback, spawn, spawnSync } from "node:child_process";
+import { execFile as execFileCallback, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import {
   lstat,
@@ -28,6 +28,7 @@ import {
   scrubbedV2CredentialEnvironmentNames
 } from "./policy-repair-v2.mjs";
 import { executeTargetPolicyFile } from "./target-adapter.mjs";
+import { createUnifiedDiff } from "./unified-diff.mjs";
 
 const execFile = promisify(execFileCallback);
 const engineDir = dirname(fileURLToPath(import.meta.url));
@@ -196,28 +197,6 @@ async function executeAndGrade(caseData, policyPath, variant) {
     generatedAt: new Date().toISOString()
   });
   return { runInput, evaluation: gradeRun(caseData, runInput) };
-}
-
-function makeUnifiedDiff(baselinePath, candidatePath) {
-  const diff = spawnSync(
-    "diff",
-    [
-      "-u",
-      "--label",
-      "a/targets/demo-agent/v2/baseline.mjs",
-      baselinePath,
-      "--label",
-      "b/output/codex-policy-repair-v2/candidate.mjs",
-      candidatePath
-    ],
-    { encoding: "utf8" }
-  );
-  if (![0, 1].includes(diff.status)) {
-    throw new Error(
-      `Unable to produce V2 candidate diff: ${diff.stderr || "diff failed"}`
-    );
-  }
-  return diff.stdout;
 }
 
 function safeErrorMessage(error) {
@@ -389,7 +368,12 @@ export async function runV2PolicyRepairWithCodex(options = {}) {
       signatureError = error;
     }
 
-    const patch = makeUnifiedDiff(baselinePath, candidatePath);
+    const patch = createUnifiedDiff({
+      oldText: baselineSource,
+      newText: candidateSource,
+      oldLabel: "a/targets/demo-agent/v2/baseline.mjs",
+      newLabel: "b/output/codex-policy-repair-v2/candidate.mjs"
+    });
     await writeFile(patchPath, patch, { encoding: "utf8", flag: "wx" });
     const { stdout: versionOutput } = await execFile("codex", ["--version"], {
       cwd: rootDir,

@@ -1,0 +1,165 @@
+1
+00:00:00,000 --> 00:00:04,000
+I’m a third-year medical student.
+Healthcare-agent failures often die
+
+2
+00:00:04,000 --> 00:00:08,000
+as screenshots. WitnessPatch locks when
+each synthetic fact appears, then emits
+
+3
+00:00:08,000 --> 00:00:12,000
+a standard red test and evidence chain.
+
+4
+00:00:12,000 --> 00:00:17,000
+At T-plus-two, the agent knows this
+patient is eight days postpartum,
+
+5
+00:00:17,000 --> 00:00:22,000
+with unrelieved headache and visual
+changes, but waits for blood pressure
+
+6
+00:00:22,000 --> 00:00:28,000
+arriving at T-plus-six. Locked code
+records two critical breaches.
+
+7
+00:00:28,000 --> 00:00:32,000
+I chose the synthetic fixture, narrow
+contract, and review gate.
+
+8
+00:00:32,000 --> 00:00:36,000
+Codex built and attacked the post-start
+compiler and verifier.
+
+9
+00:00:36,000 --> 00:00:40,000
+A fresh Codex run requested GPT-5.6
+Sol with Ultra reasoning to propose
+
+10
+00:00:40,000 --> 00:00:45,000
+declarative repair data. Neither model
+controls the grade.
+
+11
+00:00:45,000 --> 00:00:49,000
+Compile Failure hashes and validates
+the two exact inputs, regrades the
+
+12
+00:00:49,000 --> 00:00:53,000
+recorded baseline, and generates a
+nine-file Node test bundle locally,
+
+13
+00:00:53,000 --> 00:00:58,000
+with no model or target rerun.
+
+14
+00:00:58,000 --> 00:01:03,000
+For encoded rule INV-02, the static
+witness reduces nine visible facts
+
+15
+00:01:03,000 --> 00:01:07,000
+to three at T-plus-two. The exported
+baseline bundle remains red;
+
+16
+00:01:07,000 --> 00:01:12,000
+the retained repair is verified
+separately.
+
+17
+00:01:12,000 --> 00:01:18,000
+Now the separate verifier checks 23
+exact artifact hashes, recomputes two
+
+18
+00:01:18,000 --> 00:01:24,000
+reference grades, and runs four declared
+holdouts.
+
+19
+00:01:24,000 --> 00:01:28,000
+Same case, same locked grader: 50
+becomes 100,
+
+20
+00:01:28,000 --> 00:01:32,000
+with zero critical breaches. This
+verified behavior-diff excerpt
+
+21
+00:01:32,000 --> 00:01:36,000
+changes the target policy, while the
+exact-fact control rejects an
+
+22
+00:01:36,000 --> 00:01:41,000
+always-escalate mutant.
+
+23
+00:01:41,000 --> 00:01:47,000
+The retained V2 reference is separate
+from the fresh Sol candidate.
+
+24
+00:01:47,000 --> 00:01:53,000
+The reference passes four of four
+holdouts. The Sol proposal stays
+
+25
+00:01:53,000 --> 00:01:59,000
+quarantined and uninstalled. This
+browser interprets its declarative JSON;
+
+26
+00:01:59,000 --> 00:02:05,000
+only the Node verifier executes
+candidate JavaScript.
+
+27
+00:02:05,000 --> 00:02:09,000
+The receipt shows 23 of 23 hashes,
+two of two regrades, and four of four
+
+28
+00:02:09,000 --> 00:02:14,000
+candidate mutation checks. It records
+the requested model configuration,
+
+29
+00:02:14,000 --> 00:02:18,000
+not independently attested served
+identity. The disclosed pre-start V1
+
+30
+00:02:18,000 --> 00:02:23,000
+candidate remains unchanged and fails
+V2.
+
+31
+00:02:23,000 --> 00:02:27,000
+No patient data, API key, or runtime
+model call. Both displayed
+
+32
+00:02:27,000 --> 00:02:31,000
+blood-pressure classes are
+fixture-supplied. Physician validation
+
+33
+00:02:31,000 --> 00:02:35,000
+remains pending; clinical use is
+prohibited. WitnessPatch makes failures
+
+34
+00:02:35,000 --> 00:02:38,000
+reproducible—it does not certify safety.

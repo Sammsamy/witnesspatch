@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   lstat,
@@ -23,6 +22,7 @@ import {
   compileV2PolicyRepairProposal
 } from "./policy-repair-v2.mjs";
 import { assertCodexPolicyRepairV2Schema } from "./schema-validator.mjs";
+import { applyUnifiedDiff } from "./unified-diff.mjs";
 
 const engineDir = dirname(fileURLToPath(import.meta.url));
 const rootDir = dirname(engineDir);
@@ -94,27 +94,6 @@ function assertExactByteRecord(record, expectedPath, bytes, label) {
   requireValue(record?.path === expectedPath, `${label} input path drifted.`);
   requireValue(record?.sha256 === sha256(bytes), `${label} input hash drifted.`);
   requireValue(record?.byte_length === bytes.length, `${label} input byte length drifted.`);
-}
-
-function makeUnifiedDiff(baselinePath, candidatePath) {
-  const diff = spawnSync(
-    "diff",
-    [
-      "-u",
-      "--label",
-      "a/targets/demo-agent/v2/baseline.mjs",
-      baselinePath,
-      "--label",
-      "b/output/codex-policy-repair-v2/candidate.mjs",
-      candidatePath
-    ],
-    { encoding: null }
-  );
-  requireValue(
-    [0, 1].includes(diff.status),
-    `Unable to reproduce candidate diff: ${diff.stderr?.toString("utf8") || "diff failed"}`
-  );
-  return diff.stdout;
 }
 
 function assertReceiptBoundary(receipt) {
@@ -301,9 +280,17 @@ export async function promoteV2SolProof({ captureDir = defaultCaptureDir } = {})
     "Fixed compiler output differs from the captured candidate."
   );
   assert.deepEqual(
-    makeUnifiedDiff(paths.baseline, paths.candidate),
-    bytes.patch,
-    "Reproduced unified diff differs from the captured patch."
+    Buffer.from(
+      applyUnifiedDiff({
+        oldText: bytes.baseline.toString("utf8"),
+        patchText: bytes.patch.toString("utf8"),
+        oldLabel: "a/targets/demo-agent/v2/baseline.mjs",
+        newLabel: "b/output/codex-policy-repair-v2/candidate.mjs"
+      }),
+      "utf8"
+    ),
+    bytes.candidate,
+    "Captured unified diff does not produce the exact candidate bytes."
   );
 
   const retained = new Map([

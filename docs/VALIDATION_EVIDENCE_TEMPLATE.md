@@ -124,7 +124,7 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 | Untested-boundary disclosure | | | |
 | CDC/AIM/ACOG source representations | | | |
 
-**Counts — supported / revise / outside scope / unresolved:**
+**Counts for Items 1–9 only — supported / revise / outside scope / unresolved:**
 **Source pages opened / unavailable / outside scope:**
 **Pre-wording concerns addressed / unaddressed / newly introduced:**
 **Required changes and reviewer-stated severity:**
@@ -146,6 +146,8 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Fixture-level limitation sentence:**
 **Quote approved exactly:** none / text:
 **Unresolved correction requested by participant:**
+
+The five source-specific sub-dispositions under Item 9 are audit detail and are not five additional claims in the disposition totals above. The participant-completed generated PDF remains the authoritative record; this template stores only its deidentified, participant-approved summary.
 
 ## Facilitator integrity check
 

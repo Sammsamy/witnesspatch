@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,6 +7,7 @@ import test from "node:test";
 import { assertCase, gradeRun, readJson } from "../core.mjs";
 import { runHoldoutSuite } from "../holdouts.mjs";
 import { executeTargetPolicyFile } from "../target-adapter.mjs";
+import { applyUnifiedDiff } from "../unified-diff.mjs";
 import { buildV2DemoReceipt } from "../../targets/demo-agent/v2/run-demo.mjs";
 
 const testDir = dirname(fileURLToPath(import.meta.url));
@@ -288,25 +288,13 @@ test("V2 executable policies reproduce the four expected verdicts", async () => 
 });
 
 test("the retained V2 policy diff exactly matches the executable sources", async () => {
-  const baselinePath = join(targetDir, "baseline.mjs");
-  const repairedPath = join(targetDir, "repaired.mjs");
-  const generated = spawnSync(
-    "diff",
-    [
-      "-u",
-      "--label",
-      "a/targets/demo-agent/v2/baseline.mjs",
-      baselinePath,
-      "--label",
-      "b/targets/demo-agent/v2/repaired.mjs",
-      repairedPath
-    ],
-    { encoding: "utf8" }
-  );
-
-  assert.equal(generated.status, 1, generated.stderr);
-  assert.equal(
-    await readFile(join(targetDir, "patch.diff"), "utf8"),
-    generated.stdout
-  );
+  const baseline = await readFile(join(targetDir, "baseline.mjs"), "utf8");
+  const repaired = await readFile(join(targetDir, "repaired.mjs"), "utf8");
+  const patched = applyUnifiedDiff({
+    oldText: baseline,
+    patchText: await readFile(join(targetDir, "patch.diff"), "utf8"),
+    oldLabel: "a/targets/demo-agent/v2/baseline.mjs",
+    newLabel: "b/targets/demo-agent/v2/repaired.mjs"
+  });
+  assert.equal(patched, repaired);
 });

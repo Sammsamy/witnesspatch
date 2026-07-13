@@ -47,8 +47,11 @@ yarn-error.log*
 next-env.d.ts
 /dist/
 /.wrangler/
+/.venv-physician-pdf/
 /outputs/
 /output/
+/tmp/
+__pycache__/
 /.playwright-cli/
 /work/
 /submission/qa/

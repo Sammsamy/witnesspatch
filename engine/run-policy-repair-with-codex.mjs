@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execFile as execFileCallback, spawn, spawnSync } from "node:child_process";
+import { execFile as execFileCallback, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -17,6 +17,7 @@ import {
   compilePolicyRepairProposal
 } from "./policy-repair.mjs";
 import { executeTargetPolicyFile } from "./target-adapter.mjs";
+import { createUnifiedDiff } from "./unified-diff.mjs";
 
 const execFile = promisify(execFileCallback);
 const engineDir = dirname(fileURLToPath(import.meta.url));
@@ -168,26 +169,6 @@ async function executeAndGrade(caseData, policyPath, variant) {
   return gradeRun(caseData, runInput);
 }
 
-function makeUnifiedDiff(baselinePath, candidatePath) {
-  const diff = spawnSync(
-    "diff",
-    [
-      "-u",
-      "--label",
-      "a/targets/demo-agent/baseline.mjs",
-      baselinePath,
-      "--label",
-      "b/output/codex-policy-repair/candidate.mjs",
-      candidatePath
-    ],
-    { encoding: "utf8" }
-  );
-  if (![0, 1].includes(diff.status)) {
-    throw new Error(`Unable to produce candidate diff: ${diff.stderr || "diff failed"}`);
-  }
-  return diff.stdout;
-}
-
 function isAccepted(urgent, benign) {
   return [urgent, benign].every(
     (evaluation) =>
@@ -286,7 +267,12 @@ export async function runPolicyRepairWithCodex(options = {}) {
         executeAndGrade(benignCase, candidatePath, "candidate")
       ]);
     const accepted = isAccepted(candidateUrgent, candidateBenign);
-    const patch = makeUnifiedDiff(baselinePath, candidatePath);
+    const patch = createUnifiedDiff({
+      oldText: baselineSource,
+      newText: candidateSource,
+      oldLabel: "a/targets/demo-agent/baseline.mjs",
+      newLabel: "b/output/codex-policy-repair/candidate.mjs"
+    });
     await writeFile(patchPath, patch, "utf8");
 
     const { stdout: versionOutput } = await execFile("codex", ["--version"], {

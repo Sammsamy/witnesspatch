@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,6 +6,7 @@ import test from "node:test";
 
 import { assertCase, gradeRun, readJson } from "../core.mjs";
 import { executeTargetPolicyFile } from "../target-adapter.mjs";
+import { applyUnifiedDiff } from "../unified-diff.mjs";
 
 const testDir = dirname(fileURLToPath(import.meta.url));
 const engineDir = dirname(testDir);
@@ -82,25 +82,13 @@ test("the benign twin rejects an executable always-escalate repair", async () =>
 });
 
 test("the retained policy diff exactly matches the executable files", async () => {
-  const baselinePath = policyPath("baseline.mjs");
-  const repairedPath = policyPath("repaired.mjs");
-  const generated = spawnSync(
-    "diff",
-    [
-      "-u",
-      "--label",
-      "a/targets/demo-agent/baseline.mjs",
-      baselinePath,
-      "--label",
-      "b/targets/demo-agent/repaired.mjs",
-      repairedPath
-    ],
-    { encoding: "utf8" }
-  );
-
-  assert.equal(generated.status, 1, generated.stderr);
-  assert.equal(
-    await readFile(policyPath("patch.diff"), "utf8"),
-    generated.stdout
-  );
+  const baseline = await readFile(policyPath("baseline.mjs"), "utf8");
+  const repaired = await readFile(policyPath("repaired.mjs"), "utf8");
+  const patched = applyUnifiedDiff({
+    oldText: baseline,
+    patchText: await readFile(policyPath("patch.diff"), "utf8"),
+    oldLabel: "a/targets/demo-agent/baseline.mjs",
+    newLabel: "b/targets/demo-agent/repaired.mjs"
+  });
+  assert.equal(patched, repaired);
 });

@@ -102,18 +102,18 @@ Stop immediately if patient information, a real patient question, credentials, e
 
 Use a physician who attests to an active license and states the licensing jurisdiction and relevant practice area. Record how status was checked as `reviewer attestation` or `public registry checked`; keep license numbers and screenshots private. A teammate is not external. A relative, mentor, financial relationship, or other conflict does not automatically erase the review, but it must be disclosed and the review must not be called independent.
 
-Budget 30 minutes:
+Budget 45 minutes; extend to 60 rather than rushing a source or wording disposition:
 
-- 3 minutes: credential scope, conflict, consent, and privacy boundary;
-- 7 minutes: pre-wording review of the two synthetic timelines and cited public sources;
-- 15 minutes: exact claim and wording review;
-- 5 minutes: unresolved issues, scope statement, and publication permission.
+- 5 minutes: credential scope, conflict, consent, and privacy boundary;
+- 10 minutes: pre-wording review of the two synthetic timelines and cited public sources;
+- 20 minutes: exact claim and wording review;
+- 10 minutes: unresolved issues, scope statement, and publication permission.
 
 This is a fixture and wording review. The participant must not be asked to approve the software, diagnose a case, recommend treatment, validate patient outcomes, or endorse the project.
 
 ### Pre-wording measures
 
-First show only the two synthetic timelines, declared intended-use limits, and linked source material—without the project's rules, repaired responses, scores, or proposed review statement. Ask:
+First show only Page 1 of the handoff generated from `docs/PHYSICIAN_REVIEW_PACKET.md`: the two synthetic timelines, declared intended-use limits, and linked source material—without the project's rules, repaired responses, scores, proposed review statement, or Pages 2–5. Ask:
 
 1. “Which clinical implications, if any, are supportable from these exact authored facts and sources?”
 2. “Which implications would be misleading or exceed the sources?”
@@ -124,7 +124,7 @@ Record the participant's concerns before revealing project wording. This is a pr
 
 ### Exact claim review
 
-Reveal the frozen rules, displayed response copy, `clinical-scope.json`, and source summaries. For each item in `docs/EXTERNAL_REVIEW_PACKET.md`, require one disposition:
+Reveal Pages 2–5 of the frozen generated PDF, including the exact messages and fingerprints, all seven UI contract cards, numbered Items 1–9, source-support statements, and closeout. Require the participant to complete those pages and record one disposition for each numbered item:
 
 - `supported as scoped`;
 - `revise`;
@@ -133,13 +133,15 @@ Reveal the frozen rules, displayed response copy, `clinical-scope.json`, and sou
 
 Record the reason and exact requested change in the participant's own words. The facilitator must not paraphrase a `revise`, `outside reviewer scope`, or `unresolved` disposition into agreement.
 
+The generated PDF is the authoritative participant record. `docs/EXTERNAL_REVIEW_PACKET.md` and facilitator notes mirror the prompts only and may not replace Pages 2–5. Count dispositions for Items 1–9 only; preserve the five source-specific sub-dispositions under Item 9 as audit detail, but do not add them to the closeout totals as five extra claims.
+
 Do not edit a fixture during the session. If changes are requested, preserve the original disposition, make a new commit after the session, and ask the same physician to re-review only the changed lines. Until that re-review is confirmed, `licensed physician fixture review pending` remains the public status.
 
 ### Physician post measures
 
-Record:
+Record from the completed PDF:
 
-- claims reviewed and counts in each disposition;
+- Items 1–9 reviewed and counts in each disposition, excluding the five Item 9 source sub-dispositions from the totals;
 - source pages actually opened, unavailable, or outside scope;
 - pre-wording concerns that remain addressed, unaddressed, or newly introduced;
 - required changes and severity in the reviewer's words;

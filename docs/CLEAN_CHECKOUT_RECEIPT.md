@@ -33,5 +33,5 @@ Those checkouts were temporary and no repository files were edited.
 
 - This verifies the documented source-build path on macOS; it does not establish Linux or Windows compatibility.
 - It does not yet satisfy the no-rebuild judge path. That requires a hosted demo, sandbox, test build, or equivalent externally accessible artifact.
-- It does not verify public CI, remote repository access, judge sharing, or licensing.
+- It does not verify remote GitHub Actions CI, private-repository access from a judge-equivalent account, or sharing with both judging addresses.
 - It does not replace an external healthcare-AI builder's independent run.

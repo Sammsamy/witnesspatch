@@ -51,7 +51,7 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [x] Complete the current public-static-demo/private-source-repository distribution audit; repeat it before shipping a packaged CLI, server image, vendored dependencies, or public source under a new project license.
 - [x] Replace unrecorded favicon/icon path data with project-authored geometric primitives and record the bundled visual-asset boundary in `docs/ASSET_PROVENANCE.md`.
 - [ ] Authorize every original asset and contribution before release.
-- [ ] Verify repository access from a logged-out or judge-equivalent session.
+- [ ] Verify the private repository and its GitHub Actions checks from a judge-equivalent account after sharing it with both judging addresses.
 - [ ] Verify the exact submitted commit and record its hash.
 - [ ] Record one release fingerprint joining the submitted commit, V2 manifest SHA-256, deployed-build URL, repository URL, and video URL.
 - [ ] Freeze the submitted version after July 21 at 5:00 PM PDT except for organizer-authorized narrow corrections.
@@ -61,8 +61,8 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [x] The judge-facing build requires no API key, payment, login, or request-time model call.
 - [x] The current creator supplied the credit form's name, country, and Devpost-account email in the private task context; no personal data was copied into the repository.
 - [x] Exact Devpost username confirmed read-only from the authenticated account menu; the value remains in private task context.
-- [ ] Approve the two-to-three-sentence `Developer Tools` response in `docs/CODEX_CREDIT_REQUEST.md`.
-- [ ] Request the optional $100 Codex credits by July 17 at 12:00 PM PT only after the representative confirms the email for the intended ChatGPT/Codex account, registration and eligibility, explicit acceptance of the OpenAI Services Agreement, and authorization to submit. The form labels its field only as `Email`; the FAQ-backed account guidance is operational, not a separate form requirement.
+- [x] Save the authenticated credit-form draft with the exact three-sentence `Developer tools` response in `docs/CODEX_CREDIT_REQUEST.md`; no submission was made.
+- [ ] Request the optional $100 Codex credits by July 17 at 12:00 PM PT only after the representative approves the frozen response, explicitly accepts the OpenAI Services Agreement, and authorizes the consequential Submit action. The representative chose the privately supplied Devpost-account email for the form's generically labeled `Email` field.
 - [x] The optional request is Codex credits only; it does not provide API credits and will not become a judge-runtime dependency.
 - [ ] Confirm Auto top-up remains disabled in the relevant OpenAI account; Codex cannot infer account settings.
 - [ ] Do not purchase credits or add a paid runtime dependency.
@@ -78,16 +78,16 @@ The joined challenge's authenticated submission manager was inspected read-only 
 ## Final release audit
 
 - [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0 (`94/94` core, `4/4` rendered); rule-audit checkpoint `950fea6` also passed from a fresh clone on Node 24.14.0 (`94/94` core, `5/5` rendered).
-- [x] The current submission-package tree passes `104/104` core tests, `5/5` rendered tests, a `1/1` real development-server HTTP smoke, `4/4` submission-package checks, the 624-package/15-static-package license gate, and a 59-file deployment dry run; the media gate also binds every screenshot to the current visual-source hashes.
+- [x] The current submission-package tree passes `112/112` core tests, `5/5` rendered tests, a `1/1` real development-server HTTP smoke, `5/5` submission-package checks, the 624-package/15-static-package license gate, and a 59-file deployment dry run; the media gate also binds every screenshot, every caption cue, and both judge-facing clinical-source lists to the frozen project sources.
 - [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, 56-file deployment dry run).
 - [x] Release-code checkpoint `9f2cd8d` fixes the development-server first-request failure and passes the expanded verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, 59-file deployment dry run).
 - [x] Submission-package checkpoint `b4c8217` passes `npm ci` and the full expanded release verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, `4/4` submission checks, 59-file deployment dry run, zero install vulnerabilities).
 - [x] Final local desktop and 390 x 844 mobile static-export QA passes without horizontal overflow or console errors; this does not replace logged-out testing of the eventual public URL.
 - [x] Submission title, pitch, tags, image count, PNG geometry, byte limits, and media-manifest hashes have an automated release gate.
 - [ ] Repeat the clean-checkout release verifier on the exact final submitted commit.
-- [ ] Public CI passes on the exact submitted commit.
+- [ ] Remote GitHub Actions CI passes on the exact submitted commit and is visible inside the judge-shared private repository.
 - [ ] Static demo passes logged-out desktop and mobile checks with no console errors.
 - [ ] Every displayed score and hash recomputes from the submitted artifacts.
 - [ ] Video shows only behavior present in the submitted release.
-- [ ] All repository, demo, video, and test links work without founder credentials.
+- [ ] Public demo, video, and test links work without founder credentials; the private repository and CI work from a judge-equivalent account.
 - [ ] Rules, FAQ, resources, schedule, and authenticated form are rechecked immediately before submission.

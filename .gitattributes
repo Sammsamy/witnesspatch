@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.png binary
+*.diff text eol=lf -whitespace
+*.patch text eol=lf -whitespace

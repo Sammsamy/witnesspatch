@@ -32,6 +32,8 @@ Do not turn an estimate into a published time-saved claim without observing a re
 
 This review is only about the two authored V2 postpartum fixtures, their public sources, and their wording. It is not product approval, a clinical study, patient-care advice, or validation of the software.
 
+Use the visually checked five-page handoff generated from `docs/PHYSICIAN_REVIEW_PACKET.md`. Show Page 1 and record the independent first-look answers before revealing Pages 2–5. The participant must complete Pages 2–5 of that PDF; it is the authoritative participant record. This document is a facilitator mirror of the prompts, not a substitute record. The generated packet uses only the five source URLs embedded in the V2 fixtures, fingerprints the exact wording artifacts, includes complete retained-display and executable-reference messages and all seven UI contract cards, and separately flags exact route and repeat-reading phrases for disposition.
+
 **Reviewer credentials and jurisdiction:**  
 **Relevant practice area:**  
 **Date:**  
@@ -54,7 +56,9 @@ Then, for each item, record **supported as scoped / revise / outside reviewer sc
 
 **Required changes:**  
 **Unresolved disagreement or uncertainty:**  
-**Disposition counts — supported / revise / outside scope / unresolved:**
+**Disposition counts for Items 1–9 only — supported / revise / outside scope / unresolved:**
+
+Do not add the five source-specific sub-dispositions under Item 9 to these totals as five additional claims.
 
 **Narrow review-scope statement:** accepted / revise / declined
 
@@ -93,7 +97,7 @@ Ask a software/evaluation reviewer to confirm that the public wording matches wh
 
 ### Licensed-physician request
 
-> I am a third-year medical student building a synthetic developer tool for OpenAI Build Week. It converts one healthcare-agent contract failure into a time-locked regression and review-gated software patch. Would you spend 30 minutes reviewing only two authored postpartum fixtures, their linked public sources, and the exact wording boundaries? I am not asking for product endorsement, diagnosis, treatment, or patient-care advice. I will preserve disagreements, will not request any patient information, and will not claim clinical validation from this review.
+> I am a third-year medical student building a synthetic developer tool for OpenAI Build Week. It converts one healthcare-agent contract failure into a time-locked regression and review-gated software patch. Would you spend 45–60 minutes reviewing only two authored postpartum fixtures, their linked public sources, and the exact wording boundaries? I am not asking for product endorsement, diagnosis, treatment, or patient-care advice. I will preserve disagreements, will not request any patient information, and will not claim clinical validation from this review.
 
 ### Health-AI builder request
 

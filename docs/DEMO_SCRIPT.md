@@ -31,6 +31,7 @@ Do not say the brother is a teammate until he has joined the Devpost draft and c
 - Capture the real verification transitions and wait for their visible completion states.
 - Keep the exported baseline explicitly **BASELINE RED** after repair verification; only the separate retained repair passes.
 - Keep the uploaded cut below three minutes after YouTube processing, and add accurate captions.
+- Upload `submission/video/witnesspatch-demo.en.srt`; the submission gate verifies every cue, millisecond boundary, readability limit, and word against this exact narration.
 - Use no unlicensed music, third-party logos, reviewer identity, or patient information.
 
 ## Claims that are prohibited

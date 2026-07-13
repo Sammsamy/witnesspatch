@@ -27,11 +27,11 @@ Use different people for the builder and physician reviews. Do not mass-message,
 
 ## Licensed physician
 
-**Subject:** 30-minute review of two synthetic fixture and wording boundaries
+**Subject:** 45–60-minute review of two synthetic fixture and wording boundaries
 
 > Hi — I am a third-year medical student building WitnessPatch for OpenAI Build Week. It is developer safety tooling for healthcare-agent teams, not clinical decision support. The project uses two fully synthetic fixtures and does not process patient data or provide patient-specific advice.
 >
-> I am looking for one actively licensed physician to do a 30-minute, tightly scoped review of the two synthetic timelines, linked public sources, and nine wording/scope claims. I am not asking you to diagnose a case, approve the software, endorse the project, or certify clinical safety. The useful outcome may be disagreement, requested revision, or a finding that something is outside your scope.
+> I am looking for one actively licensed physician to do a 45–60-minute, tightly scoped review of the two synthetic timelines, linked public sources, and nine wording/scope claims. I am not asking you to diagnose a case, approve the software, endorse the project, or certify clinical safety. The useful outcome may be disagreement, requested revision, or a finding that something is outside your scope.
 >
 > I would privately record your practice area, licensing jurisdiction, conflicts, and whether licensure was checked by attestation or a public registry. Your name, license number, employer, quotes, and raw notes will not be published unless you later approve an exact summary and permission level. Would you be available today or tomorrow for the review and a short confirmation of the resulting deidentified record?
 

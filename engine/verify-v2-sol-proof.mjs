@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -16,6 +15,7 @@ import {
 } from "./policy-repair-v2.mjs";
 import { assertCodexPolicyRepairV2Schema } from "./schema-validator.mjs";
 import { executeTargetPolicyFile } from "./target-adapter.mjs";
+import { applyUnifiedDiff } from "./unified-diff.mjs";
 
 const CAPTURE_PREFIX =
   "output/codex-policy-repair-v2/2026-07-13T17-49-55-290Z-cdc6f9e9";
@@ -40,27 +40,6 @@ function assertByteRecord(record, path, bytes, label) {
     bytes.length,
     `${label} receipt byte length mismatch.`
   );
-}
-
-function makeUnifiedDiff(baselinePath, candidatePath) {
-  const diff = spawnSync(
-    "diff",
-    [
-      "-u",
-      "--label",
-      "a/targets/demo-agent/v2/baseline.mjs",
-      baselinePath,
-      "--label",
-      "b/output/codex-policy-repair-v2/candidate.mjs",
-      candidatePath
-    ],
-    { encoding: null }
-  );
-  assert.ok(
-    [0, 1].includes(diff.status),
-    `Unable to reproduce Sol V2 patch: ${diff.stderr?.toString("utf8") || "diff failed"}`
-  );
-  return diff.stdout;
 }
 
 async function executeAndGrade(caseData, policyPath, runId) {
@@ -255,8 +234,16 @@ export async function verifyV2SolProof({
     Buffer.from(compileV2PolicyRepairProposal(proposal), "utf8")
   );
   assert.deepEqual(
-    publicBytes.patch,
-    makeUnifiedDiff(publicPaths.baseline, publicPaths.candidate)
+    Buffer.from(
+      applyUnifiedDiff({
+        oldText: publicBytes.baseline.toString("utf8"),
+        patchText: publicBytes.patch.toString("utf8"),
+        oldLabel: "a/targets/demo-agent/v2/baseline.mjs",
+        newLabel: "b/output/codex-policy-repair-v2/candidate.mjs"
+      }),
+      "utf8"
+    ),
+    publicBytes.candidate
   );
 
   const [

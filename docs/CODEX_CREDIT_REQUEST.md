@@ -1,6 +1,6 @@
 # Codex credit request draft
 
-Status: **not submitted**. The live Google form was checked July 13, 2026. It says requests are first-come, first-served, not guaranteed, and due July 17 at 12:00 PM PT. One eligible entrant may request one code for $100 in Codex credits that expires July 31. These are not API credits, have no cash value, and will not become part of the judge-runtime architecture.
+Status: **authenticated draft saved; not submitted**. The live Google form was checked July 13, 2026. It says requests are first-come, first-served, not guaranteed, and due July 17 at 12:00 PM PT. One eligible entrant may request one code for $100 in Codex credits that expires July 31. These are not API credits, have no cash value, and will not become part of the judge-runtime architecture.
 
 Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/policies/services-agreement/). Do not submit until the representative confirms every personal field and explicitly approves that acknowledgment.
 
@@ -15,15 +15,15 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 
 ## Project response
 
-> Developer Tools: WitnessPatch binds authored facts to reveal times and actions to deadlines for healthcare-agent tests. Its compiler emits a portable red CI regression with a documented WitnessPatch CLI dependency; a separate verifier checks the retained patch, exact-fact control, mutation tests, and browser/Node artifacts. We use Codex configured to request GPT-5.6 Sol with Ultra reasoning for post-start implementation, adversarial testing, and schema-constrained repair exploration; the requested credits would support further Build Week red-teaming and demo hardening, while judging remains API-key-free, uses no real patient data, and provides no medical advice.
+> We are building in the Developer tools category. WitnessPatch is a synthetic healthcare-agent safety CI tool that replays one time-released scenario, catches a supported unsafe or missing escalation behavior, and compiles that found failure into an executable regression bundle. GPT-5.6 and Codex helped us inspect and red-team the failure and propose a quarantined repair; deterministic local code produces and hash-checks the evidence so developers can review the fix before deployment.
 
 ## Submission gate
 
-- [ ] Required identity fields confirmed by the entrant.
-- [ ] Entrant confirms whether the privately supplied Devpost email is also the OpenAI-account email used for ChatGPT/Codex; if not, use the confirmed OpenAI-account email.
+- [x] Required identity fields confirmed by the entrant and entered only in the private authenticated form.
+- [x] Entrant explicitly chose the privately supplied Devpost-account email for the form's generically labeled `Email` field.
 - [x] Exact Devpost username confirmed read-only from the authenticated account menu; keep the value in private task context.
-- [ ] Devpost registration and eligibility confirmed.
-- [ ] `Developer Tools` remains the chosen category.
+- [x] Authenticated Devpost registration and active Build Week draft confirmed; final age/conflict eligibility attestations remain part of the submission gate.
+- [x] `Developer tools` remains the chosen category.
 - [ ] Entrant approves the frozen two-to-three-sentence project response above.
 - [ ] Entrant has read and explicitly accepts the linked Services Agreement.
 - [ ] Entrant explicitly approves submitting the completed Google form.

@@ -1,6 +1,6 @@
 # Submission draft
 
-This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). Repository visibility, license, teammate eligibility, `/feedback` session ID, public video, and final hosted URL still require completion before submission.
+This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). The selected route is a private, all-rights-reserved repository to be shared with both judging addresses; repository creation, judge-equivalent access verification, teammate eligibility, `/feedback` session ID, public video, and final hosted URL still require completion before submission.
 
 ## Exact project overview fields
 
@@ -128,7 +128,7 @@ npm run verify:release
 npm run dev
 ```
 
-Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Treat Linux as verified only after the linked public GitHub Actions check is green. Windows is not tested.
+Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Treat Linux as verified only after the remote GitHub Actions check visible inside the judge-shared private repository is green. Windows is not tested.
 
 ## Form placeholders that must remain blank until real
 

@@ -42,7 +42,7 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
-Publication remains an explicit release action. The official rules require free, unrestricted judge access through judging, so any final deployment and repository visibility choice must be verified before submission.
+Publication remains an explicit release action. The selected route is a public static demo plus an all-rights-reserved private source repository shared with both judging addresses. The official rules require free, unrestricted judge access through judging, so the deployment and judge-equivalent private-repository access must be verified before submission.
 
 ### Verified platform boundary
 
@@ -51,7 +51,7 @@ Publication remains an explicit release action. The official rules require free,
 | Source install and release verification | Submission-package checkpoint `b4c8217` passed from a fresh local clone on macOS 26.5.2 Apple silicon with Node 24.14.0 and npm 11.9.0, including the real development-server smoke and `4/4` submission checks; earlier checkpoint `a056fe3` also passed on Node 22.15.0 and 24.14.0 | macOS is verified; rerun the exact submitted commit after final freeze |
 | Browser replay | Two-stage live compile and retained-repair verification passed a real Chrome session on macOS with zero console warnings or errors | Chrome on macOS is verified; no broad browser matrix is claimed |
 | Static hosting package | Wrangler dry run passes with 59 static files | Packaging is verified; no public deployment exists yet |
-| Linux | GitHub Actions workflow is authored but has never run publicly | Unverified |
+| Linux | GitHub Actions workflow is authored but has not run remotely in the judge-shared private repository | Unverified |
 | Windows | No clean checkout or browser run | Unverified |
 
 ## Portable evaluator and compiler
@@ -137,10 +137,10 @@ The exact-fact negative control activates only when every authored fact in that 
 The declared rules link to current public guidance from:
 
 - [CDC Hear Her — Urgent Maternal Warning Signs](https://www.cdc.gov/hearher/maternal-warning-signs/index.html)
-- [Alliance for Innovation on Maternal Health — Urgent Maternal Warning Signs](https://saferbirth.org/aim-resources/aim-cornerstones/urgent-maternal-warning-signs/)
-- [AIM Obstetric Emergency Readiness Resource Kit](https://saferbirth.org/wp-content/uploads/2023-aim-oerrk.pdf)
+- [Alliance for Innovation on Maternal Health — Severe Hypertension in Pregnancy Patient Safety Bundle](https://saferbirth.org/psbs/severe-hypertension-in-pregnancy/)
 - [ACOG — Headaches and Pregnancy](https://www.acog.org/womens-health/faqs/headaches-and-pregnancy)
 - [ACOG — Preeclampsia and High Blood Pressure During Pregnancy](https://www.acog.org/womens-health/faqs/preeclampsia-and-high-blood-pressure-during-pregnancy)
+- [ACOG — 3 Conditions to Watch for After Childbirth](https://www.acog.org/womens-health/experts-and-stories/the-latest/3-conditions-to-watch-for-after-childbirth)
 
 The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. See the [validation plan](docs/VALIDATION_PLAN.md) and [external review packet](docs/EXTERNAL_REVIEW_PACKET.md).
 

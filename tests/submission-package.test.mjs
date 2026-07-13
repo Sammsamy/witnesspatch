@@ -143,11 +143,72 @@ test("authenticated overview copy stays inside the recorded field limits", async
   assert.ok(!tags.includes("OpenAI API"));
 });
 
-test("founder demo timeline stays continuous, speakable, and below three minutes", async () => {
-  const script = await readFile(
-    new URL("../docs/DEMO_SCRIPT.md", import.meta.url),
-    "utf8",
+test("judge-facing clinical source lists match the exact V2 fixture evidence", async () => {
+  const [urgentBytes, controlBytes, readme, physicianPacket] = await Promise.all([
+    readFile(
+      new URL("../cases/v2/postpartum-warning-signs.json", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL(
+        "../cases/v2/postpartum-exact-negative-control.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(
+      new URL("../docs/PHYSICIAN_REVIEW_PACKET.md", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  const cases = [JSON.parse(urgentBytes), JSON.parse(controlBytes)];
+  const evidenceUrls = [
+    ...new Set(
+      cases.flatMap((caseData) =>
+        caseData.evidence.map((item) => item.url),
+      ),
+    ),
+  ];
+  assert.equal(evidenceUrls.length, 5);
+
+  const markdownUrls = (markdown, startMarker, endMarker) => {
+    const start = markdown.indexOf(startMarker);
+    const end = markdown.indexOf(endMarker, start + startMarker.length);
+    assert.ok(start >= 0 && end > start, `Missing bounded source list: ${startMarker}`);
+    return [
+      ...markdown
+        .slice(start, end)
+        .matchAll(/^- .*?\[[^\]]+\]\((https:\/\/[^)]+)\)$/gm),
+    ].map((match) => match[1]);
+  };
+
+  assert.deepEqual(
+    markdownUrls(
+      readme,
+      "The declared rules link to current public guidance from:",
+      "The software verifies that declared source IDs resolve",
+    ),
+    evidenceUrls,
   );
+  assert.deepEqual(
+    markdownUrls(
+      physicianPacket,
+      "The packet uses only the five source URLs embedded in the V2 cases:",
+      "The exact routing phrases",
+    ),
+    evidenceUrls,
+  );
+});
+
+test("founder demo timeline stays continuous, speakable, and below three minutes", async () => {
+  const [script, captions] = await Promise.all([
+    readFile(new URL("../docs/DEMO_SCRIPT.md", import.meta.url), "utf8"),
+    readFile(
+      new URL("../submission/video/witnesspatch-demo.en.srt", import.meta.url),
+      "utf8",
+    ),
+  ]);
   const rowPattern =
     /^\| `(\d+):(\d+)–(\d+):(\d+)` \| “([^”]+)” \|/gm;
   const rows = [...script.matchAll(rowPattern)].map((match) => ({
@@ -178,6 +239,103 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
   assert.doesNotMatch(
     narration,
     /clinically validated|tamper-proof|Sol fixed it|HIPAA compliant|saves lives|production-ready/i,
+  );
+
+  const parseTimestamp = (value, cueIndex, boundary) => {
+    const match = value.match(/^(\d{2}):(\d{2}):(\d{2}),(\d{3})$/);
+    assert.ok(match, `Invalid ${boundary} timestamp at cue ${cueIndex}`);
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    const seconds = Number(match[3]);
+    const milliseconds = Number(match[4]);
+    assert.ok(minutes < 60, `Invalid minutes at cue ${cueIndex}`);
+    assert.ok(seconds < 60, `Invalid seconds at cue ${cueIndex}`);
+    assert.ok(milliseconds < 1000, `Invalid milliseconds at cue ${cueIndex}`);
+    return ((hours * 60 + minutes) * 60 + seconds) * 1000 + milliseconds;
+  };
+
+  const captionRows = captions
+    .trim()
+    .split(/\r?\n\r?\n+/)
+    .map((block) => {
+      const [indexText, timing, ...textLines] = block.split(/\r?\n/);
+      assert.match(indexText, /^\d+$/, `Invalid SRT cue index: ${indexText}`);
+      const timingMatch = timing?.match(
+        /^(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})$/,
+      );
+      const index = Number(indexText);
+      assert.ok(timingMatch, `Invalid SRT timing at cue ${index}`);
+      assert.ok(
+        textLines.length >= 1 && textLines.length <= 2,
+        `Cue ${index} must contain one or two caption lines`,
+      );
+      for (const line of textLines) {
+        assert.equal(line, line.trim(), `Cue ${index} contains edge whitespace`);
+        assert.ok(line.length > 0, `Cue ${index} contains an empty line`);
+        assert.ok(
+          [...line].length <= 42,
+          `Cue ${index} caption line exceeds 42 characters`,
+        );
+      }
+      return {
+        index,
+        startMs: parseTimestamp(timingMatch[1], index, "start"),
+        endMs: parseTimestamp(timingMatch[2], index, "end"),
+        narration: textLines.join(" "),
+      };
+    });
+
+  assert.ok(captionRows.length >= 25 && captionRows.length <= 35);
+  assert.equal(captionRows[0].startMs, 0);
+  assert.equal(captionRows.at(-1).endMs, 158_000);
+
+  const captionsByScriptRow = rows.map(() => []);
+  for (const [index, caption] of captionRows.entries()) {
+    assert.equal(caption.index, index + 1);
+    assert.ok(caption.endMs > caption.startMs, `Cue ${caption.index} is empty`);
+    const durationMs = caption.endMs - caption.startMs;
+    assert.ok(
+      durationMs >= 2_000 && durationMs <= 8_000,
+      `Cue ${caption.index} must last between two and eight seconds`,
+    );
+    if (index > 0) {
+      assert.equal(
+        caption.startMs,
+        captionRows[index - 1].endMs,
+        `Cue ${caption.index} does not continue exactly from the prior cue`,
+      );
+    }
+
+    const containingRows = rows
+      .map((row, rowIndex) => ({ row, rowIndex }))
+      .filter(
+        ({ row }) =>
+          caption.startMs >= row.start * 1000 &&
+          caption.endMs <= row.end * 1000,
+      );
+    assert.equal(
+      containingRows.length,
+      1,
+      `Cue ${caption.index} must fit wholly inside one demo-script row`,
+    );
+    captionsByScriptRow[containingRows[0].rowIndex].push(caption);
+  }
+
+  for (const [rowIndex, row] of rows.entries()) {
+    const rowCaptions = captionsByScriptRow[rowIndex];
+    assert.ok(rowCaptions.length > 0, `Demo segment ${rowIndex + 1} has no cues`);
+    assert.equal(rowCaptions[0].startMs, row.start * 1000);
+    assert.equal(rowCaptions.at(-1).endMs, row.end * 1000);
+    assert.equal(
+      rowCaptions.map((caption) => caption.narration).join(" "),
+      row.narration,
+      `Demo segment ${rowIndex + 1} captions changed the exact narration`,
+    );
+  }
+
+  assert.equal(
+    captionRows.map((caption) => caption.narration).join(" "),
+    narration,
   );
 });
 
