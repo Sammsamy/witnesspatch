@@ -4,13 +4,13 @@ This is a retained local reproducibility record, not independent third-party val
 
 ## Current release-code checkpoint
 
-- Commit: `15f1aee67b419822cab54310ae9bec7cd321cb9c`
+- Commit: `9f2cd8da2ea03f294a247cb91795571e744a68fb`
 - Source: local `git clone --no-local` into a new temporary directory, with no inherited `node_modules`, generated output, or ignored workspace files
 - Host: macOS 26.5.2, Apple silicon
 - Runtime: Node `v24.14.0`, npm `11.9.0`
 - Commands: `npm ci` followed by `npm run verify:release`
 - Result: exit code `0`
-- Verified outcomes: both artifact profiles, `104/104` core tests, production build, `5/5` rendered tests, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a Wrangler static-deployment dry run with 56 files
+- Verified outcomes: both artifact profiles, `104/104` core tests, production build, `5/5` rendered tests, a `1/1` real development-server smoke proving the first page and retained manifest return HTTP 200, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a Wrangler static-deployment dry run with 59 files
 - Install observation: npm installed 495 packages and reported zero vulnerabilities
 
 The temporary clone was not used to edit the repository. This verifies the current release-code checkpoint; the exact submitted commit must still be replayed after repository and submission documentation are frozen.

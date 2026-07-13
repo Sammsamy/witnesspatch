@@ -64,7 +64,7 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Reference browser recomputation: `2/2` fresh regrades and `4/4` V2 holdouts.
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
-- Local release verification: release-code checkpoint `15f1aee` passed `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0: `104/104` core tests, `5/5` rendered-product tests, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 56-file Wrangler dry run; npm reported zero known vulnerabilities at install time.
+- Local release verification: release-code checkpoint `9f2cd8d` passed `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0: `104/104` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 59-file Wrangler dry run; npm reported zero known vulnerabilities at install time.
 - Final real-Chrome QA: visible `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, all artifact requests HTTP 200, and zero console errors or warnings.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
