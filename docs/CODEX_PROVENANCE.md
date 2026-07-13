@@ -51,7 +51,7 @@ The official submission also requires the Codex Session ID surfaced through `/fe
 
 The four V2 holdouts cover the repaired path, consumption of the fixture-supplied severe-range classification, future fixture-classification leakage, and numeric-inference contradiction copy. Separate engine coverage checks the message-marker/action-label bypass. The fresh model run did not receive the holdout definition, but these remain four scoped mutations of the authored software oracle—not held-out clinical evidence or proof of generalization.
 
-The finalized local release check passes `npm run verify:release` with `94/94` core tests, `4/4` rendered-product tests, build, lint, typecheck, and the Wrangler dry run. `npm audit` reported zero known vulnerabilities at check time. Final real-Chrome QA passed the complete 23-artifact profile with zero console warnings or errors. These results were exercised on macOS; they do not establish Linux or Windows support.
+The finalized local release check passes `npm run verify:release` with `94/94` core tests, `5/5` rendered-product tests, build, lint, typecheck, locked-license fingerprint verification, and the Wrangler dry run. `npm audit` reported zero known vulnerabilities at check time. Final real-Chrome QA passed the complete 23-artifact profile with zero console warnings or errors. These results were exercised on macOS; they do not establish Linux or Windows support.
 
 ## Pre-start V1 lineage — not Build Week work
 

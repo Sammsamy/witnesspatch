@@ -36,14 +36,12 @@ export function sites(): Plugin {
         await cp(hostingConfig, resolve(outputDirectory, "hosting.json"));
       }
 
-      if (await exists(thirdPartyNotices)) {
-        const clientOutput = resolve(root, "dist", "client");
-        await mkdir(clientOutput, { recursive: true });
-        await cp(
-          thirdPartyNotices,
-          resolve(clientOutput, "THIRD_PARTY_NOTICES.md"),
-        );
-      }
+      const clientOutput = resolve(root, "dist", "client");
+      await mkdir(clientOutput, { recursive: true });
+      await cp(
+        thirdPartyNotices,
+        resolve(clientOutput, "THIRD_PARTY_NOTICES.md"),
+      );
     },
   };
 }

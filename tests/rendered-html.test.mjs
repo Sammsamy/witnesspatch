@@ -71,3 +71,12 @@ test("exports a judge-ready static replay without a request-time Worker", async 
   assert.equal(staticConfig.assets.run_worker_first, false);
   assert.equal("main" in staticConfig, false);
 });
+
+test("ships the reviewed third-party notice byte-for-byte", async () => {
+  const [sourceNotice, exportedNotice] = await Promise.all([
+    readFile(new URL("../THIRD_PARTY_NOTICES.md", import.meta.url)),
+    readFile(new URL("../dist/client/THIRD_PARTY_NOTICES.md", import.meta.url)),
+  ]);
+
+  assert.deepEqual(exportedNotice, sourceNotice);
+});

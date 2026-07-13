@@ -63,7 +63,7 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Reference browser recomputation: `2/2` fresh regrades and `4/4` V2 holdouts.
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
-- Local release verification: `npm run verify:release` passes `94/94` core tests, `4/4` rendered-product tests, build, lint, typecheck, and the Wrangler dry run; `npm audit` reports zero known vulnerabilities at the check time.
+- Local release verification: `npm run verify:release` passes `94/94` core tests, `5/5` rendered-product tests, build, lint, typecheck, locked-license fingerprint verification, and the Wrangler dry run; `npm audit` reports zero known vulnerabilities at the check time.
 - Final real-Chrome QA: visible `50 → 100`, `23/23` HTTP 200 artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, and zero console errors or warnings.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.

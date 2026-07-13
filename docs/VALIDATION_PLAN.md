@@ -19,7 +19,7 @@ Verified local V2 software evidence:
 - `23/23` exact artifact hashes against the same-build manifest, reference `2/2` fresh browser regrades, and `4/4` V2 holdouts;
 - a 9→3 static `INV-02` witness over facts revealed through T+02, with recorded decisions fixed;
 - a distinct fresh post-start candidate, retained but not installed, whose browser-safe JSON-IR interpretation and Node execution match `2/2` authored cases and `4/4` software mutation signatures;
-- `npm run verify:release` passing `94/94` local core tests, `4/4` rendered-product tests, build, lint, typecheck, and the Wrangler dry run; `npm audit` reporting zero known vulnerabilities at check time;
+- `npm run verify:release` passing `94/94` local core tests, `5/5` rendered-product tests, build, lint, typecheck, locked-license fingerprint verification, and the Wrangler dry run; `npm audit` reporting zero known vulnerabilities at check time;
 - final real-Chrome `50 → 100` transition with `23/23` HTTP 200 artifacts, both reference and fresh proof signatures, and zero console errors or warnings;
 - bidirectional lexical marker check against urgent copy hidden behind safe action labels;
 - numeric-inference contradiction marker;
@@ -34,6 +34,8 @@ What this does **not** establish:
 - generalization to other cases, models, teams, or production systems;
 - independently attested served-model identity—the receipt records the requested `gpt-5.6-sol` / `ultra` configuration only;
 - current workflow pain, willingness to adopt, time saved, patient outcomes, or business impact.
+
+The judge-facing path also remains deliberately outside automated high-stakes medical decision-making: it uses synthetic fixtures, produces developer evidence, and leaves any patch installation and clinical interpretation to human review. Testing must remain limited to the team's own reference adapter or explicitly authorized targets.
 
 ## Three interviews that matter most
 
@@ -107,3 +109,4 @@ After a real review, preserve reviewer scope, date, requested changes, conflicts
 - Dated post-start checkpoint `21405c8` and retained V1/V2 before-after ledger; preserve both without rewriting history.
 - Preserve the fresh V2 candidate's quarantined/not-installed state, requested-model wording, browser JSON-IR boundary, Node execution proof, and exact manifest links in the final release.
 - Final repository/license choice, `/feedback` Session ID, public deployment, and founder-voiced video.
+- Authenticated Devpost form audit and every human eligibility/representative item in `docs/SUBMISSION_FORM_CHECKLIST.md`.

@@ -34,7 +34,7 @@ Open `http://localhost:3000`, then select **Verify retained evidence**. The brow
 
 The verifier's trust anchor is the manifest shipped with the same app build; it is an integrity check, not a publisher signature. Judges need no OpenAI API key, model call, database, or hosting login to inspect or replay the reference.
 
-The finalized 23-artifact build passed a real Chrome replay with a visible `50 → 100` transition, `23/23` HTTP 200 artifact responses, reference `2/2` regrades plus `4/4` holdouts, fresh-candidate IR `2/2` plus `4/4`, and zero console warnings or errors. `npm run verify:release` also passes `94/94` core tests, `4/4` rendered-product tests, build, lint, typecheck, and the Wrangler dry run; `npm audit` reports zero known vulnerabilities at the time of this release check. These are local macOS results, not Linux or Windows verification.
+The finalized 23-artifact build passed a real Chrome replay with a visible `50 → 100` transition, `23/23` HTTP 200 artifact responses, reference `2/2` regrades plus `4/4` holdouts, fresh-candidate IR `2/2` plus `4/4`, and zero console warnings or errors. At checkpoint `a056fe3`, the documented `npm ci` plus `npm run verify:release` path passed from fresh local clones on macOS with Node 22.15.0 and Node 24.14.0: `94/94` core tests, `4/4` rendered-product tests, build, lint, typecheck, and the Wrangler dry run. `npm audit` reports zero known vulnerabilities at the time of this release check. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). These remain local macOS results, not Linux or Windows verification; the final submitted commit must be rechecked.
 
 The release bundle can also be built and checked without publishing:
 
@@ -43,6 +43,16 @@ npm run deploy:dry-run
 ```
 
 Publication remains an explicit release action. The official rules require free, unrestricted judge access through judging, so any final deployment and repository visibility choice must be verified before submission.
+
+### Verified platform boundary
+
+| Surface | Current evidence | Claim boundary |
+| --- | --- | --- |
+| Source install and release verification | Fresh local clones passed on macOS 26.5.2 Apple silicon with Node 22.15.0 and 24.14.0, npm 11.9.0 | macOS is verified; rerun the exact final commit |
+| Browser replay | Final 23-artifact profile passed a real Chrome session on macOS with zero console warnings or errors | Chrome on macOS is verified; no broad browser matrix is claimed |
+| Static hosting package | Wrangler dry run passes with 56 static files | Packaging is verified; no public deployment exists yet |
+| Linux | GitHub Actions workflow is authored but has never run publicly | Unverified |
+| Windows | No clean checkout or browser run | Unverified |
 
 ## Portable evaluator and compiler
 
@@ -91,6 +101,13 @@ The unchanged pre-start V1 Sol candidate is preserved only as lineage. Under V2 
 A separate post-start Codex CLI run requested `gpt-5.6-sol` with `ultra` reasoning through ChatGPT-plan authentication. It produced schema-constrained declarative JSON that fixed code compiled into a distinct candidate. That candidate is quarantined and was not installed. The urgent and exact-control contracts were supplied to the run; the four-check holdout definition and checked-in repaired policy were not. Browser-safe IR interpretation and Node execution both match the exact `2/2` case and `4/4` software-holdout signature. The receipt records the requested model and reasoning effort; it is not independent attestation of served-model identity. Its empty `credential_environment_scrubbed` list means no matching credential variables were present to remove, not that active secrets were scrubbed.
 
 The retained V2 reference repair and the fresh candidate remain separate evidence. Neither passing result is clinical validation, proof of generalization, or permission to install a model-authored patch without review.
+
+| AI-accelerated work | Human decision retained |
+| --- | --- |
+| Codex implemented and attacked the post-start compiler, browser verifier, test suite, and release workflow | The team chose the problem, narrowed the claim, rejected causal and clinical overclaims, and owns every submitted line and product decision |
+| A fresh Codex CLI workflow requested GPT-5.6 Sol with Ultra reasoning to produce one schema-constrained declarative repair candidate | The team authored the contracts and fixed compiler, withheld the holdout definition, quarantined the candidate, and did not install it |
+| Codex helped enumerate adversarial verifier attacks and release checks | Deterministic code executes every displayed grade; AI commentary cannot change the verdict |
+| GPT-5.6 output is retained byte-for-byte with prompt/input links and hashes | The retained reference repair is separately inspectable and is never relabeled as the fresh model candidate |
 
 ```text
 synthetic case + locked action contracts
@@ -151,9 +168,13 @@ The [OpenAI Build Week Official Rules](https://openai.devpost.com/rules) allow a
 
 - Synthetic data only; do not add protected health information.
 - Developer tooling only; never present output to patients as medical advice.
+- No automated medical decision is made: the tool evaluates authored software contracts, and every proposed repair remains subject to human review.
+- Test only the included reference adapter or systems whose owners have authorized testing; WitnessPatch is not for unsolicited safety testing.
 - No claim of HIPAA compliance, clinical validation, regulatory clearance, or production readiness.
 - Codex credentials and private traces must never be committed or exposed by the app.
 - Every visible pass must be reproducible from retained inputs and executable checks.
+
+See the [OpenAI Build Week submission checklist](docs/SUBMISSION_FORM_CHECKLIST.md) for the remaining human, repository, video, and release gates.
 
 ## License
 
