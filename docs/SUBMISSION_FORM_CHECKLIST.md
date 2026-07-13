@@ -79,6 +79,7 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [x] The current submission-package tree passes `104/104` core tests, `5/5` rendered tests, a `1/1` real development-server HTTP smoke, `4/4` submission-package checks, the 624-package/15-static-package license gate, and a 59-file deployment dry run; the media gate also binds every screenshot to the current visual-source hashes.
 - [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, 56-file deployment dry run).
 - [x] Release-code checkpoint `9f2cd8d` fixes the development-server first-request failure and passes the expanded verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, 59-file deployment dry run).
+- [x] Submission-package checkpoint `b4c8217` passes `npm ci` and the full expanded release verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, `4/4` submission checks, 59-file deployment dry run, zero install vulnerabilities).
 - [x] Final local desktop and 390 x 844 mobile static-export QA passes without horizontal overflow or console errors; this does not replace logged-out testing of the eventual public URL.
 - [x] Submission title, pitch, tags, image count, PNG geometry, byte limits, and media-manifest hashes have an automated release gate.
 - [ ] Repeat the clean-checkout release verifier on the exact final submitted commit.

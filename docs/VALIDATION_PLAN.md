@@ -21,7 +21,7 @@ Verified local V2 software evidence:
 - `23/23` exact artifact hashes against the same-build manifest, reference `2/2` fresh browser regrades, and `4/4` V2 holdouts;
 - a 9→3 static `INV-02` witness over facts revealed through T+02, with recorded decisions fixed;
 - a distinct fresh post-start candidate, retained but not installed, whose browser-safe JSON-IR interpretation and Node execution match `2/2` authored cases and `4/4` software mutation signatures;
-- release-code checkpoint `9f2cd8d` passing `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 with `104/104` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and the 59-file Wrangler dry run; npm reporting zero known vulnerabilities at install time;
+- submission-package checkpoint `b4c8217` passing `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 with `104/104` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `4/4` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and the 59-file Wrangler dry run; npm reporting zero known vulnerabilities at install time;
 - final real-Chrome `50 → 100` transition with `23/23` HTTP 200 artifacts, both reference and fresh proof signatures, and zero console errors or warnings;
 - bidirectional lexical marker check against urgent copy hidden behind safe action labels;
 - numeric-inference contradiction marker;
