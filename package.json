@@ -19,6 +19,7 @@
     "test": "npm run test:core && npm run build && node --test tests/rendered-html.test.mjs",
     "test:core": "node --test engine/tests/*.test.mjs",
     "test:dev-smoke": "node --test tests/dev-server-smoke.test.mjs",
+    "test:submission": "node --test tests/submission-package.test.mjs",
     "demo": "node targets/demo-agent/run-demo.mjs",
     "artifacts:build": "node engine/build-reference-runs.mjs",
     "artifacts:verify": "node engine/verify-artifacts.mjs",
@@ -35,7 +36,7 @@
     "release:static:check": "npm run licenses:check && node --test tests/rendered-html.test.mjs",
     "typecheck": "tsc --noEmit",
     "verify": "npm run artifacts:verify && npm run artifacts:v2:verify && npm test && npm run lint && npm run typecheck",
-    "verify:release": "npm run verify && npm run test:dev-smoke && npm run deploy:dry-run",
+    "verify:release": "npm run verify && npm run test:dev-smoke && npm run test:submission && npm run deploy:dry-run",
     "witnesspatch": "node bin/witnesspatch.mjs"
   },
   "dependencies": {

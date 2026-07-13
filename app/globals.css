@@ -120,8 +120,8 @@ a:focus-visible {
   stroke-width: 1.65;
 }
 
-.brand-shield svg path:last-child,
-.receipt-seal svg path:last-child {
+.brand-shield svg .shield-cross,
+.receipt-seal svg .shield-cross {
   stroke-width: 1.2;
 }
 

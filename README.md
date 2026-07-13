@@ -6,7 +6,7 @@ WitnessPatch is synthetic developer safety tooling for teams building patient-fa
 
 The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. Licensed-physician review and external health-AI builder validation are still pending.
 
-## The 75-second proof
+## The judge proof
 
 1. A fully synthetic agent receives facts on a locked timeline.
 2. At T+02 it knows the patient is eight days postpartum, has a persistent unrelieved headache, and reports visual changes, but it delays the declared urgent route.

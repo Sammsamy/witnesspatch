@@ -152,7 +152,8 @@ function MarkIcon({ kind }: { kind: "pass" | "fail" | "lock" }) {
   if (kind === "fail") {
     return (
       <svg viewBox="0 0 16 16" aria-hidden="true">
-        <path d="m5 5 6 6M11 5l-6 6" />
+        <line x1="5" y1="5" x2="11" y2="11" />
+        <line x1="11" y1="5" x2="5" y2="11" />
       </svg>
     );
   }
@@ -160,13 +161,13 @@ function MarkIcon({ kind }: { kind: "pass" | "fail" | "lock" }) {
     return (
       <svg viewBox="0 0 16 16" aria-hidden="true">
         <rect x="3.5" y="7" width="9" height="6.5" rx="2" />
-        <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" />
+        <polyline points="5.5,7 5.5,5 6.25,3.5 8,2.75 9.75,3.5 10.5,5 10.5,7" />
       </svg>
     );
   }
   return (
     <svg viewBox="0 0 16 16" aria-hidden="true">
-      <path d="m3.5 8.5 2.8 2.7 6.2-6.4" />
+      <polyline points="3.5,8.5 6.3,11.2 12.5,4.8" />
     </svg>
   );
 }
@@ -174,7 +175,8 @@ function MarkIcon({ kind }: { kind: "pass" | "fail" | "lock" }) {
 function ArrowIcon() {
   return (
     <svg viewBox="0 0 18 18" aria-hidden="true">
-      <path d="M3 9h11M10 5l4 4-4 4" />
+      <line x1="3" y1="9" x2="14" y2="9" />
+      <polyline points="10,5 14,9 10,13" />
     </svg>
   );
 }
@@ -182,8 +184,9 @@ function ArrowIcon() {
 function ShieldMark() {
   return (
     <svg viewBox="0 0 28 32" aria-hidden="true">
-      <path d="M14 1.8 25 6v8.4c0 7.1-4.5 12.8-11 15.8C7.5 27.2 3 21.5 3 14.4V6l11-4.2Z" />
-      <path d="M14 8v14M7 15h14" />
+      <polygon points="14,2 25,6 25,14.5 22.5,23 14,30 5.5,23 3,14.5 3,6" />
+      <line className="shield-cross" x1="14" y1="8" x2="14" y2="22" />
+      <line className="shield-cross" x1="7" y1="15" x2="21" y2="15" />
     </svg>
   );
 }
@@ -191,7 +194,10 @@ function ShieldMark() {
 function MiniSpark() {
   return (
     <svg viewBox="0 0 18 18" aria-hidden="true">
-      <path d="M9 1.5c.5 4.7 2.8 7 7.5 7.5-4.7.5-7 2.8-7.5 7.5C8.5 11.8 6.2 9.5 1.5 9 6.2 8.5 8.5 6.2 9 1.5Z" />
+      <line x1="9" y1="1.75" x2="9" y2="16.25" />
+      <line x1="1.75" y1="9" x2="16.25" y2="9" />
+      <line x1="4.25" y1="4.25" x2="13.75" y2="13.75" />
+      <line x1="13.75" y1="4.25" x2="4.25" y2="13.75" />
     </svg>
   );
 }
@@ -454,7 +460,7 @@ export function WitnessPatchLab() {
             type="button"
           >
             <svg viewBox="0 0 18 18" aria-hidden="true">
-              <path d="M6 5V3.8c0-1 .8-1.8 1.8-1.8h6.4c1 0 1.8.8 1.8 1.8v6.4c0 1-.8 1.8-1.8 1.8H13" />
+              <rect x="6" y="2" width="10" height="10" rx="2" />
               <rect x="2" y="6" width="10" height="10" rx="2" />
             </svg>
             {copied ? "Command copied" : "Copy verify command"}

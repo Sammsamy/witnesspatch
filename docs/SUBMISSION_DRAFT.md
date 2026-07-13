@@ -2,13 +2,23 @@
 
 This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). Repository visibility, license, teammate eligibility, `/feedback` session ID, public video, and final hosted URL still require completion before submission.
 
-## One-line description
+## Exact project overview fields
 
-WitnessPatch compiles one fully synthetic, time-fenced healthcare-agent contract violation into a CI-ready regression, then verifies a review-gated policy patch against the unchanged urgent fixture and a scoped over-escalation control.
+**Project name — 50/60 characters**
 
-## Short description
+> WitnessPatch: Compile AI Failures into Regressions
 
-A screenshot of a healthcare-agent test failure does not preserve what the agent knew, what contract it violated, or whether a repair survives a nearby control. WitnessPatch compiles one fully synthetic, time-locked contract violation into a CI-ready regression and deterministic evidence receipt, then verifies an inspectable, review-gated policy patch against the unchanged urgent fixture and a scoped over-escalation control. Codex configured to request GPT-5.6 Sol with Ultra reasoning assists implementation, adversarial testing, and repair exploration; locked deterministic code—not another model—owns every verdict.
+**Elevator pitch — 191/200 characters**
+
+> Compile one synthetic healthcare-agent failure into an integrity-checked, executable regression bundle, then deterministically verify a review-gated repair—without an API key or patient data.
+
+**Category**
+
+> Developer Tools. WitnessPatch is testing and release-gating infrastructure for teams building healthcare agents: it outputs an executable regression bundle and deterministic CI verifier, not patient-facing advice or automated medical decisions.
+
+## Inspiration
+
+Healthcare-agent safety failures can end as screenshots or model-written critiques. Those do not preserve exactly what the agent knew, which authored contract failed, or whether a repair survives a nearby overreach control. I am a third-year medical student; that perspective motivated the problem, but it is not licensed clinical authority.
 
 ## Problem
 
@@ -32,6 +42,14 @@ The retained V2 patch must fix the urgent fixture without changing the locked gr
 3. In the browser, hash and fully validate the exact synthetic case and failing run, freshly regrade them, and compile the earliest failed critical contract into an exportable nine-file red regression ZIP and static witness. The browser-generated files match the Node compiler byte for byte. The compiler holds recorded decisions fixed; it makes no target-in-loop, counterfactual, or clinical-minimality claim and invokes neither a model nor a target.
 4. Apply a retained, inspectable V2 target-policy patch and execute four expected paths: urgent before, urgent after, exact-fact negative control, and always-escalate mutation.
 5. In the browser, verify `23/23` exact hashes, recompute the reference repair's `2/2` regrades and `4/4` holdouts, and separately interpret the fresh candidate's declarative JSON IR across `2/2` cases and `4/4` mutation holdouts before displaying the repaired score. Retained JavaScript is not executed in the browser.
+
+## Built with
+
+Use these `22/25` tags:
+
+`Codex`, `GPT-5.6 Sol`, `Node.js`, `JavaScript`, `TypeScript`, `React`, `Next.js`, `Vite`, `Vinext`, `Tailwind CSS`, `Cloudflare Workers`, `Wrangler`, `Ajv`, `JSON Schema`, `Web Crypto API`, `node:test`, `GitHub Actions`, `AI Safety`, `Agent Evaluation`, `Regression Testing`, `Synthetic Data`, `Healthcare AI`
+
+Do not add `OpenAI API`; the product does not use it.
 
 ## What is different
 
@@ -77,8 +95,42 @@ WitnessPatch began as a pre-existing local V1 prototype. Its original evaluator,
 
 ## Team
 
-We are two brothers; one is a third-year medical student. That training motivates the problem choice but is not licensed clinical authority. The product preserves team-authored behavior in executable software while making independent expert review explicit.
+The currently registered creator is a third-year medical student. That training motivates the problem choice but is not licensed clinical authority. Do not describe the brother as a teammate until he has registered, joined the Devpost draft, accepted the rules, and contributed.
 
 ## Safety and validation status
 
 WitnessPatch is developer safety tooling, not clinical decision support. It uses no real patient data. The V2 rules link to public CDC, AIM, and ACOG guidance, but source-ID linkage is not semantic validation. Licensed-physician review and a health-AI builder workflow interview are both pending. The project does not certify safety, diagnose, recommend treatment, or replace organizational clinical governance.
+
+## Judge testing instructions
+
+No account, API key, payment, database, or model call is required.
+
+### Fast live test
+
+1. Open the submitted **Try it** URL in desktop Chrome.
+2. Select **Compile failure**.
+3. Confirm `2/2 exact inputs`, `BASELINE RED`, nine generated files, `INV-02` at T+02, and the `9 → 3` recorded-decision witness. The baseline remains `50/100`.
+4. Optionally select **Export complete 9-file ZIP**.
+5. Select **Verify retained repair**.
+6. Confirm `23/23` exact retained artifacts, reference `2/2` regrades plus `4/4` holdouts, and fresh-candidate JSON-IR `2/2` regrades plus `4/4` mutation checks.
+7. The final display should show `100/100` and `baseline RED · retained repair PASS`. The compiled baseline regression intentionally remains red; the separate retained repair passes.
+
+### Local verification
+
+Requires Node.js `22.15` or newer:
+
+```bash
+npm ci
+npm run verify:release
+npm run dev
+```
+
+Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Treat Linux as verified only after the linked public GitHub Actions check is green. Windows is not tested.
+
+## Form placeholders that must remain blank until real
+
+- **Try it URL:** pending public static deployment.
+- **Repository URL:** pending private repository creation and judge sharing.
+- **Video URL:** pending public founder-voice YouTube upload shorter than three minutes.
+- **`/feedback` Session ID:** pending capture from the primary Codex task.
+- **External validation language:** keep pending until participant-confirmed evidence exists.
