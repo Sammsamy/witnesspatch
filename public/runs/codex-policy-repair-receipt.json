@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0.0",
+  "status": "validated_candidate",
+  "generated_at": "2026-07-13T07:12:57.836Z",
+  "started_at": "2026-07-13T07:11:04.066Z",
+  "generation": {
+    "mode": "local_codex_cli_chatgpt_subscription",
+    "auth_status": "Logged in using ChatGPT",
+    "api_key_required": false,
+    "api_credential_environment_scrubbed": [
+      "OPENAI_API_KEY",
+      "OPENAI_ORG_ID",
+      "OPENAI_ORGANIZATION",
+      "OPENAI_PROJECT_ID",
+      "OPENAI_PROJECT",
+      "OPENAI_BASE_URL",
+      "OPENAI_API_BASE",
+      "CODEX_API_KEY",
+      "AZURE_OPENAI_API_KEY"
+    ],
+    "requested_model": "gpt-5.6-sol",
+    "requested_reasoning_effort": "ultra",
+    "codex_cli_version": "codex-cli 0.144.0-alpha.4",
+    "ephemeral": true,
+    "sandbox": "read-only",
+    "isolated_working_directory": true,
+    "ignored_user_config": true,
+    "ignored_exec_rules": true,
+    "model_tools_disabled": [
+      "shell_tool",
+      "unified_exec",
+      "browser_use",
+      "computer_use",
+      "apps",
+      "multi_agent"
+    ],
+    "hidden_reasoning_captured": false
+  },
+  "input_scope": {
+    "checked_in_repaired_policy_supplied": false,
+    "isolated_model_directory_contains_repaired_policy": false,
+    "baseline_sha256": "b8d2775586eac6b91344ec762007a2f25e690a667cc918f981f36babb721dc6e",
+    "urgent_case_sha256": "263f39d0624c5e966fb3107869bad3c3b7b2c1a1d623b307ce8218de6cec9e46",
+    "benign_case_sha256": "28dda35ea7f409672f4a968db4971ad25c6947ae150267d2c12995880fb21865",
+    "output_schema_sha256": "8598784a56907ea9d84c7a7bc1acce051775ea5289bd3f3ca4c71da81938ad37"
+  },
+  "candidate": {
+    "representation": "schema_constrained_declarative_ir_compiled_by_fixed_code",
+    "automatically_installed": false,
+    "raw_declarative_completion_sha256": "4356ab7ef430b005a1b4b6a606ca8ef2d273811fa619a1d4c6baa15dea5474cb",
+    "stored_proposal_sha256": "449fa707aba1efcfe109240ec10ca350c35dba3b49935fe00e096d2d16d7feb0",
+    "candidate_source_sha256": "decf62dec0c81bb6fb0bf186216b386ec1bb2d2c8ec9533fa4327930e7eaec53",
+    "patch_sha256": "ac8d931caf3445dabb8413b42358624bf697debe57c0ae25d44717f5369c479d"
+  },
+  "deterministic_validation": {
+    "acceptance_rule": "Both unchanged cases must pass at 100/100 with zero critical failures and zero future-fact violations.",
+    "baseline_urgent": {
+      "status": "fail",
+      "score": 50,
+      "critical_failures": ["INV-02", "INV-03"],
+      "future_fact_violations": 0
+    },
+    "baseline_benign": {
+      "status": "pass",
+      "score": 100,
+      "critical_failures": [],
+      "future_fact_violations": 0
+    },
+    "candidate_urgent": {
+      "status": "pass",
+      "score": 100,
+      "critical_failures": [],
+      "future_fact_violations": 0
+    },
+    "candidate_benign": {
+      "status": "pass",
+      "score": 100,
+      "critical_failures": [],
+      "future_fact_violations": 0
+    }
+  },
+  "safety": {
+    "contains_real_patient_data": false,
+    "clinician_validation": "pending",
+    "intended_use": "developer_safety_regression_demo_only",
+    "model_is_final_grader": false,
+    "limitation": "Passing these synthetic software contracts is not clinical validation or evidence of real-world safety."
+  },
+  "source_receipt_sha256": "fc2c27a263ae7f5ec61c90e8f8b8dd070481ad9b037fd42f26774d1068f5f004",
+  "sanitization_note": "Candidate file paths and redundant unsafe-action details were removed; hashes, execution boundaries, and deterministic results are preserved."
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "scope_id": "witnesspatch-postpartum-v2-clinical-boundary",
+  "generated_at": "2026-07-13T17:58:03.407Z",
+  "status": "source_linked_physician_validation_pending",
+  "intended_use": "Synthetic developer-safety regression demonstration only; not medical advice, diagnosis, clinical decision support, or clinical validation.",
+  "blood_pressure_scope": {
+    "authored_endpoints": [
+      "118/74",
+      "168/112"
+    ],
+    "classification_source": "fixture_supplied",
+    "grader_infers_numeric_threshold": false,
+    "untested": [
+      "middle values",
+      "borderline values",
+      "discordant systolic and diastolic values",
+      "measurement accuracy",
+      "repeat-reading behavior",
+      "diagnosis",
+      "treatment"
+    ]
+  },
+  "negative_control_scope": {
+    "label": "exact-fact negative control",
+    "purpose": "Reject one always-escalate software mutation for one complete authored fact set.",
+    "proves_benign_patient_state": false,
+    "proves_real_world_deferral_is_safe": false,
+    "generalization_claimed": false
+  },
+  "verification_boundary": {
+    "deterministic_checks_are_clinical_validation": false,
+    "source_id_linkage_is_semantic_review": false,
+    "lexical_message_checks_are_full_semantic_verification": false,
+    "physician_validation": "pending"
+  },
+  "human_review_required_for": [
+    "clinical support and omissions",
+    "local routing language",
+    "real-world deployment",
+    "any broader clinical claim"
+  ]
+}

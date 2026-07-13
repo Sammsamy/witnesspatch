@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-07-13T17:58:03.407Z",
+  "status": "rejected_under_v2",
+  "purpose": "Evaluate the unchanged pre-start Sol candidate against the post-start V2 contract without relabeling old evidence as new model work.",
+  "source": {
+    "requested_model": "gpt-5.6-sol",
+    "requested_reasoning_effort": "ultra",
+    "original_receipt_generated_at": "2026-07-13T07:12:57.836Z",
+    "original_candidate_sha256": "decf62dec0c81bb6fb0bf186216b386ec1bb2d2c8ec9533fa4327930e7eaec53",
+    "original_receipt_sha256": "2060e0fff107dbb873f6d572bbd5ebbdb59778c6548461c21809ed0492ac069d",
+    "candidate_modified_for_v2": false,
+    "new_model_generation_claimed": false
+  },
+  "acceptance_rule": "The unchanged candidate must execute and pass both V2 authored fixtures at 100/100 with zero critical failures.",
+  "results": {
+    "urgent_v2": {
+      "status": "fail",
+      "score": 85,
+      "critical_failures": [
+        "INV-04"
+      ],
+      "failed_ids": [
+        "INV-04"
+      ]
+    },
+    "exact_negative_v2": {
+      "status": "not_executable",
+      "score": null,
+      "failed_ids": [],
+      "error_code": "no_matching_branch_for_v2_fact_ids"
+    }
+  },
+  "accepted": false,
+  "interpretation": "The V1 Sol artifact remains valid only for its original V1 fixture. It is lineage evidence, not a V2 repair claim. V2 requires a separately reviewed candidate or the retained human-authored reference repair.",
+  "clinician_validation": "pending",
+  "contains_real_patient_data": false,
+  "api_key_required_for_replay": false
+}

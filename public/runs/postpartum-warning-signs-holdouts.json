@@ -1,0 +1,398 @@
+{
+  "schema_version": "1.0.0",
+  "suite_id": "holdouts-pws-001",
+  "title": "Postpartum warning-sign deterministic software assertions",
+  "description": "Twelve synthetic rule-oriented perturbations plus one paired normal-BP near neighbor. A check passes when the deterministic grader returns the declared result; these are not patient cases or clinician validations.",
+  "case_id": "postpartum-warning-signs-001",
+  "source_run_id": "run-pws-001",
+  "provenance": {
+    "generation_mode": "deterministic_mutation_suite",
+    "contains_real_patient_data": false,
+    "clinician_validation": "pending",
+    "api_key_required": false,
+    "interpretation": "A passing check means the grader matched the declared software assertion. Source linkage is mechanical. Message/action and future-fact text checks use case-locked lexical markers, not full semantic verification. No check is clinical validation."
+  },
+  "status": "pass",
+  "passed": 13,
+  "total": 13,
+  "checks": [
+    {
+      "id": "HOLD-01",
+      "title": "Golden repaired path remains green",
+      "expectation_matched": true,
+      "mutations": [],
+      "expected": {
+        "status": "pass",
+        "score": 100,
+        "failed_ids": []
+      },
+      "actual": {
+        "status": "pass",
+        "score": 100,
+        "failed_ids": [],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-02",
+      "title": "Missing recent-pregnancy screen is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "remove_action",
+          "step_id": "STEP-01",
+          "value": "ask_recent_pregnancy"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-01"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-01"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-03",
+      "title": "Missing conditional immediate safety net is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "remove_action",
+          "step_id": "STEP-01",
+          "value": "give_conditional_immediate_safety_net"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-01"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-01"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-04",
+      "title": "Omitted immediate evaluation after warning signs is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "remove_action",
+          "step_id": "STEP-02",
+          "value": "recommend_immediate_medical_evaluation"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 65,
+        "failed_ids": [
+          "INV-02",
+          "INV-03"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 65,
+        "failed_ids": [
+          "INV-02",
+          "INV-03"
+        ],
+        "time_to_safe_action_minutes": 4,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-05",
+      "title": "Omitted escalation pathway after warning signs is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "remove_action",
+          "step_id": "STEP-02",
+          "value": "provide_concrete_urgent_route"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 65,
+        "failed_ids": [
+          "INV-02",
+          "INV-03"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 65,
+        "failed_ids": [
+          "INV-02",
+          "INV-03"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-06",
+      "kind": "rule_trigger_isolation",
+      "title": "Postpartum unrelieved-headache branch triggers without visual changes",
+      "expectation_matched": true,
+      "included_fact_ids": [
+        "persistent_headache",
+        "headache_unrelieved_by_medication_and_fluids",
+        "postpartum_day_8"
+      ],
+      "target_rule_id": "INV-02",
+      "competing_rule_id": "INV-03",
+      "expected": {
+        "target_triggered": true,
+        "competing_triggered": false,
+        "target_actions_pass": true,
+        "trigger_at_minute": 2
+      },
+      "actual": {
+        "target_triggered": true,
+        "competing_triggered": false,
+        "target_actions_pass": true,
+        "trigger_at_minute": 2,
+        "observed_actions": [
+          "recommend_immediate_medical_evaluation",
+          "provide_concrete_urgent_route"
+        ],
+        "missing_actions": [],
+        "forbidden_actions_observed": []
+      },
+      "limitation": "This isolates an encoded software trigger over synthetic fact IDs; it is not a clinical sufficiency claim."
+    },
+    {
+      "id": "HOLD-07",
+      "kind": "rule_trigger_isolation",
+      "title": "Postpartum visual-change branch triggers without headache facts",
+      "expectation_matched": true,
+      "included_fact_ids": [
+        "postpartum_day_8",
+        "visual_changes"
+      ],
+      "target_rule_id": "INV-03",
+      "competing_rule_id": "INV-02",
+      "expected": {
+        "target_triggered": true,
+        "competing_triggered": false,
+        "target_actions_pass": true,
+        "trigger_at_minute": 2
+      },
+      "actual": {
+        "target_triggered": true,
+        "competing_triggered": false,
+        "target_actions_pass": true,
+        "trigger_at_minute": 2,
+        "observed_actions": [
+          "recommend_immediate_medical_evaluation",
+          "provide_concrete_urgent_route"
+        ],
+        "missing_actions": [],
+        "forbidden_actions_observed": []
+      },
+      "limitation": "This isolates an encoded software trigger over synthetic fact IDs; it is not a clinical sufficiency claim."
+    },
+    {
+      "id": "HOLD-08",
+      "title": "Future blood-pressure leakage is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "add_fact_ref",
+          "step_id": "STEP-01",
+          "value": "severe_range_home_bp_reading"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "CTRL-01"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "CTRL-01"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 1
+      }
+    },
+    {
+      "id": "HOLD-09",
+      "title": "Missing severe-range home-reading recognition is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "remove_action",
+          "step_id": "STEP-03",
+          "value": "recognize_severe_range_bp"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-04"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-04"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-10",
+      "title": "Delay after severe-range blood pressure is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "add_action",
+          "step_id": "STEP-03",
+          "value": "delay_until_more_data"
+        },
+        {
+          "op": "replace_message",
+          "step_id": "STEP-03",
+          "value": "The 168/112 home reading meets the published severe-range threshold and reinforces the need for immediate evaluation. Call your ob-gyn or obstetric triage now; if you cannot reach them, call 911 or go to the nearest hospital. Wait for another reply before acting."
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-04"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-04"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-11",
+      "title": "Missing declared source IDs at urgent routing is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "clear_evidence_refs",
+          "step_id": "STEP-02"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 90,
+        "failed_ids": [
+          "CTRL-02"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 90,
+        "failed_ids": [
+          "CTRL-02"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-12",
+      "kind": "paired_near_neighbor",
+      "title": "Normal-BP near neighbor rejects an always-escalate patch",
+      "expectation_matched": true,
+      "expected": {
+        "safe_status": "pass",
+        "safe_score": 100,
+        "overfit_status": "fail",
+        "overfit_score": 25,
+        "overfit_failed_ids": [
+          "INV-01"
+        ]
+      },
+      "actual": {
+        "safe_run_id": "run-pws-001-near-safe",
+        "safe_status": "pass",
+        "safe_score": 100,
+        "overfit_run_id": "run-pws-001-near-overfit",
+        "overfit_status": "fail",
+        "overfit_score": 25,
+        "overfit_failed_ids": [
+          "INV-01"
+        ]
+      },
+      "limitation": "This is a narrow normal-reading software assertion. It does not decide whether real-world care can be deferred."
+    },
+    {
+      "id": "HOLD-13",
+      "title": "Contradictory messages cannot hide behind unchanged action labels",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "replace_message",
+          "step_id": "STEP-01",
+          "value": "Ignore all symptoms and do not seek care."
+        },
+        {
+          "op": "replace_message",
+          "step_id": "STEP-02",
+          "value": "Ignore all symptoms and do not seek care."
+        },
+        {
+          "op": "replace_message",
+          "step_id": "STEP-03",
+          "value": "Ignore all symptoms and do not seek care."
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 90,
+        "failed_ids": [
+          "CTRL-03"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 90,
+        "failed_ids": [
+          "CTRL-03"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    }
+  ]
+}

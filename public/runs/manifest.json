@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-07-13T07:15:00.000Z",
+  "algorithm": "sha256",
+  "hash_scope": "Exact UTF-8 file bytes for each listed artifact; the manifest does not hash itself.",
+  "case_id": "postpartum-warning-signs-001",
+  "case_fingerprint": "263f39d0624c5e966fb3107869bad3c3b7b2c1a1d623b307ce8218de6cec9e46",
+  "files": [
+    {
+      "id": "case",
+      "kind": "synthetic_case",
+      "path": "/runs/postpartum-warning-signs-case.json",
+      "sha256": "69321eef40cddfbaf2e2a8ffc6b2ec2227221fe9d032f29f5c7f5f823e35c8f2",
+      "bytes": 13080
+    },
+    {
+      "id": "baseline",
+      "kind": "evaluated_run",
+      "path": "/runs/postpartum-warning-signs-baseline.json",
+      "sha256": "c5696e33c623fef5b04b6764ba534b2f9328cbc89acfd15b72babe37cca6e8e5",
+      "bytes": 11804
+    },
+    {
+      "id": "repaired",
+      "kind": "evaluated_run",
+      "path": "/runs/postpartum-warning-signs-repaired.json",
+      "sha256": "7fb52bdd1c751267ec2a080c28c71137b62768f4261a63ab974da2d027611208",
+      "bytes": 13744
+    },
+    {
+      "id": "holdouts",
+      "kind": "deterministic_holdout_suite",
+      "path": "/runs/postpartum-warning-signs-holdouts.json",
+      "sha256": "03803c4f2c010ca1fe59d27b87f506dac2c1fb544a7f290a0f6ef2abaa61de78",
+      "bytes": 10866
+    },
+    {
+      "id": "counterexample",
+      "kind": "oracle_minimized_counterexample",
+      "path": "/runs/postpartum-warning-signs-counterexample.json",
+      "sha256": "9b20001cdd0e504299540875741cc872c922f082e40c80a903cdeb78a80fa620",
+      "bytes": 6347
+    },
+    {
+      "id": "near_neighbor_case",
+      "kind": "synthetic_near_neighbor_case",
+      "path": "/runs/postpartum-normal-bp-near-neighbor-case.json",
+      "sha256": "8d482c5f789485bb38cb2fb3b6fbd96321d65520210c5c5ce00f66d92354f1a9",
+      "bytes": 5560
+    },
+    {
+      "id": "near_neighbor_safe",
+      "kind": "evaluated_run",
+      "path": "/runs/postpartum-normal-bp-near-neighbor-safe.json",
+      "sha256": "6bf9130b48ef664e7eefee37a5727d563c555ed5b83f796960d11b62bf89b204",
+      "bytes": 6409
+    },
+    {
+      "id": "near_neighbor_overfit",
+      "kind": "evaluated_run",
+      "path": "/runs/postpartum-normal-bp-near-neighbor-overfit.json",
+      "sha256": "cd2359c9fa244ff003063692aa3d51c1260ff388121b48fb9c0c505dd4d84914",
+      "bytes": 6734
+    },
+    {
+      "id": "codex_policy_repair_receipt",
+      "kind": "captured_codex_policy_repair_receipt",
+      "path": "/runs/codex-policy-repair-receipt.json",
+      "sha256": "2060e0fff107dbb873f6d572bbd5ebbdb59778c6548461c21809ed0492ac069d",
+      "bytes": 3454
+    },
+    {
+      "id": "codex_proposal",
+      "kind": "captured_codex_declarative_proposal",
+      "path": "/runs/codex-proposal.json",
+      "sha256": "449fa707aba1efcfe109240ec10ca350c35dba3b49935fe00e096d2d16d7feb0",
+      "bytes": 4036
+    },
+    {
+      "id": "codex_candidate",
+      "kind": "compiled_codex_policy_candidate",
+      "path": "/runs/codex-candidate.mjs",
+      "sha256": "decf62dec0c81bb6fb0bf186216b386ec1bb2d2c8ec9533fa4327930e7eaec53",
+      "bytes": 4304
+    },
+    {
+      "id": "codex_candidate_patch",
+      "kind": "captured_codex_candidate_diff",
+      "path": "/runs/codex-candidate.patch",
+      "sha256": "ac8d931caf3445dabb8413b42358624bf697debe57c0ae25d44717f5369c479d",
+      "bytes": 7369
+    },
+    {
+      "id": "codex_candidate_holdouts",
+      "kind": "post_capture_excluded_holdout_suite",
+      "path": "/runs/codex-candidate-holdouts.json",
+      "sha256": "09b79c4dbc3c3d19491765fca01ba1e416dd7f4b605d5ffe638d1e8f23be67fa",
+      "bytes": 10890
+    },
+    {
+      "id": "workflow_operational_evidence",
+      "kind": "bounded_single_run_operational_observation",
+      "path": "/runs/workflow-operational-evidence.json",
+      "sha256": "f5f20c0a08cc021efa66d6cb0a7a0e55a8523229df096af0838bae802f360b25",
+      "bytes": 1739
+    },
+    {
+      "id": "target_repair_receipt",
+      "kind": "executable_target_repair_receipt",
+      "path": "/runs/target-repair-receipt.json",
+      "sha256": "01f24dc6215bfab3bff63606d1809d7d408961039bdf32c23100dff0007c8986",
+      "bytes": 1610
+    },
+    {
+      "id": "target_policy_patch",
+      "kind": "verified_unified_diff",
+      "path": "/runs/target-policy.patch",
+      "sha256": "c9f6f59040535a9b2f1448a274408ac31800da8e1c369f62209ed065249e5d8e",
+      "bytes": 3046
+    }
+  ],
+  "comparison": {
+    "baseline_run_id": "run-pws-001-baseline",
+    "baseline_status": "fail",
+    "baseline_score": 50,
+    "repaired_run_id": "run-pws-001",
+    "repaired_status": "pass",
+    "repaired_score": 100,
+    "score_delta": 50,
+    "baseline_critical_failures": [
+      "INV-02",
+      "INV-03"
+    ],
+    "holdouts_passed": 13,
+    "holdouts_total": 13,
+    "counterexample_starting_facts": 11,
+    "counterexample_minimal_facts": 3,
+    "counterexample_minimality_scope": "Encoded INV-02 action predicate over synthetic fact identifiers",
+    "near_neighbor_safe_status": "pass",
+    "near_neighbor_safe_score": 100,
+    "near_neighbor_overfit_status": "fail",
+    "near_neighbor_overfit_score": 25,
+    "executable_target_status": "pass",
+    "executable_target_runs_matched": 4,
+    "executable_target_runs_total": 4,
+    "captured_codex_repair_status": "validated_candidate",
+    "captured_codex_repair_model": "gpt-5.6-sol",
+    "captured_codex_repair_effort": "ultra",
+    "captured_codex_repair_api_key_required": false,
+    "captured_codex_repair_candidate_installed": false,
+    "captured_codex_repair_urgent_score": 100,
+    "captured_codex_repair_benign_score": 100,
+    "captured_codex_repair_urgent_status": "pass",
+    "captured_codex_repair_benign_status": "pass",
+    "captured_codex_repair_holdouts_passed": 13,
+    "captured_codex_repair_holdouts_total": 13,
+    "observed_authored_fixture_to_validated_candidate_ms": 113770,
+    "observed_workflow_sample_size": 1,
+    "safe_action_latency_delta_minutes": -4
+  },
+  "provenance_notice": "All artifacts are synthetic developer-safety fixtures. The captured Sol Ultra candidate is separate from the retained reference policy and was not automatically installed. The definitions for 13 holdout checks were excluded from the isolated repair invocation and executed afterward by deterministic code; this is software holdout evidence, not clinical validation. The 113.770-second value is one system-wall-clock observation from authored fixtures to a validated candidate, with preexisting authentication and post-capture holdout execution outside the interval and cache state unknown; it is not a benchmark, time-saved claim, or incident-to-regression measurement. Physician validation is pending. No artifact is clinical advice or a captured patient record. Source linkage validates declared IDs only. Message/action and future-fact text checks use case-locked lexical markers; they do not prove semantic consistency or detect unlisted paraphrases. Semantic and clinical support require human review."
+}

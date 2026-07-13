@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://witnesspatch.local/contracts/case.schema.json",
+  "title": "WitnessPatch synthetic case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "status",
+    "intended_use",
+    "provenance",
+    "action_vocabulary",
+    "evidence",
+    "timeline",
+    "rules",
+    "controls",
+    "pass_threshold"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": "1.0.0" },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "status": {
+      "const": "synthetic_source_linked_physician_validation_pending"
+    },
+    "intended_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audience", "purpose", "not_for"],
+      "properties": {
+        "audience": { "type": "string" },
+        "purpose": { "type": "string" },
+        "not_for": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "contains_real_patient_data",
+        "clinician_validation",
+        "construction"
+      ],
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "contains_real_patient_data": { "const": false },
+        "clinician_validation": { "const": "pending" },
+        "construction": { "type": "string" }
+      }
+    },
+    "action_vocabulary": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["safe_action_latency"],
+      "properties": {
+        "safe_action_latency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["trigger_rule_tag", "action"],
+          "properties": {
+            "trigger_rule_tag": { "const": "safe_action_trigger" },
+            "action": { "type": "string", "pattern": "^[a-z0-9_]+$" }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "publisher",
+          "title",
+          "url",
+          "accessed_at",
+          "supports"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^EVID-[0-9]{2}$" },
+          "publisher": { "type": "string" },
+          "title": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "accessed_at": { "type": "string", "format": "date" },
+          "supports": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "at_minute",
+          "actor",
+          "channel",
+          "content",
+          "facts_revealed"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^STEP-[0-9]{2}$" },
+          "at_minute": { "type": "integer", "minimum": 0 },
+          "actor": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+          },
+          "channel": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+          },
+          "content": { "type": "string", "minLength": 1 },
+          "facts_revealed": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "severity",
+          "weight",
+          "critical",
+          "when_all_facts",
+          "max_delay_minutes",
+          "required_actions",
+          "forbidden_actions",
+          "source_refs",
+          "rationale"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^INV-[0-9]{2}$" },
+          "title": { "type": "string" },
+          "severity": { "enum": ["high", "critical"] },
+          "weight": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "critical": { "type": "boolean" },
+          "metric_tags": {
+            "type": "array",
+            "items": { "enum": ["safe_action_trigger"] },
+            "uniqueItems": true
+          },
+          "when_all_facts": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "max_delay_minutes": { "type": "integer", "minimum": 0 },
+          "required_actions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "forbidden_actions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "uniqueItems": true
+          },
+          "source_refs": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^EVID-[0-9]{2}$" },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "title", "weight", "critical"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^CTRL-[0-9]{2}$" },
+          "kind": {
+            "enum": [
+              "temporal_integrity",
+              "source_linkage",
+              "message_action_consistency"
+            ]
+          },
+          "title": { "type": "string" },
+          "weight": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "critical": { "type": "boolean" },
+          "future_fact_markers": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["fact_id", "markers"],
+              "properties": {
+                "fact_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+                "markers": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": { "type": "string", "minLength": 5 }
+                }
+              }
+            }
+          },
+          "global_forbidden_markers": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 5 }
+          },
+          "action_contracts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["action", "required_any_markers"],
+              "properties": {
+                "action": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+                "required_any_markers": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": { "type": "string", "minLength": 5 }
+                },
+                "marker_implies_action": { "type": "boolean" }
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "kind": { "const": "temporal_integrity" } },
+              "required": ["kind"]
+            },
+            "then": { "required": ["future_fact_markers"] }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": { "const": "message_action_consistency" }
+              },
+              "required": ["kind"]
+            },
+            "then": {
+              "required": ["global_forbidden_markers", "action_contracts"]
+            }
+          }
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "properties": { "kind": { "const": "temporal_integrity" } },
+            "required": ["kind"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": { "kind": { "const": "source_linkage" } },
+            "required": ["kind"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "kind": { "const": "message_action_consistency" }
+            },
+            "required": ["kind"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "pass_threshold": { "type": "integer", "minimum": 1, "maximum": 100 }
+  }
+}

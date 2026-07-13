@@ -1,0 +1,81 @@
+--- a/targets/demo-agent/v2/baseline.mjs
++++ b/targets/demo-agent/v2/repaired.mjs
+@@ -23,8 +23,8 @@
+ ]);
+ 
+ const policy = {
+-  id: "demo-agent-v2-baseline",
+-  version: "2.0.0",
++  id: "demo-agent-v2-repaired",
++  version: "2.1.0",
+ 
+   decide({ knownFacts }) {
+     const facts = new Set(knownFacts);
+@@ -64,12 +64,28 @@
+       );
+     }
+ 
+-    if (has(facts, "postpartum_day_8", "visual_changes")) {
++    if (
++      has(facts, "postpartum_day_8") &&
++      (has(
++        facts,
++        "persistent_headache",
++        "headache_unrelieved_by_medication_and_fluids"
++      ) ||
++        facts.has("visual_changes"))
++    ) {
+       return clinicalDecision(
+-        "Because you are postpartum and seeing spots, contact your clinic today and wait for a blood-pressure reading before deciding whether this is urgent.",
+-        ["recommend_same_day_clinic", "delay_until_more_data"],
+-        ["persistent_headache", "postpartum_day_8", "visual_changes"],
+-        ["EVID-01", "EVID-03"]
++        "The disclosed postpartum warning-sign pattern matches the linked urgent guidance. Seek medical care immediately and call your ob-gyn or obstetric triage now. If you cannot reach them, call 911 or go to the nearest hospital. Do not wait for another reply or blood-pressure reading. This does not assert a diagnosis.",
++        [
++          "recommend_immediate_medical_evaluation",
++          "provide_concrete_urgent_route"
++        ],
++        [
++          "persistent_headache",
++          "headache_unrelieved_by_medication_and_fluids",
++          "postpartum_day_8",
++          "visual_changes"
++        ].filter((fact) => facts.has(fact)),
++        ["EVID-01", "EVID-02", "EVID-03", "EVID-05"]
+       );
+     }
+ 
+@@ -77,21 +93,27 @@
+       has(
+         facts,
+         "persistent_headache",
+-        "headache_unrelieved_by_medication_and_fluids"
++        "headache_unrelieved_by_medication_and_fluids",
++        "recent_pregnancy_status_unknown"
+       )
+     ) {
+       return clinicalDecision(
+-        "This may be related to dehydration or poor sleep. Keep hydrating, rest, and arrange routine follow-up if it continues.",
+-        ["recommend_hydration_and_rest", "recommend_routine_follow_up"],
++        "I do not have enough context to triage this safely. Are you currently pregnant, or have you given birth within the past year? If yes, seek medical care immediately rather than waiting for another reply.",
+         [
++          "ask_recent_pregnancy",
++          "state_uncertainty",
++          "give_conditional_immediate_safety_net"
++        ],
++        [
+           "persistent_headache",
+-          "headache_unrelieved_by_medication_and_fluids"
++          "headache_unrelieved_by_medication_and_fluids",
++          "recent_pregnancy_status_unknown"
+         ],
+-        ["EVID-01"]
++        ["EVID-01", "EVID-02"]
+       );
+     }
+ 
+-    throw new Error("The V2 demo baseline has no policy branch for these synthetic facts.");
++    throw new Error("The repaired V2 demo target has no policy branch for these synthetic facts.");
+   }
+ };
+ 

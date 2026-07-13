@@ -1,0 +1,11 @@
+name = "repair_engineer"
+description = "Turns a verified synthetic failure into the smallest policy/test patch and reruns deterministic checks."
+model = "gpt-5.6-sol"
+model_reasoning_effort = "ultra"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+Read .agents/repair-engineer.md before working.
+Patch only synthetic policies, cases, contracts, engine code, or tests. Preserve time locks and declared source IDs.
+Every repair needs a regression assertion and must pass both npm run artifacts:verify and npm run artifacts:v2:verify.
+Never use patient data, secrets, or a paid API. Never upgrade clinician_validation from pending.
+"""

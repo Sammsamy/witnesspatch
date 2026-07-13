@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://witnesspatch.local/contracts/witness-bundle-manifest.schema.json",
+  "title": "WitnessPatch compiled bundle manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "bundle_id",
+    "case_id",
+    "source_run_id",
+    "target_rule_id",
+    "files",
+    "verification"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "witness_bundle_manifest" },
+    "bundle_id": {
+      "type": "string",
+      "pattern": "^witness-bundle-[a-f0-9]{16}$"
+    },
+    "case_id": { "type": "string", "minLength": 1 },
+    "source_run_id": { "type": "string", "minLength": 1 },
+    "target_rule_id": { "type": "string", "minLength": 1 },
+    "files": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind", "sha256", "bytes"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9.-]*$"
+          },
+          "kind": { "enum": ["json_artifact", "red_regression_test"] },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "bytes": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "verification": { "type": "string", "minLength": 1 }
+  }
+}

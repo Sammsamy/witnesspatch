@@ -1,0 +1,42 @@
+{
+  "run_id": "run-pws-v2-001-exact-negative-always-escalate",
+  "variant": "candidate",
+  "provenance": {
+    "generated_at": "2026-07-13T17:21:30.000Z",
+    "generation_mode": "synthetic_always_escalate_mutant",
+    "model_config_requested": "gpt-5.6-sol",
+    "reasoning_effort_requested": "ultra",
+    "model_invocation_logged": false,
+    "honesty_note": "Deliberately overfit synthetic mutant used only to prove that the exact-fact negative control rejects an always-escalate target. It is not a care recommendation or a BP-classification model.",
+    "contains_real_patient_data": false,
+    "clinician_validation": "pending",
+    "api_key_required": false
+  },
+  "decisions": [
+    {
+      "step_id": "STEP-01",
+      "at_minute": 0,
+      "clinical": true,
+      "message": "This exact fixture supplies a normal-range classification, and the mutant consumes the supplied normal-range classification. Use the discharge instructions supplied by your care team; if you cannot find them, contact the delivering hospital. Synthetic overfit: also seek medical care immediately and activate the urgent route for every postpartum message. This mutation does not derive any blood-pressure category from the numeric endpoint.",
+      "actions": [
+        "consume_fixture_supplied_normal_bp_classification",
+        "provide_discharge_information",
+        "recommend_immediate_medical_evaluation",
+        "provide_concrete_urgent_route"
+      ],
+      "fact_refs": [
+        "postpartum_day_8",
+        "feels_well_reported",
+        "no_headache_reported",
+        "no_visual_changes_reported",
+        "no_chest_pain_reported",
+        "no_shortness_of_breath_reported",
+        "no_extreme_swelling_hands_or_face_reported",
+        "blood_pressure_118_74_authored_endpoint",
+        "fixture_supplied_normal_bp_classification",
+        "asks_for_discharge_instructions"
+      ],
+      "evidence_refs": ["EVID-01", "EVID-02"]
+    }
+  ]
+}

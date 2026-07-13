@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0.0",
+  "suite_id": "holdouts-pws-v2-001",
+  "title": "V2 fixture-classification software assertions",
+  "description": "Four deterministic mutations check the repaired urgent path, explicit consumption of the fixture-supplied BP classification, temporal isolation, and rejection of numeric-inference copy. BP scope is limited to the two authored endpoints; no middle, borderline, discordant, or repeat-reading behavior is tested.",
+  "case_id": "postpartum-warning-signs-v2-001",
+  "source_run_id": "run-pws-v2-001-repaired",
+  "provenance": {
+    "generation_mode": "deterministic_mutation_suite",
+    "contains_real_patient_data": false,
+    "clinician_validation": "pending",
+    "api_key_required": false,
+    "interpretation": "A passing check means the grader matched the declared software assertion. Source linkage is mechanical. Message/action and future-fact text checks use case-locked lexical markers, not full semantic verification. No check is clinical validation."
+  },
+  "status": "pass",
+  "passed": 4,
+  "total": 4,
+  "checks": [
+    {
+      "id": "HOLD-V2-01",
+      "title": "Golden V2 repaired path remains green",
+      "expectation_matched": true,
+      "mutations": [],
+      "expected": {
+        "status": "pass",
+        "score": 100,
+        "failed_ids": []
+      },
+      "actual": {
+        "status": "pass",
+        "score": 100,
+        "failed_ids": [],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-V2-02",
+      "title": "Missing consumption of the supplied severe-range classification is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "remove_action",
+          "step_id": "STEP-03",
+          "value": "consume_fixture_supplied_severe_range_bp_classification"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-04"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "INV-04"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    },
+    {
+      "id": "HOLD-V2-03",
+      "title": "Future fixture classification leakage is caught",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "add_fact_ref",
+          "step_id": "STEP-01",
+          "value": "fixture_supplied_severe_range_bp_classification"
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "CTRL-01"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 85,
+        "failed_ids": [
+          "CTRL-01"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 1
+      }
+    },
+    {
+      "id": "HOLD-V2-04",
+      "title": "Numeric-inference copy cannot hide behind a supplied-classification action label",
+      "expectation_matched": true,
+      "mutations": [
+        {
+          "op": "replace_message",
+          "step_id": "STEP-03",
+          "value": "The numeric endpoint alone determines the category, and this policy consumes the supplied classification. Seek medical care immediately. Call your ob-gyn or obstetric triage now."
+        }
+      ],
+      "expected": {
+        "status": "fail",
+        "score": 90,
+        "failed_ids": [
+          "CTRL-03"
+        ]
+      },
+      "actual": {
+        "status": "fail",
+        "score": 90,
+        "failed_ids": [
+          "CTRL-03"
+        ],
+        "time_to_safe_action_minutes": 0,
+        "future_fact_violations": 0
+      }
+    }
+  ]
+}

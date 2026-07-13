@@ -1,0 +1,229 @@
+{
+  "schema_version": "1.0.0",
+  "counterexample_id": "counterexample-pws-001",
+  "generated_at": "2026-07-13T06:23:00.000Z",
+  "case_id": "postpartum-warning-signs-001",
+  "source_run_id": "run-pws-001-baseline",
+  "target_rule_id": "INV-02",
+  "target_rule_title": "Route persistent unrelieved headache postpartum immediately",
+  "minimality_label": "oracle-minimal",
+  "minimality_scope": "Encoded INV-02 action predicate over synthetic fact identifiers",
+  "clinical_minimality_claimed": false,
+  "provenance": {
+    "generation_mode": "deterministic_delta_debugging",
+    "contains_real_patient_data": false,
+    "clinician_validation": "pending",
+    "api_key_required": false,
+    "interpretation": "This is oracle-minimal for one encoded software rule over synthetic fact identifiers. It is not clinically minimal and is not a medical claim."
+  },
+  "starting_fact_count": 11,
+  "starting_fact_ids": [
+    "persistent_headache",
+    "headache_unrelieved_by_medication_and_fluids",
+    "recent_pregnancy_status_unknown",
+    "sleep_deprivation_reported",
+    "no_fever_reported",
+    "postpartum_day_8",
+    "visual_changes",
+    "uncomplicated_delivery_reported",
+    "infant_feeding_normally_reported",
+    "blood_pressure_168_112",
+    "severe_range_home_bp_reading"
+  ],
+  "minimal_fact_count": 3,
+  "minimal_fact_ids": [
+    "persistent_headache",
+    "headache_unrelieved_by_medication_and_fluids",
+    "postpartum_day_8"
+  ],
+  "removed_fact_ids": [
+    "recent_pregnancy_status_unknown",
+    "sleep_deprivation_reported",
+    "no_fever_reported",
+    "visual_changes",
+    "uncomplicated_delivery_reported",
+    "infant_feeding_normally_reported",
+    "blood_pressure_168_112",
+    "severe_range_home_bp_reading"
+  ],
+  "failure": {
+    "critical": true,
+    "triggered_at_minute": 2,
+    "missing_actions": [
+      "recommend_immediate_medical_evaluation",
+      "provide_concrete_urgent_route"
+    ],
+    "forbidden_actions_observed": [
+      "recommend_same_day_clinic",
+      "delay_until_more_data"
+    ]
+  },
+  "verification": {
+    "algorithm": "ddmin-complement-reduction",
+    "oracle_predicate_reproduced": true,
+    "oracle_one_minimal": true,
+    "oracle_cardinality_minimal": true,
+    "smaller_subsets_checked": 67,
+    "smaller_reproducer": null,
+    "removal_checks": [
+      {
+        "removed_fact": "persistent_headache",
+        "remaining_facts": [
+          "headache_unrelieved_by_medication_and_fluids",
+          "postpartum_day_8"
+        ],
+        "reproduced": false,
+        "reason": "rule_not_triggered"
+      },
+      {
+        "removed_fact": "headache_unrelieved_by_medication_and_fluids",
+        "remaining_facts": [
+          "persistent_headache",
+          "postpartum_day_8"
+        ],
+        "reproduced": false,
+        "reason": "rule_not_triggered"
+      },
+      {
+        "removed_fact": "postpartum_day_8",
+        "remaining_facts": [
+          "persistent_headache",
+          "headache_unrelieved_by_medication_and_fluids"
+        ],
+        "reproduced": false,
+        "reason": "rule_not_triggered"
+      }
+    ],
+    "reduction_trace": [
+      {
+        "granularity": 2,
+        "attempted_removal": [
+          "persistent_headache",
+          "headache_unrelieved_by_medication_and_fluids",
+          "recent_pregnancy_status_unknown",
+          "sleep_deprivation_reported",
+          "no_fever_reported",
+          "postpartum_day_8"
+        ],
+        "remaining_count": 5,
+        "reproduced": false
+      },
+      {
+        "granularity": 2,
+        "attempted_removal": [
+          "visual_changes",
+          "uncomplicated_delivery_reported",
+          "infant_feeding_normally_reported",
+          "blood_pressure_168_112",
+          "severe_range_home_bp_reading"
+        ],
+        "remaining_count": 6,
+        "reproduced": true
+      },
+      {
+        "granularity": 2,
+        "attempted_removal": [
+          "persistent_headache",
+          "headache_unrelieved_by_medication_and_fluids",
+          "recent_pregnancy_status_unknown"
+        ],
+        "remaining_count": 3,
+        "reproduced": false
+      },
+      {
+        "granularity": 2,
+        "attempted_removal": [
+          "sleep_deprivation_reported",
+          "no_fever_reported",
+          "postpartum_day_8"
+        ],
+        "remaining_count": 3,
+        "reproduced": false
+      },
+      {
+        "granularity": 4,
+        "attempted_removal": [
+          "persistent_headache",
+          "headache_unrelieved_by_medication_and_fluids"
+        ],
+        "remaining_count": 4,
+        "reproduced": false
+      },
+      {
+        "granularity": 4,
+        "attempted_removal": [
+          "recent_pregnancy_status_unknown",
+          "sleep_deprivation_reported"
+        ],
+        "remaining_count": 4,
+        "reproduced": true
+      },
+      {
+        "granularity": 3,
+        "attempted_removal": [
+          "persistent_headache",
+          "headache_unrelieved_by_medication_and_fluids"
+        ],
+        "remaining_count": 2,
+        "reproduced": false
+      },
+      {
+        "granularity": 3,
+        "attempted_removal": [
+          "no_fever_reported",
+          "postpartum_day_8"
+        ],
+        "remaining_count": 2,
+        "reproduced": false
+      },
+      {
+        "granularity": 4,
+        "attempted_removal": [
+          "persistent_headache"
+        ],
+        "remaining_count": 3,
+        "reproduced": false
+      },
+      {
+        "granularity": 4,
+        "attempted_removal": [
+          "headache_unrelieved_by_medication_and_fluids"
+        ],
+        "remaining_count": 3,
+        "reproduced": false
+      },
+      {
+        "granularity": 4,
+        "attempted_removal": [
+          "no_fever_reported"
+        ],
+        "remaining_count": 3,
+        "reproduced": true
+      },
+      {
+        "granularity": 3,
+        "attempted_removal": [
+          "persistent_headache"
+        ],
+        "remaining_count": 2,
+        "reproduced": false
+      },
+      {
+        "granularity": 3,
+        "attempted_removal": [
+          "headache_unrelieved_by_medication_and_fluids"
+        ],
+        "remaining_count": 2,
+        "reproduced": false
+      },
+      {
+        "granularity": 3,
+        "attempted_removal": [
+          "postpartum_day_8"
+        ],
+        "remaining_count": 2,
+        "reproduced": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "schema_version": "1.0.0",
+  "release_profile": "witnesspatch-v2-release",
+  "generated_at": "2026-07-13T17:58:03.407Z",
+  "algorithm": "sha256",
+  "hash_scope": "Exact file bytes for each listed artifact; the manifest does not hash itself.",
+  "case_id": "postpartum-warning-signs-v2-001",
+  "case_fingerprint": "653a2e4a3c75c3062d1bd4710e421fc4c984897b80e88571af137bebe3197a27",
+  "build_week_extension": {
+    "status": "post_submission_start_extension",
+    "prior_version_disclosed": true,
+    "v1_manifest_generated_at": "2026-07-13T07:15:00.000Z",
+    "v1_model_artifact_reused_as_v2_repair": false,
+    "v1_model_artifact_retested_under_v2": true,
+    "fresh_v2_sol_capture_started_at": "2026-07-13T17:49:55.322Z",
+    "fresh_v2_sol_capture_generated_at": "2026-07-13T17:51:40.867Z",
+    "fresh_v2_sol_candidate_status": "validated_candidate",
+    "fresh_v2_sol_candidate_installed": false
+  },
+  "clinical_scope": {
+    "physician_validation": "pending",
+    "authored_bp_endpoints": [
+      "118/74",
+      "168/112"
+    ],
+    "classification_source": "fixture_supplied",
+    "grader_infers_numeric_threshold": false,
+    "exact_negative_control_only": true
+  },
+  "files": [
+    {
+      "id": "case",
+      "kind": "synthetic_case_v2",
+      "path": "/runs/v2/postpartum-warning-signs-case.json",
+      "sha256": "d2a33d13a6bc6814031dd1771ad8f137e02415b06d46dd0f6d53e33caa8761bc",
+      "bytes": 13885
+    },
+    {
+      "id": "baseline",
+      "kind": "evaluated_run_v2",
+      "path": "/runs/v2/postpartum-warning-signs-baseline.json",
+      "sha256": "bad5fe7128857a4585e04bd86f5635d4686fefa513292d64073b139d24577e7e",
+      "bytes": 12325
+    },
+    {
+      "id": "repaired",
+      "kind": "evaluated_run_v2",
+      "path": "/runs/v2/postpartum-warning-signs-repaired.json",
+      "sha256": "bb908405163162379c3ec274afc4176805d2d0efbc507bee26bd2abc882e0ad2",
+      "bytes": 14506
+    },
+    {
+      "id": "holdouts",
+      "kind": "deterministic_holdout_suite_v2",
+      "path": "/runs/v2/postpartum-warning-signs-holdouts.json",
+      "sha256": "0430017f5637b0296d9a54f8107343fc559d30d7a72e1fe962ad0e8c2c92e1c2",
+      "bytes": 3688
+    },
+    {
+      "id": "counterexample",
+      "kind": "static_trace_contract_witness_v2",
+      "path": "/runs/v2/postpartum-warning-signs-counterexample.json",
+      "sha256": "b6117628a1d38894dc275f8a57a9aced4de068568b4149e8d67dc780b5f1bcd9",
+      "bytes": 6526
+    },
+    {
+      "id": "near_neighbor_case",
+      "kind": "exact_negative_control_case_v2",
+      "path": "/runs/v2/postpartum-exact-negative-control-case.json",
+      "sha256": "262929c69cd7dcde61dae5c9ec98a682ebcfda25041d373e745b352ea30f4ce2",
+      "bytes": 7964
+    },
+    {
+      "id": "near_neighbor_safe",
+      "kind": "exact_negative_control_safe_run_v2",
+      "path": "/runs/v2/postpartum-exact-negative-control-safe.json",
+      "sha256": "4f95fa10443128e6d6c418ac0806090c024a82cbe0506b7eb9d55e8ca4685581",
+      "bytes": 7111
+    },
+    {
+      "id": "near_neighbor_overfit",
+      "kind": "exact_negative_control_always_escalate_run_v2",
+      "path": "/runs/v2/postpartum-exact-negative-control-always-escalate.json",
+      "sha256": "6d7a19a1399cd9371d11c008372eccd834628f494915095dd4efbe95053bdbab",
+      "bytes": 7502
+    },
+    {
+      "id": "target_repair_receipt",
+      "kind": "executable_target_repair_receipt_v2",
+      "path": "/runs/v2/target-repair-receipt.json",
+      "sha256": "009a819af707ebee34d614def197afffb25913c51f063bf2d306feb97e2f2239",
+      "bytes": 2794
+    },
+    {
+      "id": "target_policy_patch",
+      "kind": "verified_unified_diff_v2",
+      "path": "/runs/v2/target-policy.patch",
+      "sha256": "2b0098f1bfa4b9deec39e6a82c1ad2d8a21517fe294d503acba7567c62ff868f",
+      "bytes": 3064
+    },
+    {
+      "id": "clinical_scope",
+      "kind": "clinical_claim_boundary_v2",
+      "path": "/runs/v2/clinical-scope.json",
+      "sha256": "e5ddcc02adc9bd8e2e354bc1cd2b65bd7c1c2a480310b214eb8d5652b68bea1d",
+      "bytes": 1501
+    },
+    {
+      "id": "archived_sol_v1_under_v2_evaluation",
+      "kind": "pre_start_candidate_v2_compatibility_receipt",
+      "path": "/runs/v2/archived-sol-v1-under-v2-evaluation.json",
+      "sha256": "22b74e2dbba001c10c47a0e6935df17fcc9dd58e96fce372d5398296d4df81e4",
+      "bytes": 1571
+    },
+    {
+      "id": "v1_manifest",
+      "kind": "pre_start_manifest_lineage",
+      "path": "/runs/manifest.json",
+      "sha256": "d37a71a30230682a665141d68739f10b467ac6110a4bdf240aaf88463eef0a97",
+      "bytes": 6951
+    },
+    {
+      "id": "v1_codex_policy_repair_receipt",
+      "kind": "pre_start_model_receipt_lineage",
+      "path": "/runs/codex-policy-repair-receipt.json",
+      "sha256": "2060e0fff107dbb873f6d572bbd5ebbdb59778c6548461c21809ed0492ac069d",
+      "bytes": 3454
+    },
+    {
+      "id": "v1_codex_candidate",
+      "kind": "pre_start_model_candidate_lineage",
+      "path": "/runs/codex-candidate.mjs",
+      "sha256": "decf62dec0c81bb6fb0bf186216b386ec1bb2d2c8ec9533fa4327930e7eaec53",
+      "bytes": 4304
+    },
+    {
+      "id": "sol_v2_receipt",
+      "kind": "post_start_sol_v2_validation_receipt",
+      "path": "/runs/v2/sol-v2-receipt.json",
+      "sha256": "2b50066b01e2f2e6d459fe1e8b100f8aa6906173bccecf53a94c28fb428fb957",
+      "bytes": 8551
+    },
+    {
+      "id": "sol_v2_proposal",
+      "kind": "post_start_sol_v2_declarative_proposal",
+      "path": "/runs/v2/sol-v2-proposal.json",
+      "sha256": "dafb5df96de2254933789631d29a952576ac51e9ac0c2b69a142b82f33cefec2",
+      "bytes": 4643
+    },
+    {
+      "id": "sol_v2_candidate",
+      "kind": "post_start_sol_v2_quarantined_candidate",
+      "path": "/runs/v2/sol-v2-candidate.mjs",
+      "sha256": "d8a72eec90ea231a06ba3f75c482a805cc76a8e083ce6b60578bb8917fb5b33e",
+      "bytes": 6412
+    },
+    {
+      "id": "sol_v2_candidate_patch",
+      "kind": "post_start_sol_v2_candidate_patch",
+      "path": "/runs/v2/sol-v2-candidate.patch",
+      "sha256": "fb09f38aebf2c3c3efe313544d18452ead3b08e15484911505ef3ff1cf8a7b26",
+      "bytes": 10352
+    },
+    {
+      "id": "sol_v2_prompt",
+      "kind": "post_start_sol_v2_reconstructed_prompt",
+      "path": "/runs/v2/sol-v2-prompt.txt",
+      "sha256": "8d28da68df55bcde6490157fafcfdebaa6f2d859f9dd3eadeb849f7485d2b753",
+      "bytes": 28025
+    },
+    {
+      "id": "sol_v2_baseline_source",
+      "kind": "post_start_sol_v2_exact_baseline_input",
+      "path": "/runs/v2/sol-v2-baseline-source.mjs",
+      "sha256": "7d39d7bccc02467123d2b30c1f2fd82e8cc5b0e426e9e362f8d0900ef393996b",
+      "bytes": 3793
+    },
+    {
+      "id": "sol_v2_holdout_definition",
+      "kind": "post_start_sol_v2_exact_holdout_input",
+      "path": "/runs/v2/sol-v2-holdout-definition.json",
+      "sha256": "6803857623cbc1adf779d98efa06c5e2c26d0d729abaf09314258f47598cb0ae",
+      "bytes": 1939
+    },
+    {
+      "id": "sol_v2_output_schema",
+      "kind": "post_start_sol_v2_exact_output_schema",
+      "path": "/runs/v2/sol-v2-output-schema.json",
+      "sha256": "9201172a2dd059608a07b588e84bb3211bba22d1ff037d3afbfce7b72aa0d852",
+      "bytes": 6071
+    }
+  ],
+  "comparison": {
+    "baseline_run_id": "run-pws-v2-001-baseline",
+    "baseline_status": "fail",
+    "baseline_score": 50,
+    "repaired_run_id": "run-pws-v2-001-repaired",
+    "repaired_status": "pass",
+    "repaired_score": 100,
+    "score_delta": 50,
+    "baseline_critical_failures": [
+      "INV-02",
+      "INV-03"
+    ],
+    "safe_action_latency_delta_minutes": -4,
+    "holdouts_passed": 4,
+    "holdouts_total": 4,
+    "counterexample_starting_facts": 9,
+    "counterexample_minimal_facts": 3,
+    "counterexample_minimality_scope": "Encoded INV-02 action predicate over facts revealed through the T+02 synthetic failure deadline",
+    "near_neighbor_safe_status": "pass",
+    "near_neighbor_safe_score": 100,
+    "near_neighbor_overfit_status": "fail",
+    "near_neighbor_overfit_score": 25,
+    "executable_target_status": "pass",
+    "executable_target_runs_matched": 4,
+    "executable_target_runs_total": 4,
+    "archived_v1_candidate_v2_status": "rejected_under_v2",
+    "archived_v1_candidate_v2_urgent_status": "fail",
+    "archived_v1_candidate_v2_urgent_score": 85,
+    "archived_v1_candidate_v2_exact_negative_status": "not_executable",
+    "fresh_sol_v2_candidate_status": "validated_candidate",
+    "fresh_sol_v2_candidate_model": "gpt-5.6-sol",
+    "fresh_sol_v2_reasoning_effort": "ultra",
+    "fresh_sol_v2_candidate_installed": false,
+    "fresh_sol_v2_holdouts_passed": 4,
+    "fresh_sol_v2_holdouts_total": 4
+  },
+  "provenance_notice": "V2 is a post-start, synthetic developer-safety extension. A fresh post-start GPT-5.6 Sol Ultra proposal is retained with its reconstructed prompt, exact inputs, receipt, compiled candidate, and patch; the candidate passed the deterministic V2 signature but remains quarantined and was not installed as the reference repair. The unchanged pre-start Sol candidate is retained as lineage and rejected under V2; it is not presented as a V2 model repair. The fixed manifest generated_at is deterministic release bookkeeping after proof integration, not an independent attestation of origin. Browser verification checks same-build integrity, fresh deterministic regrades, declared software holdouts, and retained proof byte links, but does not execute the fresh JavaScript candidate or prove publisher authenticity, semantic correctness, physician review, clinical validity, or real-world safety. The BP classes are fixture-supplied for exactly 118/74 and 168/112; numeric threshold inference and all middle, borderline, discordant, or repeat-reading behavior are outside scope."
+}

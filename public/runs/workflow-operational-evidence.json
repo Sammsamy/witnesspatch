@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_kind": "bounded_operational_observation",
+  "observation": {
+    "label": "One observed authored-fixture-to-validated-candidate wall-clock run",
+    "sample_size": 1,
+    "started_at": "2026-07-13T07:11:04.066Z",
+    "validated_candidate_at": "2026-07-13T07:12:57.836Z",
+    "observed_wall_clock_ms": 113770,
+    "clock": {
+      "source": "system_wall_clock",
+      "monotonic": false,
+      "derivation": "validated_candidate_at minus started_at"
+    },
+    "authentication": {
+      "state_at_start": "preexisting_chatgpt_session",
+      "included_in_observed_interval": false
+    },
+    "cache_state": "unknown"
+  },
+  "candidate_outcomes": {
+    "urgent": {
+      "status": "pass",
+      "score": 100,
+      "critical_failures": [],
+      "future_fact_violations": 0
+    },
+    "benign": {
+      "status": "pass",
+      "score": 100,
+      "critical_failures": [],
+      "future_fact_violations": 0
+    }
+  },
+  "holdouts": {
+    "passed": 13,
+    "total": 13,
+    "all_passed": true,
+    "included_in_observed_interval": false
+  },
+  "not_measured": [
+    "authentication_duration",
+    "cache_warmth_or_cache_effects",
+    "model_only_latency",
+    "network_latency",
+    "cold_start_latency",
+    "warm_start_latency",
+    "repeat_run_distribution",
+    "post_capture_holdout_execution_duration",
+    "throughput",
+    "cost",
+    "production_performance",
+    "clinical_safety_or_effectiveness"
+  ],
+  "claim_boundary": "This artifact reports one observed system-wall-clock interval for one authored-fixture-to-validated-candidate run. It is not a benchmark, speed threshold, latency SLA, throughput or cost measurement, production-performance guarantee, or clinical-safety evidence."
+}

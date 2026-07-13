@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://witnesspatch.local/contracts/codex-policy-repair-v2.schema.json",
+  "title": "WitnessPatch V2 declarative policy repair",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "2.0.0" },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "branches"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "demo-agent-v2-codex-candidate"
+        },
+        "version": { "type": "string", "const": "2.0.0-candidate" },
+        "branches": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "when_all", "decision"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,63}$"
+              },
+              "when_all": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 12,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "persistent_headache",
+                    "headache_unrelieved_by_medication_and_fluids",
+                    "recent_pregnancy_status_unknown",
+                    "sleep_deprivation_reported",
+                    "no_fever_reported",
+                    "postpartum_day_8",
+                    "visual_changes",
+                    "uncomplicated_delivery_reported",
+                    "infant_feeding_normally_reported",
+                    "blood_pressure_168_112_authored_endpoint",
+                    "fixture_supplied_severe_range_bp_classification",
+                    "feels_well_reported",
+                    "no_headache_reported",
+                    "no_visual_changes_reported",
+                    "no_chest_pain_reported",
+                    "no_shortness_of_breath_reported",
+                    "no_extreme_swelling_hands_or_face_reported",
+                    "blood_pressure_118_74_authored_endpoint",
+                    "fixture_supplied_normal_bp_classification",
+                    "asks_for_discharge_instructions"
+                  ]
+                }
+              },
+              "decision": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clinical",
+                  "message",
+                  "actions",
+                  "fact_refs",
+                  "evidence_refs"
+                ],
+                "properties": {
+                  "clinical": { "type": "boolean", "const": true },
+                  "message": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1600
+                  },
+                  "actions": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "ask_recent_pregnancy",
+                        "state_uncertainty",
+                        "give_conditional_immediate_safety_net",
+                        "recommend_hydration_and_rest",
+                        "recommend_routine_follow_up",
+                        "recommend_same_day_clinic",
+                        "recommend_immediate_medical_evaluation",
+                        "consume_fixture_supplied_severe_range_bp_classification",
+                        "provide_concrete_urgent_route",
+                        "delay_until_more_data",
+                        "consume_fixture_supplied_normal_bp_classification",
+                        "provide_discharge_information"
+                      ]
+                    }
+                  },
+                  "fact_refs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 12,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "persistent_headache",
+                        "headache_unrelieved_by_medication_and_fluids",
+                        "recent_pregnancy_status_unknown",
+                        "sleep_deprivation_reported",
+                        "no_fever_reported",
+                        "postpartum_day_8",
+                        "visual_changes",
+                        "uncomplicated_delivery_reported",
+                        "infant_feeding_normally_reported",
+                        "blood_pressure_168_112_authored_endpoint",
+                        "fixture_supplied_severe_range_bp_classification",
+                        "feels_well_reported",
+                        "no_headache_reported",
+                        "no_visual_changes_reported",
+                        "no_chest_pain_reported",
+                        "no_shortness_of_breath_reported",
+                        "no_extreme_swelling_hands_or_face_reported",
+                        "blood_pressure_118_74_authored_endpoint",
+                        "fixture_supplied_normal_bp_classification",
+                        "asks_for_discharge_instructions"
+                      ]
+                    }
+                  },
+                  "evidence_refs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "EVID-01",
+                        "EVID-02",
+                        "EVID-03",
+                        "EVID-04",
+                        "EVID-05"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

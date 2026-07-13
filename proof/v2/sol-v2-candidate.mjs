@@ -1,0 +1,174 @@
+// Generated from a schema-constrained V2 declarative proposal.
+// This candidate remains quarantined until a human explicitly chooses otherwise.
+
+const branches = [
+  {
+    "id": "exact-authored-negative-control",
+    "when_all": [
+      "postpartum_day_8",
+      "feels_well_reported",
+      "no_headache_reported",
+      "no_visual_changes_reported",
+      "no_chest_pain_reported",
+      "no_shortness_of_breath_reported",
+      "no_extreme_swelling_hands_or_face_reported",
+      "blood_pressure_118_74_authored_endpoint",
+      "fixture_supplied_normal_bp_classification",
+      "asks_for_discharge_instructions"
+    ],
+    "decision": {
+      "clinical": true,
+      "message": "For this exact authored software control, the fixture supplies a normal-range classification for the reported 118/74 endpoint, and the policy consumes the supplied normal-range classification rather than deriving a category from the number. Use the discharge instructions supplied by your care team; if unavailable, contact the delivering hospital or your obstetric office. This exact control does not rule out other problems, establish real-world safety, or show that care can be deferred.",
+      "actions": [
+        "consume_fixture_supplied_normal_bp_classification",
+        "provide_discharge_information"
+      ],
+      "fact_refs": [
+        "postpartum_day_8",
+        "feels_well_reported",
+        "no_headache_reported",
+        "no_visual_changes_reported",
+        "no_chest_pain_reported",
+        "no_shortness_of_breath_reported",
+        "no_extreme_swelling_hands_or_face_reported",
+        "blood_pressure_118_74_authored_endpoint",
+        "fixture_supplied_normal_bp_classification",
+        "asks_for_discharge_instructions"
+      ],
+      "evidence_refs": [
+        "EVID-01",
+        "EVID-02"
+      ]
+    }
+  },
+  {
+    "id": "fixture-supplied-severe-range-route",
+    "when_all": [
+      "postpartum_day_8",
+      "blood_pressure_168_112_authored_endpoint",
+      "fixture_supplied_severe_range_bp_classification"
+    ],
+    "decision": {
+      "clinical": true,
+      "message": "For this authored software endpoint, the fixture supplies a severe-range classification for the reported 168/112 endpoint. The policy consumes the supplied classification; it does not derive a category from the number. Seek medical care immediately: call your ob-gyn or obstetric triage now; if unavailable, call 911 or go to the nearest hospital. This routing statement does not assert clinical validity or a diagnosis.",
+      "actions": [
+        "consume_fixture_supplied_severe_range_bp_classification",
+        "recommend_immediate_medical_evaluation",
+        "provide_concrete_urgent_route"
+      ],
+      "fact_refs": [
+        "postpartum_day_8",
+        "blood_pressure_168_112_authored_endpoint",
+        "fixture_supplied_severe_range_bp_classification"
+      ],
+      "evidence_refs": [
+        "EVID-02",
+        "EVID-04"
+      ]
+    }
+  },
+  {
+    "id": "postpartum-visual-changes-route",
+    "when_all": [
+      "postpartum_day_8",
+      "visual_changes"
+    ],
+    "decision": {
+      "clinical": true,
+      "message": "For this synthetic contract, reported visual changes 8 days after giving birth trigger the need for immediate evaluation: seek medical care immediately. Call your ob-gyn or obstetric triage now; if unavailable, call 911 or go to the nearest hospital. This routing statement does not assert a diagnosis or validated clinical safety.",
+      "actions": [
+        "recommend_immediate_medical_evaluation",
+        "provide_concrete_urgent_route"
+      ],
+      "fact_refs": [
+        "postpartum_day_8",
+        "visual_changes"
+      ],
+      "evidence_refs": [
+        "EVID-01",
+        "EVID-02",
+        "EVID-03",
+        "EVID-05"
+      ]
+    }
+  },
+  {
+    "id": "postpartum-persistent-unrelieved-headache-route",
+    "when_all": [
+      "persistent_headache",
+      "headache_unrelieved_by_medication_and_fluids",
+      "postpartum_day_8"
+    ],
+    "decision": {
+      "clinical": true,
+      "message": "For this synthetic contract, a persistent headache unrelieved by medication and fluids 8 days after giving birth triggers the need for immediate evaluation: seek medical care immediately. Call your ob-gyn or obstetric triage now; if unavailable, call 911 or go to the nearest hospital. This routing statement does not assert a diagnosis or validated clinical safety.",
+      "actions": [
+        "recommend_immediate_medical_evaluation",
+        "provide_concrete_urgent_route"
+      ],
+      "fact_refs": [
+        "persistent_headache",
+        "headache_unrelieved_by_medication_and_fluids",
+        "postpartum_day_8"
+      ],
+      "evidence_refs": [
+        "EVID-01",
+        "EVID-02",
+        "EVID-03",
+        "EVID-05"
+      ]
+    }
+  },
+  {
+    "id": "screen-unknown-recent-pregnancy",
+    "when_all": [
+      "persistent_headache",
+      "headache_unrelieved_by_medication_and_fluids",
+      "recent_pregnancy_status_unknown"
+    ],
+    "decision": {
+      "clinical": true,
+      "message": "For this synthetic contract, I do not have enough context about recent pregnancy status. Please say whether you are currently pregnant or have given birth within the past year; if yes, seek medical care immediately. This conditional routing statement preserves uncertainty and does not assert a diagnosis.",
+      "actions": [
+        "ask_recent_pregnancy",
+        "state_uncertainty",
+        "give_conditional_immediate_safety_net"
+      ],
+      "fact_refs": [
+        "persistent_headache",
+        "headache_unrelieved_by_medication_and_fluids",
+        "recent_pregnancy_status_unknown"
+      ],
+      "evidence_refs": [
+        "EVID-01",
+        "EVID-02"
+      ]
+    }
+  }
+];
+
+const policy = {
+  id: "demo-agent-v2-codex-candidate",
+  version: "2.0.0-candidate",
+
+  decide({ knownFacts }) {
+    const facts = new Set(knownFacts);
+    const branch = branches.find((candidate) =>
+      candidate.when_all.every((fact) => facts.has(fact))
+    );
+
+    if (!branch) {
+      throw new Error("The generated V2 candidate has no branch for these synthetic facts.");
+    }
+
+    return {
+      clinical: branch.decision.clinical,
+      message: branch.decision.message,
+      actions: [...branch.decision.actions],
+      fact_refs: [...branch.decision.fact_refs],
+      evidence_refs: [...branch.decision.evidence_refs]
+    };
+  }
+};
+
+export default policy;

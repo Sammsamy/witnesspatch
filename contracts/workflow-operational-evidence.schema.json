@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://witnesspatch.local/contracts/workflow-operational-evidence.schema.json",
+  "title": "WitnessPatch bounded workflow operational evidence",
+  "description": "One bounded observation of the local authored-fixture-to-validated-candidate workflow. This is not a benchmark or clinical evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_kind",
+    "observation",
+    "candidate_outcomes",
+    "holdouts",
+    "not_measured",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "evidence_kind": {
+      "type": "string",
+      "const": "bounded_operational_observation"
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "sample_size",
+        "started_at",
+        "validated_candidate_at",
+        "observed_wall_clock_ms",
+        "clock",
+        "authentication",
+        "cache_state"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "const": "One observed authored-fixture-to-validated-candidate wall-clock run"
+        },
+        "sample_size": {
+          "type": "integer",
+          "const": 1
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validated_candidate_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "observed_wall_clock_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "clock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "monotonic", "derivation"],
+          "properties": {
+            "source": {
+              "type": "string",
+              "const": "system_wall_clock"
+            },
+            "monotonic": {
+              "type": "boolean",
+              "const": false
+            },
+            "derivation": {
+              "type": "string",
+              "const": "validated_candidate_at minus started_at"
+            }
+          }
+        },
+        "authentication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state_at_start", "included_in_observed_interval"],
+          "properties": {
+            "state_at_start": {
+              "type": "string",
+              "const": "preexisting_chatgpt_session"
+            },
+            "included_in_observed_interval": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        },
+        "cache_state": {
+          "type": "string",
+          "const": "unknown"
+        }
+      }
+    },
+    "candidate_outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["urgent", "benign"],
+      "properties": {
+        "urgent": {
+          "$ref": "#/$defs/passingCandidateOutcome"
+        },
+        "benign": {
+          "$ref": "#/$defs/passingCandidateOutcome"
+        }
+      }
+    },
+    "holdouts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passed",
+        "total",
+        "all_passed",
+        "included_in_observed_interval"
+      ],
+      "properties": {
+        "passed": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "all_passed": {
+          "type": "boolean",
+          "const": true
+        },
+        "included_in_observed_interval": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "not_measured": {
+      "type": "array",
+      "const": [
+        "authentication_duration",
+        "cache_warmth_or_cache_effects",
+        "model_only_latency",
+        "network_latency",
+        "cold_start_latency",
+        "warm_start_latency",
+        "repeat_run_distribution",
+        "post_capture_holdout_execution_duration",
+        "throughput",
+        "cost",
+        "production_performance",
+        "clinical_safety_or_effectiveness"
+      ]
+    },
+    "claim_boundary": {
+      "type": "string",
+      "const": "This artifact reports one observed system-wall-clock interval for one authored-fixture-to-validated-candidate run. It is not a benchmark, speed threshold, latency SLA, throughput or cost measurement, production-performance guarantee, or clinical-safety evidence."
+    }
+  },
+  "$defs": {
+    "passingCandidateOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "score",
+        "critical_failures",
+        "future_fact_violations"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "pass"
+        },
+        "score": {
+          "type": "integer",
+          "const": 100
+        },
+        "critical_failures": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "future_fact_violations": {
+          "type": "integer",
+          "const": 0
+        }
+      }
+    }
+  }
+}
