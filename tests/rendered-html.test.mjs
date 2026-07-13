@@ -11,7 +11,7 @@ test("the deployed static export contains the WitnessPatch product shell", async
   assert.match(html, /<title>Compile healthcare AI failures into tests · WitnessPatch/);
   assert.match(html, /contract breach happened/);
   assert.match(html, /before the blood pressure arrived/);
-  assert.match(html, /Verify retained evidence/);
+  assert.match(html, /Compile failure/);
   assert.match(html, /Locked verifier/);
   assert.match(html, /not model-graded/);
   assert.match(html, /fully synthetic/i);
@@ -23,18 +23,22 @@ test("exposes the evidence, executable test, and safety boundary", async () => {
   assert.match(html, /CDC Hear Her/);
   assert.match(html, /AIM/);
   assert.match(html, /ACOG/);
-  assert.match(
+  assert.match(html, /No regression is pre-rendered here/);
+  assert.match(html, /contract-cardinality-minimal static recorded-decision witness/);
+  assert.doesNotMatch(
     html,
     /the repair passes the urgent trace and exact negative control/,
   );
-  assert.match(html, /engine\/tests\/v2-clinical-scope.test.mjs/);
+  assert.doesNotMatch(html, /engine\/tests\/v2-clinical-scope.test.mjs/);
   assert.doesNotMatch(html, /engine\/tests\/target-repair.test.mjs/);
-  assert.match(html, /Locked verifier · read-only to Sol/);
+  assert.match(html, /Static recorded decisions · no target or model rerun/);
   assert.match(html, /Match actions to visible words/);
   assert.match(html, /Developer safety tooling—not clinical decision support/);
   assert.match(html, /licensed physician validation pending/i);
   assert.match(html, /PWS-V2-001/);
   assert.match(html, /Assists fixture &amp; repair authoring/);
+  assert.match(html, /GPT-5\.6 Sol requested/);
+  assert.match(html, /no OpenAI or clinical-organization endorsement implied/);
   assert.match(html, /npm run artifacts:v2:verify/);
   assert.doesNotMatch(html, /HIPAA compliant|clinically validated|medical advice/i);
 });
@@ -65,7 +69,7 @@ test("exports a judge-ready static replay without a request-time Worker", async 
   ]);
 
   assert.match(html, /<title>Compile healthcare AI failures into tests · WitnessPatch/);
-  assert.match(html, /Verify retained evidence/);
+  assert.match(html, /Compile failure/);
   assert.ok(rscStats.size > 0, "static export must retain its RSC payload");
   assert.equal(staticConfig.assets.directory, "./dist/client");
   assert.equal(staticConfig.assets.run_worker_first, false);

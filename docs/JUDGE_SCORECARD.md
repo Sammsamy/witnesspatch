@@ -8,11 +8,11 @@ The [Official Rules](https://openai.devpost.com/rules) score technological imple
 
 | Official criterion | Now | Defensible finalist target | Main gap |
 |---|---:|---:|---|
-| Technological implementation | 9.2 / 10 | 9.5 | Post-start work includes a portable static-witness compiler, 9→3 T+02 witness, attack-tested fail-closed browser verification, a 23-file exact profile, an executable reference diff, and a separate quarantined post-start candidate whose JSON IR and Node execution match exact `2/2` case and `4/4` mutation signatures. The documented path passed fresh local clones on macOS with Node 22.15.0 and 24.14.0; the current `npm run verify:release` covers `94/94` core and `5/5` rendered tests, build/lint/typecheck, exact locked-license fingerprint gating, byte-identical deployed notices, and Wrangler dry run. `npm audit` reports zero known vulnerabilities at check time. Public CI/repository proof, final-commit clean-clone replay, and non-macOS verification still remain. |
-| Design | 8.6 / 10 | 9.2 | Final real-Chrome QA shows `50 → 100`, `23/23` HTTP 200 artifacts, both proof signatures, and zero console warnings or errors while exposing scope/provenance in the receipt. A public deployment and final founder-voiced video are still missing. |
+| Technological implementation | 9.4 / 10 | 9.6 | Post-start work includes a live browser compiler that hash-checks and fully validates `2/2` inputs, emits a nine-file regression ZIP byte-identical to Node, reduces the T+02 witness `9→3`, and fails closed on coordinated schema tampering. The exported default test is red and turns green only for the supplied repaired candidate. Separate retained-repair verification covers a 23-file exact profile, `2/2` regrades, `4/4` reference holdouts, and a quarantined fresh candidate whose browser IR and Node execution match exact `2/2` plus `4/4` signatures. The current `npm run verify:release` passes `104/104` core and `5/5` rendered tests, build/lint/typecheck, 624-package/15-static-package license gating, byte-identical deployed notices, and a 56-file Wrangler dry run. Public CI, final-commit clean-clone replay, and non-macOS verification remain. |
+| Design | 9.1 / 10 | 9.4 | The truthful two-stage flow starts at `50`, displays no generated test before compilation, exposes the live `BASELINE RED` bundle and ZIP export, then reaches `100` while preserving `baseline RED · retained repair PASS`. Final hydrated Chrome compile/export/verify/replay/recompile QA had all artifact requests HTTP 200 and zero console warnings or errors. A public deployment and final founder-voiced video are still missing. |
 | Potential impact | 6.1 / 10 | 8.3 | The user and release-gating job are specific, but there is still no external health-AI builder workflow interview, real failure-to-regression baseline, or licensed-physician review. Synthetic software checks cannot fill this gap. |
-| Quality of the idea | 8.3 / 10 | 8.9 | The temporal contract-to-regression wedge is coherent and honestly bounded. Healthcare eval tooling is crowded, only one vertical slice is demonstrated, and the exact-fact control does not establish generalization. |
-| **Planning total** | **32.2 / 40** | **35.9 / 40** | Strong local implementation; not yet a defensible winning submission. External evidence, public access, and rule-complete submission assets are now much higher-value than more internal proof. |
+| Quality of the idea | 8.4 / 10 | 8.9 | The temporal contract-to-regression wedge now closes into an inspectable, exportable developer artifact instead of a demo-only animation. Healthcare eval tooling remains crowded, only one vertical slice is demonstrated, and the exact-fact control does not establish generalization. |
+| **Planning total** | **33.0 / 40** | **36.2 / 40** | Strong local implementation; not yet a defensible winning submission. External evidence, public access, and rule-complete submission assets are now much higher-value than more internal proof. |
 
 No honest process can guarantee `40/40`, a prize, or employment. Today the impact score is the hard ceiling: more polish cannot substitute for external evidence.
 
@@ -66,10 +66,13 @@ No honest process can guarantee `40/40`, a prize, or employment. Today the impac
 - [x] Make blood-pressure classification fixture-supplied and disclose the two-endpoint-only scope.
 - [x] Close the urgent-wording/safe-label bypass and numeric-inference contradiction path.
 - [x] Retain a 23-file V2 manifest with reference `2/2` regrades, `4/4` holdouts, and full 9→3 witness recomputation.
+- [x] Compile the exact failure live in the browser into an exportable nine-file ZIP, prove Node/browser byte parity, and execute the exported regression red then green against the supplied repair.
+- [x] Share the full schema and semantic input-validation boundary across Node and browser, with coordinated manifest-rehashed attack tests.
 - [x] Re-test and reject the unchanged pre-start V1 Sol candidate under V2 instead of relabeling it.
 - [x] Capture a fresh post-start candidate under a recorded `gpt-5.6-sol` / `ultra` request, keep it quarantined, and verify its exact browser-IR and Node signatures without claiming served-model attestation.
 - [x] Create the first dated post-start checkpoint (`21405c8`) and preserve the non-rewritten provenance ledger.
 - [x] Pass `npm ci` and the complete release verifier from fresh local clones on macOS with Node 22.15.0 and 24.14.0 at checkpoint `a056fe3`.
+- [x] Pass the current combined-tree release verifier with `104/104` core and `5/5` rendered tests, plus hydrated Chrome compile/export/verify/replay/recompile QA with zero console errors or warnings.
 - [ ] Obtain at least one health-AI builder workflow interview.
 - [ ] Obtain a scoped licensed-physician fixture review, or preserve `pending` everywhere.
 - [ ] Choose public licensed repository or private judge-shared repository and verify access.

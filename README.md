@@ -1,20 +1,20 @@
 # WitnessPatch
 
-**Compile a time-fenced healthcare-agent contract failure into a red regression and a review-gated target repair.**
+**Compile a time-fenced healthcare-agent contract failure into a red regression, then verify a review-gated target repair.**
 
 WitnessPatch is synthetic developer safety tooling for teams building patient-facing healthcare agents. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic software owns every displayed verdict. The post-start V2 reference demonstrates a real executable policy change, an exact-fact negative control, a portable static witness compiler, and browser-side verification that fails closed.
 
 The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. Licensed-physician review and external health-AI builder validation are still pending.
 
-## The one-minute proof
+## The 75-second proof
 
 1. A fully synthetic agent receives facts on a locked timeline.
 2. At T+02 it knows the patient is eight days postpartum, has a persistent unrelieved headache, and reports visual changes, but it delays the declared urgent route.
 3. Locked, source-ID-linked action contracts score the baseline `50/100` with two critical failures.
-4. The model-free compiler turns the earliest failed critical contract into a hash-listed static recorded-decision witness, reducing the T+02 predicate from 9 facts to 3 while holding recorded decisions fixed, and emits a red regression.
+4. The live browser compiler hashes the exact synthetic case and failing run, freshly regrades them, and turns the earliest failed critical contract into an exportable nine-file red regression ZIP plus a static recorded-decision witness, reducing the T+02 predicate from 9 facts to 3 while holding recorded decisions fixed. Its generated files match the Node compiler byte for byte.
 5. A retained V2 reference patch changes the executable target policy, not the case or grader.
 6. The unchanged urgent fixture passes at `100/100`; an exact-fact negative control remains at `100/100`; and an always-escalate mutant fails at `25/100`.
-7. The browser verifies `23/23` exact artifact hashes, freshly regrades both retained reference runs, and reruns `4/4` reference software holdouts before showing the repaired state.
+7. Only after the red bundle exists does the browser verify `23/23` exact retained-artifact hashes, freshly regrade both reference runs, and rerun `4/4` reference software holdouts before showing the repaired state.
 8. It separately interprets the fresh post-start candidate's declarative JSON IR for `2/2` case regrades and `4/4` mutation holdouts without executing retained JavaScript; the Node verifier executes that quarantined candidate and checks the same exact signature.
 
 Those checks establish the declared synthetic software behavior only. They do not establish semantic completeness, diagnosis, treatment, physician review, or real-world safety.
@@ -30,11 +30,11 @@ npm run verify:release
 npm run dev
 ```
 
-Open `http://localhost:3000`, then select **Verify retained evidence**. The browser hashes the complete 23-artifact same-build V2 profile, checks its case fingerprint, recomputes the 9→3 static witness, regrades the two retained reference runs, and reruns four reference holdouts locally. It also verifies the fresh model receipt, exact input and prompt links, proposal, compiled candidate, and patch, then safely interprets the declarative JSON IR across two cases and four mutation holdouts. It does **not** execute the retained JavaScript candidates or apply either patch in-browser; `npm run artifacts:v2:verify` performs the Node-side policy execution and exact-signature checks. A verification error leaves the failing baseline active.
+Open `http://localhost:3000`. First select **Compile failure**: the browser verifies the exact case and baseline bytes, applies the same schema and semantic input validation as Node, freshly regrades the failure, and materializes the nine-file red bundle—including the generated `node:test` regression, receipt, and manifest. **Export complete 9-file ZIP** downloads the usable bundle. Then select **Verify retained repair**. The browser hashes the complete 23-artifact same-build V2 profile, checks its case fingerprint, recomputes the 9→3 static witness, regrades the two retained reference runs, and reruns four reference holdouts locally. It also verifies the fresh model receipt, exact input and prompt links, proposal, compiled candidate, and patch, then safely interprets the declarative JSON IR across two cases and four mutation holdouts. It does **not** execute the generated test or retained JavaScript candidates, rerun a target, invoke a model, or apply either patch in-browser; `npm run artifacts:v2:verify` performs the Node-side policy execution and exact-signature checks. Any compilation or verification error fails closed and leaves the failing baseline active.
 
 The verifier's trust anchor is the manifest shipped with the same app build; it is an integrity check, not a publisher signature. Judges need no OpenAI API key, model call, database, or hosting login to inspect or replay the reference.
 
-The finalized 23-artifact build passed a real Chrome replay with a visible `50 → 100` transition, `23/23` HTTP 200 artifact responses, reference `2/2` regrades plus `4/4` holdouts, fresh-candidate IR `2/2` plus `4/4`, and zero console warnings or errors. At checkpoint `a056fe3`, the documented `npm ci` plus `npm run verify:release` path passed from fresh local clones on macOS with Node 22.15.0 and Node 24.14.0: `94/94` core tests, `4/4` rendered-product tests, build, lint, typecheck, and the Wrangler dry run. `npm audit` reports zero known vulnerabilities at the time of this release check. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). These remain local macOS results, not Linux or Windows verification; the final submitted commit must be rechecked.
+The current two-stage build passed a real Chrome replay with a visible `50 → nine-file RED bundle → 100` flow: `2/2` exact compiler inputs, `INV-02` at T+02, `9→3` facts, `23/23` retained artifact responses, reference `2/2` regrades plus `4/4` holdouts, fresh-candidate IR `2/2` plus `4/4`, all artifact requests HTTP 200, and zero console warnings or errors. The downloaded ZIP passed `unzip -t` for all nine files; its default regression exited red and the supplied repaired candidate exited green. The current release candidate's `npm run verify:release` passes `104/104` core tests, `5/5` rendered-product tests, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 56-file Wrangler dry run. At checkpoint `a056fe3`, the earlier documented path also passed from fresh local clones on macOS with Node 22.15.0 and Node 24.14.0. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). The exact final commit still requires a fresh-clone replay; these remain local macOS results, not Linux or Windows verification.
 
 The release bundle can also be built and checked without publishing:
 
@@ -49,7 +49,7 @@ Publication remains an explicit release action. The official rules require free,
 | Surface | Current evidence | Claim boundary |
 | --- | --- | --- |
 | Source install and release verification | Fresh local clones passed on macOS 26.5.2 Apple silicon with Node 22.15.0 and 24.14.0, npm 11.9.0 | macOS is verified; rerun the exact final commit |
-| Browser replay | Final 23-artifact profile passed a real Chrome session on macOS with zero console warnings or errors | Chrome on macOS is verified; no broad browser matrix is claimed |
+| Browser replay | Two-stage live compile and retained-repair verification passed a real Chrome session on macOS with zero console warnings or errors | Chrome on macOS is verified; no broad browser matrix is claimed |
 | Static hosting package | Wrangler dry run passes with 56 static files | Packaging is verified; no public deployment exists yet |
 | Linux | GitHub Actions workflow is authored but has never run publicly | Unverified |
 | Windows | No clean checkout or browser run | Unverified |
@@ -178,4 +178,4 @@ See the [OpenAI Build Week submission checklist](docs/SUBMISSION_FORM_CHECKLIST.
 
 ## License
 
-Repository licensing must be finalized before submission. The official rules permit either a public repository with a relevant open-source license or a private repository shared with the specified judging accounts. Until that choice is made, all rights are reserved.
+The current Build Week release plan is a public static demo plus a private source repository shared with the two required judging accounts. WitnessPatch source remains all rights reserved; third-party components retain the licenses and notices recorded in `THIRD_PARTY_NOTICES.md`. If the team later chooses a public source repository, it must first select a deliberate project license and repeat the distribution-scoped audit.

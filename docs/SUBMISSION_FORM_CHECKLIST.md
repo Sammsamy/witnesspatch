@@ -15,19 +15,23 @@ This file separates confirmed public requirements from authenticated fields and 
 
 ## Authenticated form audit
 
-The public rules and FAQ do not expose every authenticated label, character limit, image slot, or validation rule. The joined challenge form was not accessible in the audit browser without a Devpost login.
+The joined challenge's authenticated submission manager was inspected read-only on July 13. It contains five steps and an automatically created blank draft; no project content was saved or submitted during the audit.
 
-- [ ] Open the joined challenge's submission manager while logged in.
-- [ ] Record every required field and character limit here before drafting into the form.
-- [ ] Record image/screenshot dimensions and count, if required.
-- [ ] Confirm whether teammate invitations occur before or during submission.
-- [ ] Save a draft only after the team reviews the exact public content.
+- [x] Open the joined challenge's submission manager while logged in and confirm an OpenAI Build Week draft exists.
+- [x] Record the authenticated fields before drafting into the form:
+  - Project overview: required project name (`60` characters) and elevator pitch (`200` characters), plus a thumbnail.
+  - Public project details: required Markdown project story, up to `25` “Built with” tags, one or more try-it/code URLs, and a required video-demo URL.
+  - Judge/organizer details: optional file upload up to `35 MB`; required submitter type, country of residence, category, repository URL, and `/feedback` Session ID; optional judge test URL/instructions; and developer-tool installation/platform/testing instructions.
+  - Finalization: one checkbox affirming that every team member agrees to the Official Rules and Devpost Terms of Service, followed by the consequential **Submit project** action.
+- [x] Record media constraints: thumbnail and gallery accept JPG, PNG, or GIF up to `5 MB` each with `3:2` recommended; gallery allows up to `15` images.
+- [x] Confirm teammate flow: invite by email or private link before final submission; every teammate must join and accept. The live draft currently has only its creator, so the brother is not yet on the team.
+- [ ] Save project content only after the team reviews the exact public and judge-only fields; the current blank draft does not count as approval.
 - [ ] Do not submit until the final requirement-by-requirement audit passes.
 
 ## Human eligibility and representation
 
-- [ ] Both brothers are registered for the hackathon.
-- [ ] Both registrations are complete before July 21 at 5:00 PM PT.
+- [x] The current project creator is registered for OpenAI Build Week and has an authenticated draft.
+- [ ] The brother registers, joins the draft, and accepts the invitation before July 21 at 5:00 PM PT.
 - [ ] Each brother is at least the age of majority where he resides.
 - [ ] Each brother resides in an eligible supported country or territory.
 - [ ] Neither brother has an excluded OpenAI/Devpost/judge/employer/affiliate conflict.
@@ -38,10 +42,11 @@ The public rules and FAQ do not expose every authenticated label, character limi
 
 ## Repository and release choice
 
-- [ ] Choose one: public repository with a deliberate relevant license, or private repository shared with both judging addresses.
-- [ ] If public, replace the current all-rights-reserved `LICENSE` only after ownership and third-party compatibility review.
-- [ ] Inventory and authorize every third-party SDK, API, dataset, asset, pre-existing component, and contracted contribution; make every required disclosure.
-- [ ] Complete a distribution-scoped open-source notice, attribution, source-obligation, and project-license review; the lockfile fingerprint alone is not compliance proof.
+- [x] Choose the release route: public static demo plus private all-rights-reserved source repository shared with both judging addresses.
+- [x] Keep the source private for this submission; if that decision changes, replace the all-rights-reserved `LICENSE` only after ownership and third-party compatibility review.
+- [x] Inventory the 624 locked packages and the 15 packages/credited sources actually present in the static client; preserve the scoped MIT and BSD-3-Clause notices byte-for-byte in the deployed bundle.
+- [x] Complete the current public-static-demo/private-source-repository distribution audit; repeat it before shipping a packaged CLI, server image, vendored dependencies, or public source under a new project license.
+- [ ] Confirm the favicon and inline icon paths are team-authored, and authorize every original asset and contribution before release.
 - [ ] Verify repository access from a logged-out or judge-equivalent session.
 - [ ] Verify the exact submitted commit and record its hash.
 - [ ] Record one release fingerprint joining the submitted commit, V2 manifest SHA-256, deployed-build URL, repository URL, and video URL.
@@ -50,7 +55,8 @@ The public rules and FAQ do not expose every authenticated label, character limi
 ## No-cost boundary
 
 - [x] The judge-facing build requires no API key, payment, login, or request-time model call.
-- [x] The optional $100 Codex-credit request is not part of the plan.
+- [ ] Request the optional $100 Codex credits by July 17 at 12:00 PM PT after the representative confirms the required email, first and last name, country, Devpost username, registration/eligibility, and acceptance of the OpenAI Services Agreement.
+- [x] The optional request is Codex credits only; it does not provide API credits and will not become a judge-runtime dependency.
 - [ ] Confirm Auto top-up remains disabled in the relevant OpenAI account; Codex cannot infer account settings.
 - [ ] Do not purchase credits or add a paid runtime dependency.
 
@@ -64,7 +70,8 @@ The public rules and FAQ do not expose every authenticated label, character limi
 
 ## Final release audit
 
-- [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0.
+- [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0 (`94/94` core, `4/4` rendered); rule-audit checkpoint `950fea6` also passed from a fresh clone on Node 24.14.0 (`94/94` core, `5/5` rendered).
+- [x] The current combined tree passes `104/104` core and `5/5` rendered tests, the 624-package/15-static-package license gate, and a 56-file deployment dry run; hydrated Chrome compile/export/verify/replay/recompile QA has zero console errors or warnings.
 - [ ] Repeat the clean-checkout release verifier on the exact final submitted commit.
 - [ ] Public CI passes on the exact submitted commit.
 - [ ] Static demo passes logged-out desktop and mobile checks with no console errors.

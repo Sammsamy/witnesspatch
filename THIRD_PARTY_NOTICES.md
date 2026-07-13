@@ -53,13 +53,68 @@ Locked dependency inventory SHA-256: `91cb572226c6ac83f70d6aa4a85b36bddac0a5fef4
 
 The non-MIT inventory includes optional, platform-specific, development, and transitive packages. Examples include libvips binaries recorded as `LGPL-3.0-or-later`, `@resvg/resvg-wasm`, `@vercel/og`, `axe-core`, and `lightningcss` recorded as `MPL-2.0`, and `caniuse-lite` recorded as `CC-BY-4.0`. Their presence in the locked graph does not by itself establish that their code is embedded in `dist/client`, and absence from a bundle would not erase upstream obligations when a component is redistributed.
 
-This inventory is a review gate, not a legal conclusion. Before a public repository or packaged-binary release, the team must determine the actually distributed dependency scope, preserve every applicable upstream notice/source obligation, and deliberately choose a WitnessPatch project license. The current private judge-shared path does not authorize public reuse of WitnessPatch itself.
+This inventory is a review gate, not a legal conclusion. Before a public repository, packaged CLI, server bundle, or `node_modules` distribution, the team must re-determine the actually distributed dependency scope, preserve every applicable upstream notice/source obligation, and deliberately choose a WitnessPatch project license. The current private judge-shared path does not authorize public reuse of WitnessPatch itself.
 
 WitnessPatch does not download or redistribute Google Fonts. The interface uses local system font stacks so clean builds are network-independent at the font layer.
 
-## Bundled MIT notices
+## Build Week distribution scope
 
-The deployed application contains or may contain MIT-licensed code from Ajv (copyright Evgeny Poberezkin), Next.js and its ESLint configuration (copyright Vercel, Inc.), React, React DOM, and React Server Components (copyright Meta Platforms, Inc. and affiliates), Tailwind CSS (copyright Tailwind Labs, Inc.), Vite and its plugins (copyright their respective Vite, VoidZero, and plugin contributors), ESLint (copyright OpenJS Foundation and other contributors), Vinext and Cloudflare build tooling (copyright Cloudflare, Inc.), and their MIT-licensed contributors and dependencies.
+The private judging repository tracks source, package manifests, and `package-lock.json`; it ignores `node_modules` and generated `dist` output. Sharing that repository therefore does not itself redistribute installed dependency payloads. `npm ci` obtains those packages from their publishers. The analysis changes if the team later vendors dependencies, publishes the CLI as a package, commits a generated bundle, or distributes a server image.
+
+The hosted static route distributes the generated `dist/client` files. An audit-only source-map build of the same client configuration identified the package sources below; source maps are not release assets. A package marked `dev` in the lockfile can still contribute browser code, so production/dev metadata was not used as the scope boundary.
+
+| Distributed component or credited source | Version | Static-output evidence | License |
+| --- | ---: | --- | --- |
+| `ajv` | 8.20.0 | browser JavaScript source map | `MIT` |
+| `ajv-formats` | 2.1.1 | browser JavaScript source map | `MIT` |
+| `fast-deep-equal` | 3.1.3 | browser JavaScript source map through Ajv | `MIT` |
+| `fast-uri` | 3.1.2 | browser JavaScript source map through Ajv | `BSD-3-Clause` |
+| `json-schema-traverse` | 1.0.0 | browser JavaScript source map through Ajv | `MIT` |
+| `react` | 19.2.6 | browser JavaScript source map | `MIT` |
+| `react-dom` | 19.2.6 | browser JavaScript source map | `MIT` |
+| `scheduler` | 0.27.0 | browser JavaScript source map | `MIT` |
+| `react-server-dom-webpack` | 19.2.6 | browser JavaScript source map | `MIT` |
+| `vinext` | 0.0.50 | browser JavaScript source map | `MIT` |
+| Next.js-derived fragments credited by Vinext | 16.2.10 local reference; Vinext links upstream `canary` sources | bundled Vinext files explicitly mark code as ported or adapted from Next.js | `MIT` |
+| `@vitejs/plugin-rsc` | 0.5.26 | browser JavaScript source map | `MIT` |
+| `@hiogawa/utils` | 1.7.0 | vendored in the plugin's published `dist-rz-*.js`; that module is included in the client map | `MIT` |
+| `vite` | 8.1.4 | generated `__vite__` client loader code | `MIT` |
+| `rolldown` | 1.1.5 | generated `rolldown-runtime` browser chunk | `MIT` |
+| `tailwindcss` | 4.2.1 | generated CSS carries the Tailwind version/license banner | `MIT` |
+
+The audited client source map did not identify TypeScript, Wrangler, Cloudflare's Vite plugin, ESLint, Sharp/libvips, Resvg, Lightning CSS, `caniuse-lite`, or the remaining locked packages as browser sources. They are build, test, CLI, optional, platform-specific, or server-side dependencies for this release configuration. That finding applies only to the static client route described above.
+
+The release contains no webfont files or downloaded font CSS. No external source or third-party attribution is recorded for the repository's small `favicon.svg` or inline icon paths, and no icon package is imported. The team must confirm those assets are project-authored before external release; a missing attribution record is not proof of ownership.
+
+## MIT notices for the static client
+
+The following upstream copyright notices cover the MIT-licensed portions identified above. One copy of the common MIT permission and warranty text follows them.
+
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+Copyright (c) 2026 Cloudflare, Inc.
+
+Copyright (c) 2025 Vercel, Inc.
+
+Copyright (c) 2019-present, Yuxi (Evan) You and Vite contributors
+
+Copyright (c) 2019-present, VoidZero Inc. and Vite contributors
+
+Copyright (c) 2024-present VoidZero Inc. & Contributors
+
+Copyright (c) 2017 [the Rollup contributors](https://github.com/rollup/rollup/graphs/contributors)
+
+Copyright (c) 2020 Evan Wallace
+
+Copyright (c) Tailwind Labs, Inc.
+
+Copyright (c) 2015-2021 Evgeny Poberezkin
+
+Copyright (c) 2020 Evgeny Poberezkin
+
+Copyright (c) 2017 Evgeny Poberezkin
+
+`@hiogawa/utils` 1.7.0 is published by Hiroshi Ogawa and declares `MIT` in its npm and repository package metadata. Its published tarball and linked repository do not provide a standalone license file or copyright line to reproduce. The standard MIT terms below are preserved for the vendored code; this upstream notice omission should be reconsidered if the distribution route expands beyond the limited static Build Week demo.
 
 MIT License
 
@@ -69,6 +124,37 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-TypeScript is used only as build tooling and is licensed under Apache-2.0. Wrangler is dual-licensed under MIT or Apache-2.0; this distribution relies on its MIT option. Exact package-specific source notices remain reproducible from the locked packages and must be preserved if the release packaging changes.
+## BSD-3-Clause notice for `fast-uri`
+
+Copyright (c) 2011-2021, Gary Court until https://github.com/garycourt/uri-js/commit/a1acf730b4bba3f1097c9f52e7d9d3aba8cdcaae
+Copyright (c) 2021-present The Fastify team <https://github.com/fastify/fastify#team>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * The names of any contributors may not be used to endorse or promote
+      products derived from this software without specific prior written
+      permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+                                  *   *   *
+
+The complete list of contributors can be found at:
+- https://github.com/garycourt/uri-js/graphs/contributors
 
 This notice does not replace or modify any upstream license. WitnessPatch itself remains unlicensed and all rights reserved for the current private judging-repository path. A public release requires a deliberate project-license decision and a distribution-scoped notice audit first.

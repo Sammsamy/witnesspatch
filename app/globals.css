@@ -558,6 +558,12 @@ a:focus-visible {
   box-shadow: none;
 }
 
+.repair-button.compiled {
+  border-color: var(--amber);
+  background: #7a5620;
+  box-shadow: 0 10px 24px rgba(122, 86, 32, 0.16);
+}
+
 .repair-button[aria-disabled="true"] {
   cursor: wait;
   opacity: 0.82;
@@ -1210,6 +1216,20 @@ a:focus-visible {
   line-height: 1.9;
 }
 
+.generated-regression pre {
+  max-height: 330px;
+  overflow: auto;
+  white-space: pre;
+}
+
+.compiler-empty pre {
+  display: grid;
+  min-height: 208px;
+  align-items: center;
+  color: #aebbb3;
+  white-space: pre-wrap;
+}
+
 .code-muted { color: #9daba3; }
 .code-purple { color: #c7b8f0; }
 .code-green { color: #a9d6bf; }
@@ -1273,6 +1293,73 @@ a:focus-visible {
   place-items: center;
   border-radius: 7px;
   background: var(--green-pale);
+}
+
+.compiled-red-receipt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+  border: 1px solid rgba(196, 75, 70, 0.28);
+  border-radius: 8px;
+  background: var(--red-pale);
+  padding: 9px 10px;
+}
+
+.compiled-red-receipt > span {
+  border-radius: 999px;
+  background: var(--red-dark);
+  padding: 3px 7px;
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+}
+
+.compiled-red-receipt > b {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--green-dark);
+  padding: 3px 7px;
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+}
+
+.compiled-red-receipt small {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--red-dark);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.export-bundle-button {
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid rgba(24, 67, 51, 0.24);
+  border-radius: 8px;
+  background: white;
+  padding: 9px 10px;
+  color: var(--green-dark);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 720;
+  letter-spacing: 0.025em;
+  text-align: left;
+}
+
+.export-bundle-button:hover,
+.export-bundle-button:focus-visible {
+  border-color: var(--green-dark);
+  background: var(--green-pale);
+  outline: none;
 }
 
 .holdout-result {

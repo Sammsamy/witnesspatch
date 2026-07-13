@@ -6,14 +6,39 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
+import { createStoredBundleZip } from "@/engine/browser-bundle-zip.mjs";
+import { compileBrowserWitness } from "@/engine/browser-witness-compiler.mjs";
 import { verifyBrowserArtifacts } from "@/engine/browser-verifier.mjs";
 import baselineRun from "@/public/runs/v2/postpartum-warning-signs-baseline.json";
 import clinicalScope from "@/public/runs/v2/clinical-scope.json";
 import runManifest from "@/public/runs/v2/manifest.json";
 import repairedRun from "@/public/runs/v2/postpartum-warning-signs-repaired.json";
 
-type RunState = "failed" | "verifying" | "passed" | "error";
+type RunState =
+  | "failed"
+  | "compiling"
+  | "compiled"
+  | "verifying"
+  | "passed"
+  | "error";
+type FailedStage = "compile" | "verify" | null;
 type View = "trace" | "repair" | "receipt";
+
+type BrowserCompilationReceipt = {
+  status: "compiled_red";
+  hashes: { verified: number; total: number };
+  bundle_id: string;
+  target_rule_id: string;
+  file_count: number;
+  manifest_sha256: string;
+  failure_known_at_minute: number;
+  starting_fact_count: number;
+  minimal_fact_count: number;
+  regression_initial_status: "red";
+  regression_source: string;
+  trust_boundary: string;
+  files: Array<{ path: string; contents: string }>;
+};
 
 type BrowserEvaluation = {
   status: string;
@@ -175,11 +200,15 @@ function MiniSpark() {
 
 export function WitnessPatchLab() {
   const [runState, setRunState] = useState<RunState>("failed");
+  const [failedStage, setFailedStage] = useState<FailedStage>(null);
   const [view, setView] = useState<View>("trace");
   const [copied, setCopied] = useState(false);
+  const [bundleExported, setBundleExported] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const [verificationReceipt, setVerificationReceipt] =
     useState<BrowserVerificationReceipt | null>(null);
+  const [compilationReceipt, setCompilationReceipt] =
+    useState<BrowserCompilationReceipt | null>(null);
   const [verificationError, setVerificationError] = useState("");
   const tabRefs = useRef<Record<View, HTMLButtonElement | null>>({
     trace: null,
@@ -188,7 +217,10 @@ export function WitnessPatchLab() {
   });
 
   const isPassed = runState === "passed";
+  const isCompiling = runState === "compiling";
+  const isCompiled = runState === "compiled";
   const isVerifying = runState === "verifying";
+  const isBusy = isCompiling || isVerifying;
   const activeEvaluation =
     isPassed && verificationReceipt
       ? verificationReceipt.evaluations.repaired
@@ -201,9 +233,11 @@ export function WitnessPatchLab() {
     repairedRun.evaluation.critical_failures.length;
   const counterexampleStartingFacts =
     verificationReceipt?.release_verification.counterexample.starting_facts ??
+    compilationReceipt?.starting_fact_count ??
     runManifest.comparison.counterexample_starting_facts;
   const counterexampleMinimalFacts =
     verificationReceipt?.release_verification.counterexample.minimal_facts ??
+    compilationReceipt?.minimal_fact_count ??
     runManifest.comparison.counterexample_minimal_facts;
   const verifiedRelease =
     isPassed && verificationReceipt
@@ -224,19 +258,58 @@ export function WitnessPatchLab() {
     [activeEvaluation.results],
   );
 
-  async function verifyRepair() {
-    if (isVerifying) return;
-    if (isPassed) {
-      setRunState("failed");
-      setVerificationReceipt(null);
-      setVerificationError("");
-      setView("trace");
+  function replayFailure() {
+    setRunState("failed");
+    setFailedStage(null);
+    setCompilationReceipt(null);
+    setBundleExported(false);
+    setVerificationReceipt(null);
+    setVerificationError("");
+    setView("trace");
+    setAnnouncement(
+      `Failure replayed: score ${runManifest.comparison.baseline_score}, ${baselineRun.evaluation.critical_failures.length} critical breaches. Compile it to materialize a red regression.`,
+    );
+  }
+
+  async function compileFailure() {
+    if (isBusy) return;
+    setRunState("compiling");
+    setFailedStage(null);
+    setCompilationReceipt(null);
+    setBundleExported(false);
+    setVerificationReceipt(null);
+    setVerificationError("");
+    setView("trace");
+    setAnnouncement(
+      "Hashing the two exact synthetic inputs and compiling a static recorded-decision witness in this browser.",
+    );
+
+    try {
+      const receipt = (await compileBrowserWitness({
+        manifest: runManifest,
+        fetchImpl: window.fetch.bind(window),
+        subtle: window.crypto?.subtle,
+        baseUrl: window.location.href,
+      })) as BrowserCompilationReceipt;
+      setCompilationReceipt(receipt);
+      setRunState("compiled");
       setAnnouncement(
-        `Failure replayed: score ${runManifest.comparison.baseline_score}, ${baselineRun.evaluation.critical_failures.length} critical breaches.`,
+        `Red regression compiled from exact bytes: ${receipt.hashes.verified} of ${receipt.hashes.total} inputs, ${receipt.file_count} files, and a ${receipt.starting_fact_count} to ${receipt.minimal_fact_count} static witness for ${receipt.target_rule_id}.`,
       );
-      return;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unknown compilation failure.";
+      setRunState("error");
+      setFailedStage("compile");
+      setVerificationError(message);
+      setAnnouncement(`Compilation failed closed. ${message}`);
     }
+  }
+
+  async function verifyRepair() {
+    if (isBusy || !compilationReceipt) return;
     setRunState("verifying");
+    setFailedStage(null);
     setVerificationReceipt(null);
     setVerificationError("");
     setAnnouncement(
@@ -260,10 +333,23 @@ export function WitnessPatchLab() {
       const message =
         error instanceof Error ? error.message : "Unknown verification failure.";
       setRunState("error");
+      setFailedStage("verify");
       setVerificationError(message);
       setView("receipt");
       setAnnouncement(`Verification failed closed. ${message}`);
     }
+  }
+
+  function handlePrimaryAction() {
+    if (isPassed) {
+      replayFailure();
+      return;
+    }
+    if (isCompiled || (runState === "error" && failedStage === "verify")) {
+      void verifyRepair();
+      return;
+    }
+    void compileFailure();
   }
 
   function handleTabKeyDown(
@@ -298,6 +384,39 @@ export function WitnessPatchLab() {
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
       setCopied(false);
+    }
+  }
+
+  function exportCompiledBundle() {
+    if (!compilationReceipt) return;
+    try {
+      if (compilationReceipt.files.length !== compilationReceipt.file_count) {
+        throw new Error("The in-memory bundle does not match its declared file count.");
+      }
+      const archive = createStoredBundleZip(compilationReceipt.files);
+      const archiveBuffer = archive.buffer.slice(
+        archive.byteOffset,
+        archive.byteOffset + archive.byteLength,
+      );
+      const url = window.URL.createObjectURL(
+        new Blob([archiveBuffer], { type: "application/zip" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${compilationReceipt.bundle_id}.zip`;
+      link.style.display = "none";
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => window.URL.revokeObjectURL(url), 0);
+      setBundleExported(true);
+      setAnnouncement(
+        `Exported ${compilationReceipt.file_count} compiled files as ${compilationReceipt.bundle_id}.zip.`,
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown export failure.";
+      setBundleExported(false);
+      setAnnouncement(`Bundle export failed closed. ${message}`);
     }
   }
 
@@ -388,8 +507,8 @@ export function WitnessPatchLab() {
             <div className="model-card-top">
               <span className="model-spark"><MiniSpark /></span>
               <span>
-                <strong>GPT-5.6 Sol</strong>
-                <small>Codex · Ultra workflow</small>
+                <strong>GPT-5.6 Sol requested</strong>
+                <small>Codex · Ultra requested configuration</small>
               </span>
             </div>
             <div className="model-boundary">
@@ -412,20 +531,26 @@ export function WitnessPatchLab() {
               </h1>
               <p>
                 WitnessPatch isolates the earliest critical contract-breaching prefix in a
-                synthetic time-fenced trace, reduces one breached rule to an oracle-minimal
-                recorded-decision witness, and compiles the failure into an executable test.
+                synthetic time-fenced trace, reduces one breached rule to a
+                contract-cardinality-minimal static recorded-decision witness, and compiles
+                the failure into an executable test.
               </p>
             </div>
             <div className="header-action-wrap">
               <button
-                className={`repair-button ${isPassed ? "passed" : ""}`}
-                onClick={verifyRepair}
-                aria-busy={isVerifying}
-                aria-disabled={isVerifying}
-                disabled={isVerifying}
+                className={`repair-button ${isPassed ? "passed" : ""} ${isCompiled ? "compiled" : ""}`}
+                onClick={handlePrimaryAction}
+                aria-busy={isBusy}
+                aria-disabled={isBusy}
+                disabled={isBusy}
                 type="button"
               >
-                {isVerifying ? (
+                {isCompiling ? (
+                  <>
+                    <span className="button-spinner" />
+                    Compiling exact failure…
+                  </>
+                ) : isVerifying ? (
                   <>
                     <span className="button-spinner" />
                     Verifying retained evidence…
@@ -435,26 +560,40 @@ export function WitnessPatchLab() {
                     Replay failure
                     <ArrowIcon />
                   </>
-                ) : runState === "error" ? (
+                ) : runState === "error" && failedStage === "verify" ? (
                   <>
                     Retry verification
                     <ArrowIcon />
                   </>
+                ) : runState === "error" ? (
+                  <>
+                    Retry compilation
+                    <ArrowIcon />
+                  </>
+                ) : isCompiled ? (
+                  <>
+                    Verify retained repair
+                    <ArrowIcon />
+                  </>
                 ) : (
                   <>
-                    Verify retained evidence
+                    Compile failure
                     <ArrowIcon />
                   </>
                 )}
               </button>
               <small>
-                {isVerifying
+                {isCompiling
+                  ? "Hashing two exact inputs and generating locally"
+                  : isVerifying
                   ? "Hashing and regrading locally—no API call"
                   : runState === "error"
                     ? "Failed closed—the baseline remains active"
                     : isPassed
                       ? "Freshly verified in this browser"
-                      : "No API key required for browser verification"}
+                      : isCompiled
+                        ? "Red regression ready · no model or API call"
+                        : "First compile the red regression · no API key required"}
               </small>
               {runState === "error" && (
                 <p className="verification-error" role="alert">
@@ -494,7 +633,7 @@ export function WitnessPatchLab() {
             <div className="score-cell">
               <small>SOFTWARE COUNTEREXAMPLE</small>
               <strong>{counterexampleMinimalFacts} facts</strong>
-              <span>oracle-minimal for INV-02 · from {counterexampleStartingFacts}</span>
+              <span>contract-cardinality-minimal static for INV-02 · from {counterexampleStartingFacts}</span>
             </div>
             <div className="score-cell">
               <small>EARLIEST CRITICAL PREFIX</small>
@@ -728,7 +867,11 @@ export function WitnessPatchLab() {
               </button>
               <span className="artifact-spacer" />
               <span className="artifact-file">
-                {runManifest.comparison.repaired_run_id} / software-verified
+                {compilationReceipt
+                  ? isPassed
+                    ? `${compilationReceipt.bundle_id} / baseline RED · retained repair PASS`
+                    : `${compilationReceipt.bundle_id} / baseline RED`
+                  : "no browser-generated bundle yet"}
               </span>
             </div>
 
@@ -741,23 +884,77 @@ export function WitnessPatchLab() {
             >
               {view === "trace" && (
                 <div className="code-layout">
-                  <div className="code-window">
+                  <div className={`code-window ${compilationReceipt ? "generated-regression" : "compiler-empty"}`}>
                     <div className="code-topline">
-                      <span>engine/tests/v2-clinical-scope.test.mjs · excerpt</span>
-                      <span>abridged executed regression</span>
+                      <span>
+                        {compilationReceipt
+                          ? "regression.test.mjs · generated in this browser"
+                          : "regression.test.mjs · not generated"}
+                      </span>
+                      <span>
+                        {compilationReceipt
+                          ? isPassed
+                            ? `${compilationReceipt.file_count}-file baseline bundle · RED / repair PASS`
+                            : `${compilationReceipt.file_count}-file baseline bundle · RED`
+                          : "select Compile failure"}
+                      </span>
                     </div>
-                    <pre aria-label="Executable regression test"><code><span className="code-muted">01</span>  <span className="code-purple">test</span>(<span className="code-green">&quot;the repair passes the urgent trace and exact negative control&quot;</span>, <span className="code-purple">async</span> () ={`>`} {`{`}{"\n"}<span className="code-muted">02</span>    <span className="code-purple">const</span> urgent = <span className="code-purple">await</span> executeAndGrade({"\n"}<span className="code-muted">03</span>      <span className="code-green">&quot;postpartum-warning-signs.json&quot;</span>, <span className="code-green">&quot;repaired.mjs&quot;</span>{"\n"}<span className="code-muted">04</span>    );{"\n"}<span className="code-muted">05</span>    <span className="code-purple">const</span> exactNegative = <span className="code-purple">await</span> executeAndGrade({"\n"}<span className="code-muted">06</span>      <span className="code-green">&quot;postpartum-exact-negative-control.json&quot;</span>,{"\n"}<span className="code-muted">07</span>      <span className="code-green">&quot;repaired.mjs&quot;</span>{"\n"}<span className="code-muted">08</span>    );{"\n"}<span className="code-muted">09</span>    assert.equal(urgent.evaluation.status, <span className="code-green">&quot;pass&quot;</span>);{"\n"}<span className="code-muted">10</span>    assert.equal(exactNegative.evaluation.status, <span className="code-green">&quot;pass&quot;</span>);{"\n"}<span className="code-muted">11</span>  {`}`});</code></pre>
+                    <pre aria-label={compilationReceipt ? "Live browser-generated executable regression test" : "Compiler waiting state"}>
+                      <code>
+                        {compilationReceipt?.regression_source ??
+                          "// No regression is pre-rendered here.\n// Select “Compile failure” to hash the retained synthetic inputs\n// and generate the exact red node:test bundle in this browser."}
+                      </code>
+                    </pre>
                   </div>
                   <div className="artifact-explainer">
                     <span className="explainer-number">01</span>
-                    <h3>A failing prefix becomes executable</h3>
-                    <p>
-                      The urgent regression and its oracle-minimal reduction are
-                      both retained and checked, so this delay cannot silently return.
-                    </p>
+                    <h3>
+                      {compilationReceipt
+                        ? isPassed
+                          ? "Baseline regression retained; repair passed"
+                          : "Live baseline regression compiled RED"
+                        : "Compile before verifying the repair"}
+                    </h3>
+                    {compilationReceipt ? (
+                      <p>
+                        The browser verified {compilationReceipt.hashes.verified}/
+                        {compilationReceipt.hashes.total} exact synthetic inputs and
+                        generated {compilationReceipt.file_count} files. The selected
+                        {` ${compilationReceipt.target_rule_id}`} witness is static,
+                        contract-cardinality-minimal for the encoded rule, and reduced
+                        {` ${compilationReceipt.starting_fact_count} → ${compilationReceipt.minimal_fact_count}`} facts.
+                        {isPassed && " The separate retained repair now passes fresh browser verification; the exported bundle remains the baseline RED witness."}
+                      </p>
+                    ) : (
+                      <p>
+                        The product begins with the failing baseline. No executable test
+                        is shown as generated until this browser hashes the retained case
+                        and run, regrades them, and materializes the red bundle.
+                      </p>
+                    )}
+                    {compilationReceipt && (
+                      <div className="compiled-red-receipt" aria-label="Compiled regression status">
+                        <span>BASELINE RED</span>
+                        {isPassed && <b>RETAINED REPAIR PASS</b>}
+                        <small>
+                          T+{String(compilationReceipt.failure_known_at_minute).padStart(2, "0")} · manifest {compilationReceipt.manifest_sha256.slice(0, 12)}…
+                        </small>
+                      </div>
+                    )}
+                    {compilationReceipt && (
+                      <button
+                        className="export-bundle-button"
+                        onClick={exportCompiledBundle}
+                        type="button"
+                      >
+                        {bundleExported
+                          ? `Export ${compilationReceipt.file_count}-file ZIP again`
+                          : `Export complete ${compilationReceipt.file_count}-file ZIP`}
+                      </button>
+                    )}
                     <div className="explainer-rule">
                       <span><MarkIcon kind="lock" /></span>
-                      Locked verifier · read-only to Sol
+                      Static recorded decisions · no target or model rerun
                     </div>
                   </div>
                 </div>
@@ -812,10 +1009,12 @@ export function WitnessPatchLab() {
                   <div className="receipt-column">
                     <span className="section-kicker">PROVENANCE</span>
                     <dl>
+                      <div><dt>Live browser compile</dt><dd>{compilationReceipt ? `${compilationReceipt.hashes.verified}/${compilationReceipt.hashes.total} exact inputs · ${compilationReceipt.file_count} files · red` : "compile to inspect"}</dd></div>
+                      <div><dt>Compiled witness</dt><dd>{compilationReceipt ? `${compilationReceipt.target_rule_id} · T+${String(compilationReceipt.failure_known_at_minute).padStart(2, "0")} · ${compilationReceipt.starting_fact_count}→${compilationReceipt.minimal_fact_count} facts` : "compile to inspect"}</dd></div>
                       <div><dt>Retained V2 reference</dt><dd>{verifiedRelease ? `${verifiedRelease.reference_v2.score}/100 · ${verifiedRelease.reference_v2.status} · reviewed reference` : "verify to inspect"}</dd></div>
                       <div><dt>Reference holdouts</dt><dd>{verifiedRelease ? `${verifiedRelease.reference_v2.holdouts.passed}/${verifiedRelease.reference_v2.holdouts.total}` : "verify to inspect"}</dd></div>
                       <div><dt>Fresh post-start Sol</dt><dd>{verifiedRelease ? verifiedRelease.fresh_sol_v2.status.replaceAll("_", " ") : "verify to inspect"}</dd></div>
-                      <div><dt>Fresh model run</dt><dd>{verifiedRelease ? `${verifiedRelease.fresh_sol_v2.model} · ${verifiedRelease.fresh_sol_v2.reasoning_effort}` : "verify to inspect"}</dd></div>
+                      <div><dt>Fresh requested config</dt><dd>{verifiedRelease ? `${verifiedRelease.fresh_sol_v2.model} requested · ${verifiedRelease.fresh_sol_v2.reasoning_effort} requested` : "verify to inspect"}</dd></div>
                       <div><dt>Fresh candidate state</dt><dd>{verifiedRelease ? `${verifiedRelease.fresh_sol_v2.candidate_quarantined ? "quarantined" : "not quarantined"} · ${verifiedRelease.fresh_sol_v2.candidate_installed ? "installed" : "not installed"}` : "verify to inspect"}</dd></div>
                       <div><dt>Fresh browser replay</dt><dd>{verifiedRelease ? `${verifiedRelease.fresh_sol_v2.regrades.verified}/${verifiedRelease.fresh_sol_v2.regrades.total} interpreted regrades · ${verifiedRelease.fresh_sol_v2.holdouts.passed}/${verifiedRelease.fresh_sol_v2.holdouts.total} mutation holdouts` : "verify to inspect"}</dd></div>
                       <div><dt>Unchanged pre-start V1</dt><dd>{verifiedRelease ? verifiedRelease.pre_start_v1.status.replaceAll("_", " ") : "verify to inspect"}</dd></div>
@@ -829,6 +1028,7 @@ export function WitnessPatchLab() {
                       <div><dt>Safety rules</dt><dd>Read-only</dd></div>
                       <div><dt>Case timeline</dt><dd>Time-locked</dd></div>
                       <div><dt>API key</dt><dd>Not required</dd></div>
+                      <div><dt>Browser compiler</dt><dd>{compilationReceipt ? "Static trace · no target/model rerun" : "not yet run"}</dd></div>
                       <div><dt>Compiled JS</dt><dd>{verifiedRelease ? "Node only · browser interprets JSON IR" : "verify to inspect"}</dd></div>
                       <div><dt>Model self-grade</dt><dd>Disabled</dd></div>
                       <div><dt>Browser verification</dt><dd>{verificationReceipt ? `${verificationReceipt.hashes.verified}/${verificationReceipt.hashes.total} hashes · ${verificationReceipt.regrades.verified}/${verificationReceipt.regrades.total} regrades` : runState === "error" ? "failed closed" : "not yet run"}</dd></div>
@@ -842,13 +1042,15 @@ export function WitnessPatchLab() {
                   <div className="receipt-summary">
                     <span className="receipt-seal"><ShieldMark /></span>
                     <span>
-                      <strong>{isPassed ? "Fresh artifact checks passed" : runState === "error" ? "Verification failed closed" : "Unverified baseline shown"}</strong>
+                      <strong>{isPassed ? "Fresh artifact checks passed" : runState === "error" ? `${failedStage === "compile" ? "Compilation" : "Verification"} failed closed` : compilationReceipt ? "Red regression compiled; repair still locked" : "Unverified baseline shown"}</strong>
                       <small>
                         {isPassed && verificationReceipt
                           ? `${verificationReceipt.hashes.verified}/${verificationReceipt.hashes.total} exact hashes · ${verificationReceipt.regrades.verified}/${verificationReceipt.regrades.total} fresh regrades · ${verificationReceipt.holdouts.passed}/${verificationReceipt.holdouts.total} holdouts. Integrity against this app build; not a publisher signature.`
                           : runState === "error"
                             ? verificationError
-                            : "Select verify to hash, regrade, and rerun the repair artifacts locally."}
+                            : compilationReceipt
+                              ? `${compilationReceipt.file_count} files generated from ${compilationReceipt.hashes.verified}/${compilationReceipt.hashes.total} exact inputs. The regression remains red until the separate retained repair verification passes.`
+                              : "Select Compile failure to hash, regrade, and materialize the red regression locally."}
                       </small>
                     </span>
                   </div>
@@ -863,7 +1065,10 @@ export function WitnessPatchLab() {
               Fully synthetic reference case. Source-linked; licensed physician
               validation pending.
             </p>
-            <p>Built for OpenAI Build Week · Codex + GPT-5.6 Sol</p>
+            <p>
+              Independent Build Week entrant project · Codex and GPT-5.6 Sol
+              requested · no OpenAI or clinical-organization endorsement implied
+            </p>
           </footer>
         </section>
       </div>

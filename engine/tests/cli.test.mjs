@@ -32,6 +32,18 @@ const baselineInputPath = join(
   "fixtures",
   "postpartum-warning-signs-baseline.input.json"
 );
+const v2UrgentCasePath = join(
+  rootDir,
+  "cases",
+  "v2",
+  "postpartum-warning-signs.json"
+);
+const v2BaselineInputPath = join(
+  engineDir,
+  "fixtures",
+  "v2",
+  "postpartum-warning-signs-baseline.input.json"
+);
 
 function invoke(args) {
   const result = spawnSync(process.execPath, [cliPath, ...args], {
@@ -518,6 +530,25 @@ test("compile emits a hash-listed static witness and executable red regression",
   ];
   assert.deepEqual((await readdir(outDir)).sort(), expectedFiles);
 
+  const frozenPreRefactorHashes = {
+    "case.json": "69321eef40cddfbaf2e2a8ffc6b2ec2227221fe9d032f29f5c7f5f823e35c8f2",
+    "evaluated-run.json": "32b47f900bb8e8702fcb2820cc3673e17de9d89c2ad5bfe975e06db0fdaa6662",
+    "failing-prefix.json": "49f7fe4c4afa2c96d2325d54bb5b4c33c5c409a5559e0aff39a9ed8d353c8564",
+    "manifest.json": "3307ced4fe475f8649d3a14b6ec1908d85d601e3a9f6b1ed4d3f2a043e19255b",
+    "receipt.json": "c1ea77c0d7b482f2c392cd555631fad9bc57366ca9765fa57bdc5c121407161d",
+    "regression.json": "0a4bd6d316930fde0c4b0af5cfa68ee2f9d2de7e5070bc190d100e04b470f1f6",
+    "regression.test.mjs": "4f827bd1d9dc1efe9edc43faf063d9f6f41785bd1f3b83850bf0d9bb17165bc2",
+    "run.json": "3c919a2c02c5a281f2c3af7032ab150cbf45c1feec0104f6327f3560224d4c1a",
+    "static-witness.json": "cead178b850aacf61800abeb47fc7d4d7fd3da7289d5702173f538dbe2fa461b"
+  };
+  for (const [name, expectedHash] of Object.entries(frozenPreRefactorHashes)) {
+    assert.equal(
+      createHash("sha256").update(await readFile(join(outDir, name))).digest("hex"),
+      expectedHash,
+      `${name} changed across the shared-core refactor`
+    );
+  }
+
   const manifest = JSON.parse(
     await readFile(join(outDir, "manifest.json"), "utf8")
   );
@@ -677,6 +708,40 @@ test("compile emits a hash-listed static witness and executable red regression",
     }
   );
   assert.equal(green.status, 0, green.stdout + green.stderr);
+});
+
+test("compile preserves every frozen V2 output byte across the shared-core refactor", async (t) => {
+  const directory = await temporaryDirectory(t);
+  const outDir = join(directory, "frozen-v2-bundle");
+  const result = invoke([
+    "compile",
+    "--case",
+    v2UrgentCasePath,
+    "--run",
+    v2BaselineInputPath,
+    "--out-dir",
+    outDir
+  ]);
+  assert.equal(result.status, 0, result.stderr);
+
+  const frozenHashes = {
+    "case.json": "4f28233289c2ed76a0d2b0135fa60c8a22a618e751859aca8c74d5fb8e493073",
+    "evaluated-run.json": "c25e902a01ec119eceb1391f14136c9e1e96f27173b76d43788e1d8fc4169a47",
+    "failing-prefix.json": "922a873aede1ad76ec8fbb1849340a96dd4296840a8bdce5f51bf16913edb4d8",
+    "manifest.json": "a38b05e585e75d87e209e2a9c280742a3fc926b9e76ef5cd99629822cd9c1e73",
+    "receipt.json": "8c94c7d9619bca35f107e5713349d8ad6a95b54402e7f4df5574d2b509fc376d",
+    "regression.json": "f0bf189fdd5e5fd562037a713bd84742b13fc90237ba8a5bc42f1641a45ac365",
+    "regression.test.mjs": "4f827bd1d9dc1efe9edc43faf063d9f6f41785bd1f3b83850bf0d9bb17165bc2",
+    "run.json": "66d012c0e6ce304e0a7e4de4733abb712721abcc171ff6740a1d31af7e726afa",
+    "static-witness.json": "e2b4b7350b94e891555dbcd392ff8a744119ad37fc86743b40ae34a98ff5ec3c"
+  };
+  for (const [name, expectedHash] of Object.entries(frozenHashes)) {
+    assert.equal(
+      createHash("sha256").update(await readFile(join(outDir, name))).digest("hex"),
+      expectedHash,
+      `${name} changed from the frozen pre-refactor V2 bytes`
+    );
+  }
 });
 
 test("compile exits one for a valid passing run without creating output", async (t) => {

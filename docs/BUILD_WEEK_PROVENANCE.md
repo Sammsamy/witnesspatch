@@ -47,7 +47,19 @@ Created after the cutoff:
 
 The browser verifier checks safe same-origin artifact paths, exact bytes and SHA-256 values, case fingerprint, two fresh evaluations, and declared holdouts before it may display a repaired score. Attack coverage includes same-length tampering, truncation, missing files, redirects, traversal/cross-origin paths, falsified evaluations, falsified holdout expectations, and missing WebCrypto. The trust anchor is the same-build manifest; it is not a publisher signature.
 
-The current V2 browser path verifies `23/23` exact hashes. For the retained reference it performs `2/2` fresh regrades, `4/4` V2 holdouts, full 9→3 counterexample recomputation, and target-receipt cross-checking. For the fresh candidate it validates the retained prompt/compiler links and safely interprets declarative JSON IR across `2/2` cases and `4/4` mutation holdouts without executing retained JavaScript. Final real-Chrome QA recorded a genuine reference `50 → 100` transition, `23/23` HTTP 200 artifact responses, both exact proof signatures, and zero console warnings or errors.
+The current V2 browser path verifies `23/23` exact hashes. For the retained reference it performs `2/2` fresh regrades, `4/4` V2 holdouts, full 9→3 counterexample recomputation, and target-receipt cross-checking. For the fresh candidate it validates the retained prompt/compiler links and safely interprets declarative JSON IR across `2/2` cases and `4/4` mutation holdouts without executing retained JavaScript.
+
+The browser proof was then meaningfully extended again in the same post-start task:
+
+- `engine/compile-witness-core.mjs` — born `3:11:22 PM`;
+- `engine/browser-witness-compiler.mjs` — born `3:15:05 PM`;
+- `engine/input-validation.mjs` — born `3:33:35 PM`;
+- `engine/browser-bundle-zip.mjs` — born `3:34:14 PM`;
+- browser compiler and ZIP tests — born `3:15:40 PM` and `3:34:14 PM`.
+
+The UI now begins with no pre-rendered generated test. It hash-checks and fully validates the exact case and failing run through the same semantic boundary as Node, compiles an exportable nine-file baseline-red ZIP, and only then unlocks the separate retained-repair verification. Coordinated manifest-rehashed schema attacks fail closed. The exported files match Node byte for byte; a deterministic ZIP parser independently verifies paths, sizes, CRCs, offsets, and contents.
+
+Final hydrated Chrome QA recorded `50 → 2/2 exact inputs → nine-file BASELINE RED → 100`, `23/23` retained responses, both proof signatures, explicit `baseline RED · retained repair PASS`, replay/recompile stability, and zero console warnings or errors. The downloaded ZIP passed `unzip -t` for all nine files; its default regression exited red (`1`) and the supplied repaired candidate exited green (`0`).
 
 ## Post-start meaningful extension 3 — clinically narrower V2
 
@@ -97,7 +109,7 @@ The 23-artifact manifest retains the receipt, proposal, reconstructed prompt, ex
 - This Codex task contains timestamped post-start implementation and verification calls. The required `/feedback` Session ID must still be captured from this same task before submission.
 - File birth/modification times above were recorded with macOS `stat` after the rules appeared.
 - V1 and V2 manifests preserve exact artifact bytes and are deterministically rechecked; the same-build V2 manifest is an integrity anchor, not a publisher signature or independent timestamp attestation.
-- The finalized working profile passes `npm run verify:release`: `94/94` core tests, `5/5` rendered tests, build, lint, typecheck, locked-license fingerprint verification, and Wrangler dry run. `npm audit` reported zero known vulnerabilities at check time. These are local macOS results; Linux and Windows are not verified.
+- The finalized working profile passes `npm run verify:release`: `104/104` core tests, `5/5` rendered tests, build, lint, typecheck, the 624-package/15-static-package distribution-license gate, byte-identical deployed notices, and a 56-file Wrangler dry run. These are local macOS results; Linux and Windows are not verified.
 - Checkpoint `a056fe337208c0f377918bb8502d2bc6324ba19a` also passed `npm ci` followed by the full release verifier from fresh local clones on macOS with Node 22.15.0 and 24.14.0. See `docs/CLEAN_CHECKOUT_RECEIPT.md`; final-commit, Linux, Windows, public-CI, and independent external reproduction remain outstanding.
 - The first dated post-start Git checkpoint is commit `21405c8e2d3e4d03e36442a1facab96c4ec487a6`, created `2026-07-13T13:15:43-05:00` with subject `Disclose V1 baseline and add post-start WitnessPatch V2 proof`. Because it is the root commit and intentionally contains both the disclosed pre-start V1 lineage and post-start extensions, Git alone does not attest which bytes predated the event; the timestamped Codex task, retained receipts, and this before/after ledger provide that distinction. History must not be rewritten in a way that obscures it.
 - The final README must explain Codex acceleration, GPT-5.6 contribution, and the human decisions retained, as required by the rules.

@@ -1,6 +1,6 @@
 # External review packet
 
-Use this packet for real validation before submission. Do not prefill agreement, invent a reviewer, or describe a medical-student review as licensed-physician validation.
+Use this packet with `docs/SAME_DAY_VALIDATION_PROTOCOL.md` and record the result in `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. Do not prefill agreement, invent a reviewer, coach toward approval, or describe a medical-student review as licensed-physician validation.
 
 ## A. Health-AI builder workflow review
 
@@ -9,13 +9,13 @@ Use this packet for real validation before submission. Do not prefill agreement,
 **Date:**  
 **Name/quote permission:** yes / no / anonymous role only
 
-Ask about the reviewer's most recent real failure before showing WitnessPatch:
+Ask about the reviewer's most recent relevant workflow before showing WitnessPatch. Request only an abstract process; do not request patient facts, case text, private prompts, screenshots, employer secrets, or proprietary incidents:
 
 1. Where was the failure first captured: screenshot, ticket, eval set, incident review, or CI test?
 2. How long passed before it became a runnable regression?
 3. Who defined the expected behavior, and where was its evidence recorded?
 4. Did the repair ever regress or over-trigger on a nearby authored control?
-5. Which artifact would change the workflow: time trace, locked rule, red test, target diff, exact-fact control, or verification receipt?
+5. What artifact, if any, is the minimum required for release approval?
 6. What would prevent the reviewer from testing this on one existing synthetic failure?
 7. Is a static recorded-decision witness useful without target-in-loop counterfactual execution? What additional artifact would be required?
 
@@ -37,21 +37,27 @@ This review is only about the two authored V2 postpartum fixtures, their public 
 **Conflict disclosure:**  
 **Name/quote permission:** yes / no / anonymous credentials only
 
-For each item, record **supported as scoped / revise / outside reviewer scope**, plus the exact requested change:
+First show only the two synthetic timelines, their declared limits, and public sources. Record the physician's independently stated implications, misleading implications, omissions, and local-policy boundaries before revealing the project rules or copy.
 
-1. The urgent fixture's synthetic facts and chronology do not create a misleading clinical implication.
-2. `INV-01` recent-pregnancy-context wording is appropriately bounded.
-3. `INV-02` persistent unrelieved postpartum-headache wording supports an immediate concrete route without asserting a diagnosis.
-4. `INV-03` postpartum visual-change wording is independently supportable and does not instruct the user to wait for a reply or home blood-pressure reading.
-5. `INV-04` describes the authored `168/112` endpoint as fixture-supplied and in a published severe range, without diagnosing, inferring the classification numerically, or instructing a 15-minute wait at home.
-6. The urgent copy—seek care immediately, contact obstetric care/triage, and use an emergency department if the team cannot be reached—is appropriately bounded for this synthetic fixture.
-7. The `118/74` exact-fact negative-control copy avoids saying the person is benign, illness-free, or safe to defer care.
-8. The project accurately discloses that only `118/74` and `168/112` are authored endpoints and that middle, borderline, discordant, measurement-accuracy, and repeat-reading behavior are untested.
-9. The linked CDC, AIM, and ACOG materials are represented accurately within the reviewer's scope.
+Then, for each item, record **supported as scoped / revise / outside reviewer scope / unresolved**, the reason in the reviewer's words, and the exact requested change. Use these neutral prompts:
+
+1. What clinical implication, if any, does the urgent fixture's exact chronology support, and what implication would be misleading?
+2. Review `INV-01`. What is supported, what should change, and what is outside your scope?
+3. Review `INV-02`. What is supported, what should change, and does any wording assert more than an urgent-routing contract?
+4. Review `INV-03`. What is supported, what should change, and does any wording introduce a wait for a reply or home reading?
+5. Review `INV-04`. Which statements about the authored `168/112` endpoint, supplied classification, diagnosis, numerical inference, or timing should remain, change, or be removed?
+6. Review the displayed urgent route. Which parts are supported for this synthetic fixture, and which depend on local policy or need revision?
+7. Review the `118/74` exact-fact control. Does any wording imply a benign state, absence of illness, or real-world permission to defer care? Record exact changes.
+8. Review the two-endpoint and untested-behavior disclosure. What is missing, unclear, or overstated?
+9. For each linked CDC, AIM, and ACOG representation actually opened, record accurate as scoped, revise, outside scope, or unavailable.
 
 **Required changes:**  
 **Unresolved disagreement or uncertainty:**  
-**Narrow review-scope statement approved:** yes / no
+**Disposition counts — supported / revise / outside scope / unresolved:**
+
+**Narrow review-scope statement:** accepted / revise / declined
+
+**Revisions re-reviewed at commit:** not applicable / pending / hash
 
 ## C. Verification-claim review
 
@@ -73,17 +79,19 @@ Ask a software/evaluation reviewer to confirm that the public wording matches wh
 ## Evidence handling
 
 - Preserve original notes, requested edits, date, reviewer scope, and disagreements.
+- Preserve the exact commit, V2 manifest hash, environment, assistance, errors, and objections; never overwrite an initial result with a rerun.
 - Obtain explicit permission before publishing a name, organization, credentials, or quote.
 - A review of these fixtures does not validate other cases, the grader, the product, or patient outcomes.
 - A builder interview is problem/workflow evidence, not clinical validation.
+- A single clean run is usability evidence for one environment, not adoption or time-saved evidence.
 - If no qualified physician review is completed, keep `licensed physician validation pending` everywhere.
 
 ## Recruitment messages
 
 ### Licensed-physician request
 
-> I am a third-year medical student building a synthetic developer tool for OpenAI Build Week. It converts one healthcare-agent contract failure into a time-locked regression and review-gated software patch. Would you spend 15 minutes reviewing only two authored postpartum fixtures, their linked public sources, and the exact wording boundaries? I am not asking for product endorsement or patient-care advice. I will preserve disagreements and keep “physician validation pending” unless the exact review is completed and you approve the narrow way it is described.
+> I am a third-year medical student building a synthetic developer tool for OpenAI Build Week. It converts one healthcare-agent contract failure into a time-locked regression and review-gated software patch. Would you spend 30 minutes reviewing only two authored postpartum fixtures, their linked public sources, and the exact wording boundaries? I am not asking for product endorsement, diagnosis, treatment, or patient-care advice. I will preserve disagreements, will not request any patient information, and will not claim clinical validation from this review.
 
 ### Health-AI builder request
 
-> I am testing a tool that turns a discovered synthetic healthcare-agent failure into a red regression, executable target diff, exact-fact over-escalation control, and verification receipt. Could I ask about the last unsafe or borderline output your team found, what happened afterward, and whether this artifact set would have changed that workflow? The conversation takes 15 minutes. I will show the product only after hearing your current process, and I will not publish your name or quote without permission.
+> I am testing a tool that turns a supplied synthetic healthcare-agent failure into a red regression, executable target diff, exact-fact over-escalation control, and verification receipt. Could I ask about your failure-to-regression workflow at an abstract level, then watch you try the frozen synthetic repository from a clean directory without coaching? The session takes about 35 minutes. Please do not share patient data, client details, private prompts, or proprietary incidents; I will not publish your identity, employer, or quote without permission.

@@ -2,6 +2,8 @@
 
 WitnessPatch has a strong local V2 software demonstration. Its largest remaining credibility gaps are external workflow evidence and licensed clinical review. More internal tests cannot close either gap.
 
+The operational protocol is `docs/SAME_DAY_VALIDATION_PROTOCOL.md`; its fillable record is `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. The same-day minimum is one qualified healthcare-AI builder clean run plus workflow interview and one licensed-physician fixture/wording review. Each remains `n=1` and must be reported with its exact scope, environment, assistance, objections, and limitations.
+
 ## Primary user hypothesis
 
 **User:** a clinical-safety or AI-evaluation engineer building a patient-facing healthcare agent.
@@ -75,6 +77,10 @@ Do not ask only “Would you use this?” and do not treat courtesy interest as 
 - Direct objections, non-use reasons, and conditions for a trial.
 - Permission to quote or identify the reviewer.
 
+For the builder clean run, also capture the frozen commit and manifest hash, OS/Node/npm/browser versions, dependency-cache state, observed milestone times, every failed command or broken link, and every facilitator intervention verbatim. Pre-task forecast and confidence, post-task confidence, actual completion time, and assistance count must remain separate measures. Do not compare the observed synthetic repository task to a historical production workflow as if they were equivalent.
+
+For the physician review, capture the participant's concerns before showing project wording, then one of `supported as scoped / revise / outside reviewer scope / unresolved` for each of nine bounded items. Preserve source pages actually opened, requested changes, scope-statement disposition, and any re-review commit. Do not collapse disagreement into a pass percentage.
+
 ## Honest MVP metrics
 
 - Exact-hash verification rate for the released bundle.
@@ -85,6 +91,8 @@ Do not ask only “Would you use this?” and do not treat courtesy interest as 
 - Failure-to-regression time observed in a real builder workflow; currently unmeasured.
 - Reviewer agreement and disagreement with each clinical wording claim.
 - Clean-browser completion rate once a public deployment exists.
+
+For a single builder, report a result label (`independent completion`, `assisted completion`, `incomplete`, or `invalid`) rather than a completion rate. For a single physician, report raw disposition counts and unresolved objections rather than an accuracy or agreement percentage.
 
 Do not report patient outcomes, lives saved, clinical accuracy, or regulatory readiness from synthetic fixtures. Do not promote the pre-start V1 `113.770`-second observation as V2 evidence or a speed claim.
 
@@ -103,6 +111,7 @@ After a real review, preserve reviewer scope, date, requested changes, conflicts
 ## Submission evidence gates
 
 - One recorded health-AI builder interview and concrete workflow finding.
+- One clean builder replay against a frozen commit, including environment, elapsed time, assistance, failures, teach-back, and strongest objection.
 - One scoped licensed-physician review, or a fully visible pending status.
 - Public clean-browser verification of the exact submission build.
 - Final founder-voiced video showing the real receipt and limitations.

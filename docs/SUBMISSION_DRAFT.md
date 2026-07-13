@@ -4,15 +4,15 @@ This draft is aligned to the published [OpenAI Build Week Official Rules](https:
 
 ## One-line description
 
-WitnessPatch compiles a time-fenced healthcare-agent contract failure into a red regression and review-gated target patch, then verifies the repair against the unchanged urgent fixture and an exact-fact negative control.
+WitnessPatch compiles one fully synthetic, time-fenced healthcare-agent contract violation into a CI-ready regression, then verifies a review-gated policy patch against the unchanged urgent fixture and a scoped over-escalation control.
 
 ## Short description
 
-Healthcare-agent failures often survive only as screenshots. WitnessPatch turns one synthetic, time-locked failure into an executable regression, inspectable policy diff, and fail-closed browser receipt. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic code—not another model—regrades the unchanged urgent fixture, rejects an always-escalate mutation on an exact-fact negative control, and verifies every displayed artifact byte.
+A screenshot of a healthcare-agent test failure does not preserve what the agent knew, what contract it violated, or whether a repair survives a nearby control. WitnessPatch compiles one fully synthetic, time-locked contract violation into a CI-ready regression and deterministic evidence receipt, then verifies an inspectable, review-gated policy patch against the unchanged urgent fixture and a scoped over-escalation control. Codex configured to request GPT-5.6 Sol with Ultra reasoning assists implementation, adversarial testing, and repair exploration; locked deterministic code—not another model—owns every verdict.
 
 ## Problem
 
-A healthcare AI team can find a dangerous answer during testing without preserving exactly what the agent knew, what behavior was expected, why, and whether the eventual repair still passes a nearby control. Screenshots and self-grading model summaries cannot gate the next release.
+During testing, a healthcare AI team may capture a contract-violating answer without preserving exactly what the agent knew, what behavior was expected, why, or whether the eventual repair still passes a nearby control. Screenshots and self-grading model summaries are weak release gates.
 
 ## Solution
 
@@ -29,7 +29,7 @@ The retained V2 patch must fix the urgent fixture without changing the locked gr
 
 1. Execute a target against facts revealed on a fixed synthetic timeline.
 2. Regrade the recorded decisions with locked, source-ID-linked action contracts. Source linkage is checked mechanically; clinical meaning is not.
-3. Compile the earliest failed critical contract into a red regression and static witness. The compiler holds recorded decisions fixed; it makes no target-in-loop, counterfactual, or clinical-minimality claim.
+3. In the browser, hash and fully validate the exact synthetic case and failing run, freshly regrade them, and compile the earliest failed critical contract into an exportable nine-file red regression ZIP and static witness. The browser-generated files match the Node compiler byte for byte. The compiler holds recorded decisions fixed; it makes no target-in-loop, counterfactual, or clinical-minimality claim and invokes neither a model nor a target.
 4. Apply a retained, inspectable V2 target-policy patch and execute four expected paths: urgent before, urgent after, exact-fact negative control, and always-escalate mutation.
 5. In the browser, verify `23/23` exact hashes, recompute the reference repair's `2/2` regrades and `4/4` holdouts, and separately interpret the fresh candidate's declarative JSON IR across `2/2` cases and `4/4` mutation holdouts before displaying the repaired score. Retained JavaScript is not executed in the browser.
 
@@ -49,7 +49,7 @@ The default Codex workflow is configured to request GPT-5.6 Sol with Ultra reaso
 
 The unchanged pre-start V1 Sol policy candidate is preserved as lineage and deliberately tested against V2. It fails the urgent V2 contract at `85/100` and has no executable branch for the exact-fact negative control, so it is rejected and not relabeled as current model evidence.
 
-A fresh post-start Codex CLI run requested `gpt-5.6-sol` with `ultra` reasoning through confirmed ChatGPT-plan authentication. The run received the baseline and two authored contracts, not the four-check holdout definition or checked-in repair. Fixed code compiled its schema-constrained JSON proposal into a distinct candidate; the candidate remains quarantined and was not installed. Browser-safe IR interpretation and Node execution both match the exact two-case and four-holdout software signature. The receipt records the requested configuration and retained local workflow, not independent served-model identity or clinical validity. Its empty credential-scrub list means no matching variables were present to remove.
+A fresh post-start Codex CLI run requested `gpt-5.6-sol` with `ultra` reasoning; the retained local receipt records ChatGPT-plan authentication. The run received the baseline and two authored contracts, not the four-check holdout definition or checked-in repair. Fixed code compiled its schema-constrained JSON proposal into a distinct candidate; the candidate remains quarantined and was not installed. Browser-safe IR interpretation and Node execution both match the exact two-case and four-holdout software signature. The receipt records the requested configuration and retained local workflow, not independent served-model identity or clinical validity. Its empty credential-scrub list means no matching variables were present to remove.
 
 The retained reference repair remains separate from the fresh candidate. Deterministic software, not either policy or a model, owns the verdict.
 
@@ -59,12 +59,13 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Urgent retained repair: `100/100`.
 - Exact-fact negative control under the repaired policy: `100/100`.
 - Always-escalate mutation on that exact control: `25/100`, expected failure.
+- Live browser compilation: `2/2` exact synthetic input hashes, full case/run validation, an exportable nine-file red ZIP for `INV-02` at T+02, and the same exact file bytes as the Node compiler. The exported default regression exits red; pointing it at the supplied repaired run exits green.
 - V2 artifact manifest: `23/23` exact hashes against the same-build manifest; this is integrity, not a publisher signature.
 - Reference browser recomputation: `2/2` fresh regrades and `4/4` V2 holdouts.
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
 - Local release verification: `npm run verify:release` passes `94/94` core tests, `5/5` rendered-product tests, build, lint, typecheck, locked-license fingerprint verification, and the Wrangler dry run; `npm audit` reports zero known vulnerabilities at the check time.
-- Final real-Chrome QA: visible `50 → 100`, `23/23` HTTP 200 artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, and zero console errors or warnings.
+- Final real-Chrome QA: visible `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, all artifact requests HTTP 200, and zero console errors or warnings.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
 
@@ -76,7 +77,7 @@ WitnessPatch began as a pre-existing local V1 prototype. Its original evaluator,
 
 ## Team
 
-We are two brothers; one is a third-year medical student. That training motivates the problem choice but is not licensed clinical authority. The product preserves expert-defined behavior in executable software while making the need for human review explicit.
+We are two brothers; one is a third-year medical student. That training motivates the problem choice but is not licensed clinical authority. The product preserves team-authored behavior in executable software while making independent expert review explicit.
 
 ## Safety and validation status
 

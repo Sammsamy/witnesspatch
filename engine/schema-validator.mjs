@@ -1,38 +1,10 @@
-import { readFileSync } from "node:fs";
-
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-
-const caseSchema = JSON.parse(
-  readFileSync(new URL("../contracts/case.schema.json", import.meta.url), "utf8")
-);
-const runSchema = JSON.parse(
-  readFileSync(new URL("../contracts/run.schema.json", import.meta.url), "utf8")
-);
-const compiledWitnessSchema = JSON.parse(
-  readFileSync(
-    new URL("../contracts/compiled-witness.schema.json", import.meta.url),
-    "utf8"
-  )
-);
-const witnessBundleManifestSchema = JSON.parse(
-  readFileSync(
-    new URL(
-      "../contracts/witness-bundle-manifest.schema.json",
-      import.meta.url
-    ),
-    "utf8"
-  )
-);
-const codexPolicyRepairV2Schema = JSON.parse(
-  readFileSync(
-    new URL(
-      "../contracts/codex-policy-repair-v2.schema.json",
-      import.meta.url
-    ),
-    "utf8"
-  )
-);
+import caseSchema from "../contracts/case.schema.json" with { type: "json" };
+import codexPolicyRepairV2Schema from "../contracts/codex-policy-repair-v2.schema.json" with { type: "json" };
+import compiledWitnessSchema from "../contracts/compiled-witness.schema.json" with { type: "json" };
+import runSchema from "../contracts/run.schema.json" with { type: "json" };
+import witnessBundleManifestSchema from "../contracts/witness-bundle-manifest.schema.json" with { type: "json" };
 const ajv = new Ajv2020({
   allErrors: true,
   coerceTypes: false,
