@@ -104,6 +104,6 @@ After a real review, preserve reviewer scope, date, requested changes, conflicts
 - One scoped licensed-physician review, or a fully visible pending status.
 - Public clean-browser verification of the exact submission build.
 - Final founder-voiced video showing the real receipt and limitations.
-- Dated post-start commit and retained V1/V2 before-after ledger.
+- Dated post-start checkpoint `21405c8` and retained V1/V2 before-after ledger; preserve both without rewriting history.
 - Preserve the fresh V2 candidate's quarantined/not-installed state, requested-model wording, browser JSON-IR boundary, Node execution proof, and exact manifest links in the final release.
-- First dated post-start commit, final repository/license choice, `/feedback` Session ID, public deployment, and founder-voiced video.
+- Final repository/license choice, `/feedback` Session ID, public deployment, and founder-voiced video.

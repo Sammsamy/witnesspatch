@@ -72,7 +72,7 @@ This is strong implementation evidence for one synthetic software oracle, not ev
 
 ## Build Week before/after disclosure
 
-WitnessPatch began as a pre-existing local V1 prototype. Its original evaluator, static UI, 16-file artifact bundle, 13 checks, and captured Sol candidate predate the official July 13 submission start and are not claimed as Build Week work. The portable compiler, fail-closed browser verifier, clinically narrower V2 namespace, and fresh post-start candidate proof are the meaningful extensions. Timestamped Codex records, the before/after ledger, and separate V1/V2 manifests preserve that distinction locally; the first dated post-start commit is still required before submission.
+WitnessPatch began as a pre-existing local V1 prototype. Its original evaluator, static UI, 16-file artifact bundle, 13 checks, and captured Sol candidate predate the official July 13 submission start and are not claimed as Build Week work. The portable compiler, fail-closed browser verifier, clinically narrower V2 namespace, and fresh post-start candidate proof are the meaningful extensions. Timestamped Codex records, the before/after ledger, separate V1/V2 manifests, and first dated checkpoint `21405c8` preserve that distinction locally. Because the root commit contains both disclosed lineage and extensions, it is a checkpoint rather than independent proof of every file's creation time.
 
 ## Team
 
