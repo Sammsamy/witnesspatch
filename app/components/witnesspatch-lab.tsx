@@ -7,8 +7,6 @@ import {
   type KeyboardEvent,
 } from "react";
 import { createStoredBundleZip } from "@/engine/browser-bundle-zip.mjs";
-import { compileBrowserWitness } from "@/engine/browser-witness-compiler.mjs";
-import { verifyBrowserArtifacts } from "@/engine/browser-verifier.mjs";
 import baselineRun from "@/public/runs/v2/postpartum-warning-signs-baseline.json";
 import clinicalScope from "@/public/runs/v2/clinical-scope.json";
 import runManifest from "@/public/runs/v2/manifest.json";
@@ -285,6 +283,12 @@ export function WitnessPatchLab() {
     );
 
     try {
+      // Ajv generates validator functions when the compiler module is loaded.
+      // Keep that browser-only work out of Vinext's request-time RSC worker,
+      // whose sandbox correctly rejects runtime code generation.
+      const { compileBrowserWitness } = await import(
+        "@/engine/browser-witness-compiler.mjs"
+      );
       const receipt = (await compileBrowserWitness({
         manifest: runManifest,
         fetchImpl: window.fetch.bind(window),
@@ -317,6 +321,11 @@ export function WitnessPatchLab() {
     );
 
     try {
+      // See compileFailure: validation remains identical, but it is initialized
+      // in the browser rather than while the RSC worker renders the page shell.
+      const { verifyBrowserArtifacts } = await import(
+        "@/engine/browser-verifier.mjs"
+      );
       const receipt = (await verifyBrowserArtifacts({
         manifest: runManifest,
         fetchImpl: window.fetch.bind(window),
