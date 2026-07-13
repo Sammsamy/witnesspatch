@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { WitnessPatchLab } from "./components/witnesspatch-lab";
 
 export const metadata: Metadata = {
-  title: "Compile healthcare AI failures into tests",
+  title: "Time-fenced contracts for healthcare agents",
   description:
-    "Turn a synthetic healthcare-agent contract failure into a reproducible regression test and software-verified repair.",
+    "Compile one synthetic contract failure into a red Node test bundle, then separately verify the retained patch and exact-fact control.",
 };
 
 export default function Home() {

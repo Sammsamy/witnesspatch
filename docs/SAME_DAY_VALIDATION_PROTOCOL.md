@@ -26,7 +26,7 @@ Store raw notes, recordings, contact details, and credential-check material outs
 
 ### Qualification and timing
 
-Use one person who has directly built, evaluated, red-teamed, or release-gated a healthcare AI system within the last 12 months. A teammate does not count as external evidence. Record the participant's role and relevant experience, but not their employer or identity without permission.
+Use one person who has directly built, evaluated, red-teamed, or release-gated a healthcare AI system within the last 12 months. Record the month/year, role, activity type, and whether qualification is participant-attested or supported by a public project/contribution. A teammate, relative, contributor, financially connected person, or current evaluator/supervisor does not count as independent evidence. Record the participant's role and relevant experience, but not their employer or identity without permission.
 
 Budget 35 minutes:
 
@@ -49,9 +49,9 @@ Record:
 6. the minimum artifact required for release approval;
 7. one reason a generated regression or repair would be rejected.
 
-Then give only this neutral task card:
+Then give only this neutral task card and `docs/BUILDER_REVIEW_START.md`:
 
-> Starting from the supplied frozen repository and its README, reproduce the supplied synthetic failure, produce or locate its runnable regression, and verify the supplied repair and scoped over-escalation control. Stop when you believe the evidence is sufficient—or when you conclude it is not—and explain why.
+> Starting from the supplied frozen repository and reviewer start page, reproduce the supplied synthetic failure, produce or locate its runnable regression, and verify the supplied repair and scoped over-escalation control. Stop when you believe the evidence is sufficient—or when you conclude it is not—and explain why.
 
 Before opening the repository, record the participant's forecast in minutes and confidence from `1` (not confident) to `5` (very confident). This forecast is a usability expectation, not a current-workflow baseline and not a speed claim.
 

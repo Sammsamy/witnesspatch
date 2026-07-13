@@ -20,6 +20,7 @@
     "test:core": "node --test engine/tests/*.test.mjs",
     "test:dev-smoke": "node --test tests/dev-server-smoke.test.mjs",
     "test:submission": "node --test tests/submission-package.test.mjs",
+    "review:builder": "npm run artifacts:v2:verify && npm run dev",
     "demo": "node targets/demo-agent/run-demo.mjs",
     "artifacts:build": "node engine/build-reference-runs.mjs",
     "artifacts:verify": "node engine/verify-artifacts.mjs",

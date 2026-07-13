@@ -10,7 +10,11 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Frozen commit:**
 **V2 manifest SHA-256:**
 **Repository clean before handoff:** yes / no
+**Recruitment route:** warm introduction / MDplus / MLCommons / clinicians.dev / academic directory / other
 **Reviewer relationship/conflict:** none / disclosed:
+**Current supervisory, grading, or evaluator relationship:** none / disclosed:
+**Personal-capacity participation and required employer/institution permission:** confirmed / not established / not applicable
+**Prior WitnessPatch exposure before timed protocol:** none / disclosed:
 **Consent to notes:** yes / no
 **Consent to recording:** not requested / yes / no
 **Publication permission:** private only / anonymous role or credentials / named / exact quote only
@@ -25,6 +29,8 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 
 **Qualification:**
 **Relevant work in last 12 months:** yes / no
+**Qualification month/year, role, and activity type:**
+**Qualification evidence:** participant attestation / public project or contribution / unavailable
 **External to team:** yes / no
 
 ### Environment

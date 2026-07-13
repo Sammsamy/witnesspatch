@@ -4,17 +4,17 @@ This draft is aligned to the published [OpenAI Build Week Official Rules](https:
 
 ## Exact project overview fields
 
-**Project name — 50/60 characters**
+**Project name — 57/60 characters**
 
-> WitnessPatch: Compile AI Failures into Regressions
+> WitnessPatch: Time-Fenced Contracts for Healthcare Agents
 
-**Elevator pitch — 191/200 characters**
+**Elevator pitch — 199/200 characters**
 
-> Compile one synthetic healthcare-agent failure into an integrity-checked, executable regression bundle, then deterministically verify a review-gated repair—without an API key or patient data.
+> Compile a synthetic, time-fenced healthcare-agent contract failure into a red Node test bundle; verify a retained patch and exact-fact control with fail-closed checks—no API key or real patient data.
 
 **Category**
 
-> Developer Tools. WitnessPatch is testing and release-gating infrastructure for teams building healthcare agents: it outputs an executable regression bundle and deterministic CI verifier, not patient-facing advice or automated medical decisions.
+> Developer Tools. WitnessPatch is testing and release-gating infrastructure for teams building healthcare agents: it binds authored facts to reveal times and actions to deadlines, then outputs a red test bundle and deterministic verifier—not patient-facing advice or automated medical decisions.
 
 ## Inspiration
 
@@ -26,12 +26,12 @@ During testing, a healthcare AI team may capture a contract-violating answer wit
 
 ## Solution
 
-WitnessPatch converts one discovered synthetic failure into four inspectable outputs:
+WitnessPatch combines one compiled synthetic failure package with a separately retained repair and verifier into four inspectable artifacts:
 
 1. the earliest critical failing prefix and a static recorded-decision contract witness;
 2. a CI-ready red regression;
-3. a review-gated patch to the executable target policy; and
-4. a deterministic receipt covering exact bytes, fresh regrades, and scoped software holdouts.
+3. a separately authored, review-gated patch to the executable target policy; and
+4. a deterministic verification receipt covering exact bytes, fresh regrades, and scoped software holdouts.
 
 The retained V2 patch must fix the urgent fixture without changing the locked grader and preserve the exact authored negative-control behavior. The control does not establish a benign patient state or that real-world care may be deferred.
 
@@ -53,7 +53,10 @@ Do not add `OpenAI API`; the product does not use it.
 
 ## What is different
 
+Failure-to-regression workflows are established: Trajectly, ORP, Braintrust, Promptfoo, and AgentRx cover substantial parts of replay, contracts, diagnosis, datasets, or CI. WitnessPatch does not claim those primitives. Its narrower demonstrated composition is the final portable artifact handoff and closure below.
+
 - **Time-locked facts:** the grader checks which authored facts were visible at every decision.
+- **Standalone handoff:** a known failure plus an authored action contract becomes a conventional nine-file `node:test` package rather than only a platform dataset row or dashboard result.
 - **Independent verdict:** GPT-5.6 helps build and author; it cannot edit the runtime grader, artifact hashes, or expected holdouts.
 - **Executable closure:** judges can inspect a real target diff and regression, not only a risk score or generated critique.
 - **Fail-closed browser proof:** tampering, truncation, redirects, unsafe paths, evaluation drift, holdout drift, or missing WebCrypto keep the failing baseline active.

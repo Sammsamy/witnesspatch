@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     template: "%s · WitnessPatch",
   },
   description:
-    "Compile time-dependent healthcare-agent failures into executable regression tests and scoped repairs.",
+    "Bind authored fact reveal times and action deadlines, compile a synthetic failure into a red Node test, and separately verify a retained healthcare-agent repair.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

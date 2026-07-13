@@ -114,13 +114,21 @@ test("authenticated overview copy stays inside the recorded field limits", async
     new URL("../docs/SUBMISSION_DRAFT.md", import.meta.url),
     "utf8",
   );
-  const title = extractQuotedField(draft, "Project name — 50/60 characters");
-  const pitch = extractQuotedField(draft, "Elevator pitch — 191/200 characters");
+  const title = extractQuotedField(draft, "Project name — 57/60 characters");
+  const pitch = extractQuotedField(draft, "Elevator pitch — 199/200 characters");
 
-  assert.equal([...title].length, 50);
+  assert.equal([...title].length, 57);
   assert.ok([...title].length <= 60);
-  assert.equal([...pitch].length, 191);
+  assert.equal(
+    title,
+    "WitnessPatch: Time-Fenced Contracts for Healthcare Agents",
+  );
+  assert.equal([...pitch].length, 199);
   assert.ok([...pitch].length <= 200);
+  assert.equal(
+    pitch,
+    "Compile a synthetic, time-fenced healthcare-agent contract failure into a red Node test bundle; verify a retained patch and exact-fact control with fail-closed checks—no API key or real patient data.",
+  );
   assert.doesNotMatch(draft, /`OpenAI API`,/);
 
   const tagsSection = draft.match(

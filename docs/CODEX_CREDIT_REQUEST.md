@@ -6,7 +6,7 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 
 ## Required human fields
 
-- Email
+- Email. The form label does not specify an account type; the FAQ says the credit balance appears in the `chatgpt.com` account used to request it, so confirm the address associated with the intended ChatGPT/Codex account rather than assuming the Devpost-account email is interchangeable.
 - First name
 - Last name
 - Country of residence
@@ -15,13 +15,16 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 
 ## Project response
 
-> Developer Tools: WitnessPatch is an offline failure-to-regression compiler for teams building healthcare agents. It turns one fully synthetic, time-fenced contract violation into a CI-ready regression and deterministic evidence receipt, then verifies a review-gated policy patch against the unchanged failure and a scoped over-escalation control. We use Codex configured to request GPT-5.6 Sol with Ultra reasoning for post-start implementation, adversarial testing, and schema-constrained repair exploration; the requested credits would support further Build Week red-teaming and demo hardening, while judging remains API-key-free, uses no patient data, and provides no medical advice.
+> Developer Tools: WitnessPatch binds authored facts to reveal times and actions to deadlines for healthcare-agent tests. Its compiler emits a standalone red CI regression from one fully synthetic failure; a separate verifier checks the retained patch, exact-fact control, mutation tests, and browser/Node artifacts. We use Codex configured to request GPT-5.6 Sol with Ultra reasoning for post-start implementation, adversarial testing, and schema-constrained repair exploration; the requested credits would support further Build Week red-teaming and demo hardening, while judging remains API-key-free, uses no real patient data, and provides no medical advice.
 
 ## Submission gate
 
 - [ ] Required identity fields confirmed by the entrant.
+- [ ] Entrant confirms whether the privately supplied Devpost email is also the OpenAI-account email used for ChatGPT/Codex; if not, use the confirmed OpenAI-account email.
+- [x] Exact Devpost username confirmed read-only from the authenticated account menu; keep the value in private task context.
 - [ ] Devpost registration and eligibility confirmed.
 - [ ] `Developer Tools` remains the chosen category.
+- [ ] Entrant approves the frozen two-to-three-sentence project response above.
 - [ ] Entrant has read and explicitly accepts the linked Services Agreement.
 - [ ] Entrant explicitly approves submitting the completed Google form.
 - [ ] Preserve the emailed response copy or success receipt without committing personal data.

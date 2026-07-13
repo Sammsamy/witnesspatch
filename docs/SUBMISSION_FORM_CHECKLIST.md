@@ -4,8 +4,8 @@ This file separates confirmed public requirements from authenticated fields and 
 
 ## Confirmed public fields and evidence
 
-- [x] Project title frozen at 50/60 characters: `WitnessPatch: Compile AI Failures into Regressions`.
-- [x] Elevator pitch frozen at 191/200 characters in `docs/SUBMISSION_DRAFT.md`.
+- [x] Project title frozen at 57/60 characters: `WitnessPatch: Time-Fenced Contracts for Healthcare Agents`.
+- [x] Elevator pitch frozen at 199/200 characters in `docs/SUBMISSION_DRAFT.md`.
 - [x] Category: `Developer Tools`.
 - [x] English project description and 22/25 truthful “Built with” tags frozen in `docs/SUBMISSION_DRAFT.md`.
 - [x] Three final 1200 x 800 PNG media assets captured from the product and recorded by exact byte size and SHA-256 in `submission/media/MANIFEST.md`; no upload has occurred.
@@ -60,7 +60,9 @@ The joined challenge's authenticated submission manager was inspected read-only 
 
 - [x] The judge-facing build requires no API key, payment, login, or request-time model call.
 - [x] The current creator supplied the credit form's name, country, and Devpost-account email in the private task context; no personal data was copied into the repository.
-- [ ] Request the optional $100 Codex credits by July 17 at 12:00 PM PT after the representative confirms that the supplied address is also the ChatGPT/Codex account email, explicitly accepts the OpenAI Services Agreement, and authorizes submission of the request.
+- [x] Exact Devpost username confirmed read-only from the authenticated account menu; the value remains in private task context.
+- [ ] Approve the two-to-three-sentence `Developer Tools` response in `docs/CODEX_CREDIT_REQUEST.md`.
+- [ ] Request the optional $100 Codex credits by July 17 at 12:00 PM PT only after the representative confirms the email for the intended ChatGPT/Codex account, registration and eligibility, explicit acceptance of the OpenAI Services Agreement, and authorization to submit. The form labels its field only as `Email`; the FAQ-backed account guidance is operational, not a separate form requirement.
 - [x] The optional request is Codex credits only; it does not provide API credits and will not become a judge-runtime dependency.
 - [ ] Confirm Auto top-up remains disabled in the relevant OpenAI account; Codex cannot infer account settings.
 - [ ] Do not purchase credits or add a paid runtime dependency.

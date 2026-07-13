@@ -19,8 +19,9 @@ Ask about the reviewer's most recent relevant workflow before showing WitnessPat
 6. What would prevent the reviewer from testing this on one existing synthetic failure?
 7. Is a static recorded-decision witness useful without target-in-loop counterfactual execution? What additional artifact would be required?
 
-**Current time from discovered failure to runnable regression:**  
-**Estimated time with this workflow:**  
+**Historical time from discovered failure to runnable regression and evidence grade:**
+
+**Pre-exposure forecast for the frozen reviewer task, not a savings estimate:**
 **Most important objection:**  
 **Would test on one existing synthetic failure:** yes / no / conditional  
 **Condition:**
@@ -59,7 +60,9 @@ Then, for each item, record **supported as scoped / revise / outside reviewer sc
 
 **Revisions re-reviewed at commit:** not applicable / pending / hash
 
-## C. Verification-claim review
+## C. Optional verification-claim follow-up
+
+This is a separately consented 10-minute software-claim follow-up after the 35-minute builder session. It is not part of the independent task window and must not delay or relabel the original run.
 
 Ask a software/evaluation reviewer to confirm that the public wording matches what the implementation proves:
 
@@ -94,4 +97,4 @@ Ask a software/evaluation reviewer to confirm that the public wording matches wh
 
 ### Health-AI builder request
 
-> I am testing a tool that turns a supplied synthetic healthcare-agent failure into a red regression, executable target diff, exact-fact over-escalation control, and verification receipt. Could I ask about your failure-to-regression workflow at an abstract level, then watch you try the frozen synthetic repository from a clean directory without coaching? The session takes about 35 minutes. Please do not share patient data, client details, private prompts, or proprietary incidents; I will not publish your identity, employer, or quote without permission.
+> I am testing a tool whose compiler turns a supplied synthetic healthcare-agent timeline-contract failure into a red regression; a separate verifier checks the retained target patch, exact-fact control, mutations, and evidence receipt. Could I ask about your current regression workflow at an abstract level, then watch you try the frozen synthetic repository from a clean directory without coaching? The session takes about 35 minutes. Please do not share patient data, client details, private prompts, or proprietary incidents; I will not publish your identity, employer, or quote without permission.

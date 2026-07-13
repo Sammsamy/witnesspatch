@@ -32,9 +32,9 @@ WitnessPatch existed locally before the cutoff. The retained V1 artifact chain a
 
 ## Credits and runtime API boundary
 
-- Registered and eligible entrants may optionally request $100 in Codex credits by July 17 at noon PDT. The live form says requests are first-come, first-served, not guaranteed, limited to one code per entrant, and must name a current category plus a two-to-three-sentence project description.
+- Registered and eligible entrants may optionally request $100 in Codex credits by July 17 at noon PDT. The live form says requests are first-come, first-served, not guaranteed, limited to one code per entrant, and requires an email address, first and last name, country, Devpost username, and a two-to-three-sentence project description naming a current category.
 - Event credits are strictly for the submission, have no cash value, and expire July 31. The FAQ says the event supplies Codex credits only—not separate API credits or tokens. OpenAI's general [Service Credit Terms](https://openai.com/policies/service-credit-terms/) also prohibit transferring, selling, or exchanging service credits.
-- No purchase or payment is required, and the optional Devpost plugin is not required. Do not request credits for the current plan and do not enable Auto top-up; the build and judge path already work through the existing plan without incremental spend.
+- No purchase or payment is required, and the optional Devpost plugin is not required. The form labels its field only as `Email`; the FAQ says the credit balance appears in the `chatgpt.com` account used to request it. Therefore confirm the address for the intended ChatGPT/Codex account, plus eligibility, Services Agreement acknowledgment, and authorization, before submitting; do not enable Auto top-up. The build and judge path remain independent of receiving credits and work without incremental spend.
 - WitnessPatch does not need credits for judging: the static demo, browser verifier, CLI evaluator, compiler, and generated regressions use no API key.
 - No official page expressly requires a live or judge-time API call. The FAQ permits API use but does not state that it is required, and recognizes Codex work through the ChatGPT app, CLI, IDE extension, or SDK. Stage One nevertheless uses generic language about applying required APIs/SDKs, so organizer confirmation remains necessary before treating the no-runtime-call interpretation as settled.
 
@@ -45,7 +45,7 @@ WitnessPatch existed locally before the cutoff. The retained V1 artifact chain a
 - The submission must be the team's original, solely owned work and must comply with all third-party and open-source licenses.
 - The project must not have been developed or derived with financial or preferential support from OpenAI or Devpost, including project funding, investment, contract work, or a commercial license of the kind described in Section 4. Because the team uses an ordinary existing paid ChatGPT/Codex plan, confirm with the organizer that ordinary generally available plan access is not the prohibited project support contemplated by this clause.
 - Every third-party SDK, API, dataset, asset, and pre-existing component must be authorized, disclosed where required, and compatible with the final distribution and project-license posture.
-- A public repository needs relevant licensing. A private repository may instead be shared with both judging addresses above; the rules do not mandate a particular license.
+- The July 13 official update expressly says a public repository needs a relevant open-source license. A private repository may instead be shared with both judging addresses above; the rules do not mandate a particular license for that route.
 - OpenAI/Devpost employees, agents, judges, certain affiliates and immediate-family/household members, and entrants with real or apparent conflicts are excluded as specified in the rules.
 
 ## Healthcare and authorized-testing boundary
@@ -65,20 +65,20 @@ WitnessPatch remains aligned only while it:
 - The team retains submission IP; submission gives OpenAI a non-exclusive license to use the entry for judging.
 - The rules allow OpenAI and Devpost to promote the submission and use contributors' names, likenesses, voices, and images in hackathon publicity for three years. Some submission components may be public.
 - Original ownership, third-party authorization, and open-source license compliance are entrant warranties. Technical assistance is permitted only when the submitted components remain the entrants' owned work and expression of their ideas.
-- The current all-rights-reserved license is consistent with the private judge-shared path. A public repository requires a deliberate relevant-license decision plus the existing third-party notices; the rules do not prescribe a specific license.
+- The current all-rights-reserved license is consistent with the private judge-shared path. The July 13 official update says a public repository requires a relevant open-source license, so choosing that route requires a deliberate license decision plus the existing third-party notices; the rules do not prescribe a specific license.
 - `npm run licenses:check` now gates the 624-entry locked dependency graph against a reviewed SPDX-expression inventory. This is stronger evidence than a direct-dependency list, but distribution-scoped obligations and the final project-license decision remain unresolved.
 
 ## Judging
 
 - Stage One is pass/fail for theme/tool viability.
-- Stage Two weights Technological Implementation, Design, Potential Impact, and Quality of the Idea equally at 25% each.
+- Stage Two weights Technological Implementation, Design, Potential Impact, and Quality of the Idea equally at 25% each. The controlling Quality-of-the-Idea wording asks whether the concept is creative, novel, and different from existing concepts, so the submission must distinguish the closest prior art rather than rely on a broad category claim.
 - Tie-break order is Technological Implementation, Design, Potential Impact, then Quality of the Idea, followed by a panel vote if still tied.
 - Judges may choose not to test and may judge only from the description, images, and video. The proof must therefore be visible in the first minute.
-- The rules define judging as July 22 at 10:00 AM through August 5 at 5:00 PM PDT, while the official schedule says July 22 at 9:00 AM through August 9 at 5:00 PM PDT. The rules control, but keep all access working through August 9 as the conservative operational boundary.
+- The rules define judging as July 22 at 10:00 AM through August 5 at 5:00 PM PDT, while the official schedule says July 22 at 9:00 AM through August 9 at 5:00 PM PDT. The July 13 update also mislabels July 21, 2026 as Monday; the overview correctly says Tuesday and all sources agree on the July 21 at 5:00 PM PT submission cutoff. The rules control, but keep all access working through August 9 as the conservative operational boundary.
 - The published Developer Tools prizes are $15,000 for first and $10,000 for second. First also includes up to two DevDay/Exchange passes, OpenAI Developers promotion, a Codex team meeting, and one year of Pro. None of these benefits is an employment offer or hiring guarantee.
 
 ## Organizer clarification draft — do not send without the team
 
-Send only after the team confirms the wording and destination (`support@devpost.com`):
+The official [Resources page](https://openai.devpost.com/resources) links the [OpenAI Discord](https://discord.gg/openai) and direct [`#build-week-chat`](https://discord.com/channels/974519864045756446/1415384556521132134), and names `#hackathon-announcements` and `#office-hours` as official support routes. Send only after the team confirms the wording and destination (`support@devpost.com` or an official event channel):
 
 > Can you confirm that a fully local Developer Tools project meaningfully built with both Codex and GPT-5.6 satisfies the required-tool and Stage One criteria when the judge-facing product deterministically replays retained GPT-5.6 artifacts and does not call an OpenAI API or SDK at runtime? Does ordinary, generally available access through an entrant's pre-existing paid ChatGPT/Codex plan count as prohibited “financial or preferential support” or a “commercial license” under Section 4? Also, which judging end time governs free-access availability: August 5 at 5:00 PM PT in the Official Rules or August 9 at 5:00 PM PT on the official schedule?

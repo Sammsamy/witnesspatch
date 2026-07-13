@@ -8,7 +8,7 @@ function readExportedHtml() {
 
 test("the deployed static export contains the WitnessPatch product shell", async () => {
   const html = await readExportedHtml();
-  assert.match(html, /<title>Compile healthcare AI failures into tests · WitnessPatch/);
+  assert.match(html, /<title>Time-fenced contracts for healthcare agents · WitnessPatch/);
   assert.match(html, /contract breach happened/);
   assert.match(html, /before the blood pressure arrived/);
   assert.match(html, /Compile failure/);
@@ -68,7 +68,7 @@ test("exports a judge-ready static replay without a request-time Worker", async 
     readFile(staticConfigUrl, "utf8").then(JSON.parse),
   ]);
 
-  assert.match(html, /<title>Compile healthcare AI failures into tests · WitnessPatch/);
+  assert.match(html, /<title>Time-fenced contracts for healthcare agents · WitnessPatch/);
   assert.match(html, /Compile failure/);
   assert.ok(rscStats.size > 0, "static export must retain its RSC payload");
   assert.equal(staticConfig.assets.directory, "./dist/client");
