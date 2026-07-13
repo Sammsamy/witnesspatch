@@ -72,6 +72,7 @@ The joined challenge's authenticated submission manager was inspected read-only 
 
 - [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0 (`94/94` core, `4/4` rendered); rule-audit checkpoint `950fea6` also passed from a fresh clone on Node 24.14.0 (`94/94` core, `5/5` rendered).
 - [x] The current combined tree passes `104/104` core and `5/5` rendered tests, the 624-package/15-static-package license gate, and a 56-file deployment dry run; hydrated Chrome compile/export/verify/replay/recompile QA has zero console errors or warnings.
+- [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, 56-file deployment dry run).
 - [ ] Repeat the clean-checkout release verifier on the exact final submitted commit.
 - [ ] Public CI passes on the exact submitted commit.
 - [ ] Static demo passes logged-out desktop and mobile checks with no console errors.
