@@ -9,7 +9,7 @@ The facilitator must supply these values before the timer starts:
 - commit: `[fill from git rev-parse HEAD]`
 - V2 manifest SHA-256: `[fill from shasum -a 256 public/runs/v2/manifest.json]`
 
-The repository must be clean and checked out at that exact commit. Stop if either value differs, if sensitive information appears, or if the supplied synthetic reference target is not the only target under test.
+The repository must be clean and checked out at that exact commit. Stop if either value differs, if sensitive information appears, or if any external or unauthorized target is introduced. The bundled synthetic reference policies, quarantined candidate, and declared mutations are expected parts of the supplied suite.
 
 ## Install and start
 

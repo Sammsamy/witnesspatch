@@ -37,7 +37,7 @@ Budget 35 minutes:
 
 ### Pre-exposure measures
 
-Do not show the product, pitch, artifact list, or demo before this section. Ask the participant to describe the most recent relevant failure only at an abstract workflow level. Do not request case text, patient facts, screenshots, prompts, customer names, or proprietary policy.
+The recruiting blurb may disclose only that this is an unpaid Build Week developer-tool study using one synthetic healthcare-agent scenario, plus the session length and privacy boundary. Before this section, do not show or describe the UI, repository, task card, artifact list, exact mechanism, screenshots, or demo. Ask the participant to describe the most recent relevant failure only at an abstract workflow level. Do not request case text, patient facts, screenshots, prompts, customer names, or proprietary policy.
 
 Record:
 
@@ -74,7 +74,7 @@ Classify the run before discussing the product:
 - `independent completion`: all five milestones, no substantive product help;
 - `assisted completion`: all five milestones after one to three substantive interventions;
 - `incomplete`: a milestone is missing at 20 minutes or more than three substantive interventions were required;
-- `invalid`: wrong commit, changed manifest, prior product exposure, or unusable record.
+- `invalid`: wrong commit, changed manifest, prior UI/repository/task-card/artifact/demo exposure beyond the permitted recruiting blurb, or unusable record.
 
 An environment or documentation failure remains part of the result. Do not silently reset the timer, edit instructions, or switch builds. A separately labeled rerun may follow after the first record is closed.
 

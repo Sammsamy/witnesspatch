@@ -14,7 +14,7 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Reviewer relationship/conflict:** none / disclosed:
 **Current supervisory, grading, or evaluator relationship:** none / disclosed:
 **Personal-capacity participation and required employer/institution permission:** confirmed / not established / not applicable
-**Prior WitnessPatch exposure before timed protocol:** none / disclosed:
+**Prior WitnessPatch exposure before timed protocol:** permitted recruiting blurb only / additional exposure disclosed:
 **Consent to notes:** yes / no
 **Consent to recording:** not requested / yes / no
 **Publication permission:** private only / anonymous role or credentials / named / exact quote only

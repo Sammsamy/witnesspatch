@@ -15,7 +15,7 @@ Use different people for the builder and physician reviews. Do not mass-message,
 
 **Subject:** 35-minute synthetic healthcare-AI developer-tool test
 
-> Hi — I am building WitnessPatch for OpenAI Build Week. It is developer tooling that compiles one fully synthetic, time-fenced healthcare-agent contract failure into a runnable regression, then separately verifies a retained repair and evidence receipt. It uses no real patient data and provides no medical advice.
+> Hi — I am building WitnessPatch for OpenAI Build Week and conducting one bounded developer-tool study using a fully synthetic healthcare-agent scenario. It uses no real patient data and provides no medical advice. I will withhold the interface and exact mechanism until after the pre-exposure workflow questions.
 >
 > I am looking for one person who has built, evaluated, red-teamed, or release-gated a healthcare AI system within the last 12 months. Would you be willing to do a 35-minute session today or tomorrow: a short pre-demo workflow interview, a 20-minute clean run from a frozen repository, and a brief objection/teach-back? I will not ask for employer secrets, real cases, private prompts, credentials, or proprietary incidents. Negative or incomplete results are useful and will be preserved.
 >

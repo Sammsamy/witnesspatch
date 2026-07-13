@@ -56,7 +56,7 @@ Do not add `OpenAI API`; the product does not use it.
 Failure-to-regression workflows are established: Trajectly, ORP, Braintrust, Promptfoo, and AgentRx cover substantial parts of replay, contracts, diagnosis, datasets, or CI. WitnessPatch does not claim those primitives. Its narrower demonstrated composition is the final portable artifact handoff and closure below.
 
 - **Time-locked facts:** the grader checks which authored facts were visible at every decision.
-- **Standalone handoff:** a known failure plus an authored action contract becomes a conventional nine-file `node:test` package rather than only a platform dataset row or dashboard result.
+- **Portable conventional-test handoff:** a known failure plus an authored action contract becomes a nine-file `node:test` package with a documented WitnessPatch CLI dependency rather than only a platform dataset row or dashboard result.
 - **Independent verdict:** GPT-5.6 helps build and author; it cannot edit the runtime grader, artifact hashes, or expected holdouts.
 - **Executable closure:** judges can inspect a real target diff and regression, not only a risk score or generated critique.
 - **Fail-closed browser proof:** tampering, truncation, redirects, unsafe paths, evaluation drift, holdout drift, or missing WebCrypto keep the failing baseline active.

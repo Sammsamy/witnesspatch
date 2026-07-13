@@ -15,7 +15,7 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 
 ## Project response
 
-> Developer Tools: WitnessPatch binds authored facts to reveal times and actions to deadlines for healthcare-agent tests. Its compiler emits a standalone red CI regression from one fully synthetic failure; a separate verifier checks the retained patch, exact-fact control, mutation tests, and browser/Node artifacts. We use Codex configured to request GPT-5.6 Sol with Ultra reasoning for post-start implementation, adversarial testing, and schema-constrained repair exploration; the requested credits would support further Build Week red-teaming and demo hardening, while judging remains API-key-free, uses no real patient data, and provides no medical advice.
+> Developer Tools: WitnessPatch binds authored facts to reveal times and actions to deadlines for healthcare-agent tests. Its compiler emits a portable red CI regression with a documented WitnessPatch CLI dependency; a separate verifier checks the retained patch, exact-fact control, mutation tests, and browser/Node artifacts. We use Codex configured to request GPT-5.6 Sol with Ultra reasoning for post-start implementation, adversarial testing, and schema-constrained repair exploration; the requested credits would support further Build Week red-teaming and demo hardening, while judging remains API-key-free, uses no real patient data, and provides no medical advice.
 
 ## Submission gate
 
