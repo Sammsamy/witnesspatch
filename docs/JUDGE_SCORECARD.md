@@ -81,7 +81,7 @@ No honest process can guarantee `40/40`, a prize, or employment. Today the impac
 - [ ] Choose public licensed repository or private judge-shared repository and verify access.
 - [ ] Deploy the replay and verify it from a clean browser with no privileged session.
 - [ ] Record and upload the founder-voiced public video under three minutes with audio explaining both Codex and GPT-5.6.
-- [ ] Capture the `/feedback` Codex Session ID from the task where the majority of core functionality was built.
+- [ ] From this primary task, submit `/feedback` with the existing session shared and capture the returned Session ID; do not substitute the technical task/thread UUID.
 - [ ] Confirm both brothers' eligibility/registration and designate the team representative.
 
 ## Stop rule

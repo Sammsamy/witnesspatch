@@ -132,5 +132,5 @@ Open `http://localhost:3000`. The local release path and hydrated browser flow a
 - **Try it URL:** pending public static deployment.
 - **Repository URL:** pending private repository creation and judge sharing.
 - **Video URL:** pending public founder-voice YouTube upload shorter than three minutes.
-- **`/feedback` Session ID:** pending capture from the primary Codex task.
+- **`/feedback` Session ID:** pending. In this primary task, open `/feedback`, share the existing session, submit, and use the returned Session ID—not the technical task/thread UUID.
 - **External validation language:** keep pending until participant-confirmed evidence exists.

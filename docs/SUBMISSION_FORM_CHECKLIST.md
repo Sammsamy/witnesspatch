@@ -12,7 +12,7 @@ This file separates confirmed public requirements from authenticated fields and 
 - [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6.
 - [ ] Repository URL: either public with relevant licensing or private and shared with both `testing@devpost.com` and `build-week-event@openai.com`.
 - [ ] README includes setup, sample data, supported platforms, no-rebuild judge path, Codex collaboration, GPT-5.6 contribution, and human decisions.
-- [ ] `/feedback` Session ID from this primary Codex build task.
+- [ ] In this primary Codex build task, open `/feedback`, choose to share the existing session, submit the feedback, and copy the returned Session ID. Do not substitute the technical task/thread UUID.
 - [ ] Free working demo, functioning test build, or equivalent no-rebuild path available through at least August 9 at 5:00 PM PDT.
 
 ## Authenticated form audit

@@ -106,7 +106,7 @@ The 23-artifact manifest retains the receipt, proposal, reconstructed prompt, ex
 
 ## Evidence sources and remaining provenance actions
 
-- This Codex task contains timestamped post-start implementation and verification calls. The required `/feedback` Session ID must still be captured from this same task before submission.
+- This Codex task contains timestamped post-start implementation and verification calls. The required `/feedback` Session ID must still be returned by submitting feedback from this task with the existing session shared; the technical task/thread UUID is not a confirmed substitute.
 - File birth/modification times above were recorded with macOS `stat` after the rules appeared.
 - V1 and V2 manifests preserve exact artifact bytes and are deterministically rechecked; the same-build V2 manifest is an integrity anchor, not a publisher signature or independent timestamp attestation.
 - The finalized working profile passes `npm run verify:release`: `104/104` core tests, `5/5` rendered tests, a `1/1` real development-server HTTP smoke, build, lint, typecheck, the 624-package/15-static-package distribution-license gate, byte-identical deployed notices, and a 59-file Wrangler dry run. These are local macOS results; Linux and Windows are not verified.
