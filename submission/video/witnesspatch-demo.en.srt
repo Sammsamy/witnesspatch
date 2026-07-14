@@ -1,17 +1,16 @@
 1
 00:00:00,000 --> 00:00:04,000
-I’m a third-year medical student.
-Healthcare-agent failures die as
+I’m Fuzlullah Syed, a third-year
+medical student. Healthcare-agent
 
 2
 00:00:04,000 --> 00:00:08,000
-screenshots. WitnessPatch records what
-the agent knew,
+failures die as screenshots.
+WitnessPatch turns one failed answer
 
 3
 00:00:08,000 --> 00:00:13,000
-then turns a rule-breaking answer into
-a failing test.
+into a CI gate.
 
 4
 00:00:13,000 --> 00:00:18,000
@@ -134,14 +133,15 @@ not proof of which model was served.
 
 29
 00:02:37,000 --> 00:02:42,000
-No patient data, API key, or live model
-call. Blood-pressure labels come from
+The intended user is a healthcare-agent
+evaluation engineer moving a captured
 
 30
 00:02:42,000 --> 00:02:47,000
-the synthetic fixture. Physician review
-is pending; this is developer tooling,
+failure into code review. No patient
+data, API key, or live model call.
 
 31
 00:02:47,000 --> 00:02:53,000
-not clinical use or safety certification.
+Physician review is pending; this proves
+one synthetic path, not clinical safety.

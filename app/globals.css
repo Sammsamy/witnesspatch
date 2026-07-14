@@ -94,10 +94,14 @@ a:focus-visible {
   width: max-content;
   align-items: center;
   gap: 10px;
+  border: 0;
+  background: transparent;
   color: var(--ink);
+  cursor: pointer;
   font-size: 15px;
   font-weight: 710;
   letter-spacing: -0.025em;
+  padding: 0;
   text-decoration: none;
 }
 
@@ -202,11 +206,15 @@ a:focus-visible {
 }
 
 .github-link {
+  border: 0;
   border-bottom: 1px solid var(--line-strong);
+  background: transparent;
   color: var(--ink-soft);
+  cursor: pointer;
   font-size: 12px;
   font-weight: 620;
   line-height: 24px;
+  padding: 0;
   text-decoration: none;
 }
 
@@ -1226,6 +1234,27 @@ a:focus-visible {
   font-size: 9px;
 }
 
+.code-view-toggle {
+  min-height: 28px;
+  border: 1px solid rgba(231, 236, 232, 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: #d9e3dc;
+  cursor: pointer;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+}
+
+.code-view-toggle:hover,
+.code-view-toggle:focus-visible {
+  border-color: #f5fbf7;
+  color: white;
+  outline: none;
+}
+
 .code-window pre {
   overflow-x: auto;
   margin: 0;
@@ -1413,10 +1442,11 @@ a:focus-visible {
 
 .twin-proof > div {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  min-height: 44px;
+  grid-template-columns: 24px minmax(0, 1fr);
   align-items: center;
   gap: 8px;
-  padding: 8px 9px;
+  padding: 8px 10px;
 }
 
 .twin-proof > div + div {
@@ -1429,20 +1459,20 @@ a:focus-visible {
 }
 
 .twin-proof strong {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 650;
 }
 
 .twin-proof small {
   margin-top: 2px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: 9px;
 }
 
 .twin-status {
   display: grid;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   place-items: center;
   border-radius: 6px;
   background: #ebece7;
@@ -1454,6 +1484,11 @@ a:focus-visible {
 .twin-status.pass {
   background: var(--green-pale);
   color: var(--green);
+}
+
+.twin-status.fail {
+  background: var(--red-pale);
+  color: var(--red);
 }
 
 .twin-status svg {
@@ -1643,6 +1678,82 @@ a:focus-visible {
 
 .local-boundary .local-warning {
   color: var(--red-dark);
+}
+
+.local-sample-tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 254, 250, 0.72);
+  padding: 17px 20px;
+}
+
+.local-sample-tools h2,
+.local-sample-tools p {
+  margin: 0;
+}
+
+.local-sample-kicker {
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 760;
+  letter-spacing: 0.11em;
+}
+
+.local-sample-tools h2 {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 720;
+}
+
+.local-sample-tools h2 + p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.local-sample-actions {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.local-sample-actions > button {
+  min-height: 38px;
+  border: 1px solid var(--green-dark);
+  border-radius: 8px;
+  background: var(--green-dark);
+  color: white;
+  cursor: pointer;
+  padding: 0 14px;
+  font-size: 10px;
+  font-weight: 720;
+}
+
+.local-sample-actions > button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.local-sample-downloads {
+  display: flex;
+  gap: 12px;
+}
+
+.local-sample-downloads a {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 680;
+  text-underline-offset: 3px;
 }
 
 .local-form,
@@ -2068,6 +2179,7 @@ a:focus-visible {
   }
 
   .local-boundary,
+  .local-sample-tools,
   .local-file-fields,
   .local-result-grid {
     grid-template-columns: 1fr;
@@ -2075,6 +2187,14 @@ a:focus-visible {
 
   .local-boundary h2 {
     grid-column: auto;
+  }
+
+  .local-sample-actions {
+    justify-items: stretch;
+  }
+
+  .local-sample-downloads {
+    justify-content: space-between;
   }
 
   .local-actions {

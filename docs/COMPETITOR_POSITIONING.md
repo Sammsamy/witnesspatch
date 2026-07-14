@@ -42,7 +42,7 @@ The demo must show this chain in one uninterrupted flow:
 4. A retained patch changes the executable target policy, not the case or locked grader.
 5. The unchanged urgent fixture passes, the exact-fact negative control stays green, and an always-escalate mutation fails.
 6. The browser verifies 23 exact hashes, freshly regrades the two reference runs, reruns four reference holdouts, and recomputes the 9→3 static witness before unlocking the result.
-7. A distinct fresh post-start candidate, produced under a recorded `gpt-5.6-sol` / `ultra` request, remains quarantined while browser-safe JSON-IR interpretation and Node execution independently match its exact two-case/four-mutation software signature.
+7. A distinct fresh post-start candidate, produced under a recorded `gpt-5.6-sol` / `ultra` request, remains quarantined while browser-safe JSON-IR interpretation and Node execution separately match its exact two-case/four-mutation software signature.
 8. The unchanged pre-start Sol candidate fails the new V2 contract and is rejected rather than relabeled.
 
 The exact-fact control is intentionally narrow. It does not prove a benign patient state, safe deferral, or generalization. The compiler's witness is not target-in-loop, counterfactual, or clinically minimal.

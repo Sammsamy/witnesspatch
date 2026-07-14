@@ -210,6 +210,21 @@ function MiniSpark() {
   );
 }
 
+function buildBundlePreview(receipt: BrowserCompilationReceipt) {
+  const paths = receipt.files.map((file) => file.path).sort();
+  const tree = paths.map(
+    (path, index) => `${index === paths.length - 1 ? "└──" : "├──"} ${path}`,
+  );
+  return [
+    `${receipt.bundle_id}/`,
+    ...tree,
+    "",
+    "Expected first run (Node only; not executed in this browser):",
+    "  node --test regression.test.mjs",
+    `  → RED · ${receipt.target_rule_id} · T+${String(receipt.failure_known_at_minute).padStart(2, "0")}`,
+  ].join("\n");
+}
+
 export function WitnessPatchLab() {
   const [workspaceMode, setWorkspaceMode] =
     useState<WorkspaceMode>("reference");
@@ -218,6 +233,7 @@ export function WitnessPatchLab() {
   const [view, setView] = useState<View>("trace");
   const [copied, setCopied] = useState(false);
   const [bundleExported, setBundleExported] = useState(false);
+  const [showFullTest, setShowFullTest] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const [verificationReceipt, setVerificationReceipt] =
     useState<BrowserVerificationReceipt | null>(null);
@@ -277,6 +293,7 @@ export function WitnessPatchLab() {
     setFailedStage(null);
     setCompilationReceipt(null);
     setBundleExported(false);
+    setShowFullTest(false);
     setVerificationReceipt(null);
     setVerificationError("");
     setView("trace");
@@ -291,6 +308,7 @@ export function WitnessPatchLab() {
     setFailedStage(null);
     setCompilationReceipt(null);
     setBundleExported(false);
+    setShowFullTest(false);
     setVerificationReceipt(null);
     setVerificationError("");
     setView("trace");
@@ -445,15 +463,37 @@ export function WitnessPatchLab() {
     }
   }
 
+  function scrollToSection(sectionId: string) {
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    document.getElementById(sectionId)?.scrollIntoView({
+      behavior,
+      block: "start",
+    });
+  }
+
+  function scrollToTop() {
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    window.scrollTo({ top: 0, behavior });
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="WitnessPatch home">
+        <button
+          className="brand"
+          type="button"
+          onClick={scrollToTop}
+          aria-label="Scroll to the top of WitnessPatch"
+        >
           <span className="brand-shield">
             <ShieldMark />
           </span>
           <span>WitnessPatch</span>
-        </a>
+        </button>
 
         <div className="topbar-center" aria-label="Run context">
           <span className="status-dot" />
@@ -495,9 +535,13 @@ export function WitnessPatchLab() {
                 </svg>
                 {copied ? "Command copied" : "Copy verify command"}
               </button>
-              <a className="github-link" href="#method">
+              <button
+                className="github-link"
+                type="button"
+                onClick={() => scrollToSection("method")}
+              >
                 How it works
-              </a>
+              </button>
             </>
           ) : (
             <button
@@ -536,26 +580,14 @@ export function WitnessPatchLab() {
           <div className="sidebar-label">CASES</div>
           <nav className="case-nav" aria-label="Cases">
             <div className="case-item active" aria-current="page">
-              <span className={isPassed ? "case-state pass" : "case-state fail"}>
-                <MarkIcon kind={isPassed ? "pass" : "fail"} />
+              <span className="case-state fail">
+                <MarkIcon kind="fail" />
               </span>
               <span>
                 <strong>Postpartum headache</strong>
-                <small>Urgent escalation</small>
-              </span>
-            </div>
-            <div className="case-item muted">
-              <span className="case-state queued">02</span>
-              <span>
-                <strong>Conflicting medication list</strong>
-                <small>Queued after MVP</small>
-              </span>
-            </div>
-            <div className="case-item muted">
-              <span className="case-state queued">03</span>
-              <span>
-                <strong>Missing interpreter</strong>
-                <small>Queued after MVP</small>
+                <small>
+                  {isPassed ? "Baseline red · repair passes" : "Urgent escalation"}
+                </small>
               </span>
             </div>
           </nav>
@@ -580,17 +612,21 @@ export function WitnessPatchLab() {
           <div className="case-header">
             <div>
               <div className="eyebrow">
-                <span>SYNTHETIC FAILURE REPLAY</span>
+                <span>HEALTHCARE-AGENT RELEASE GATE</span>
                 <span className="eyebrow-separator">/</span>
-                <span>8 days postpartum</span>
+                <span>fully synthetic fixture</span>
               </div>
               <h1>
-                At T+02, the agent had the warning-sign facts—and <em>still waited.</em>
+                {isPassed ? (
+                  <>The original failure stays <em>red.</em> The retained repair passes.</>
+                ) : (
+                  <>At T+02, the agent had the warning-sign facts—and <em>still waited.</em></>
+                )}
               </h1>
               <p>
-                WitnessPatch turns that synthetic healthcare-agent failure into a red
-                Node test, then checks a separate repair against the same locked rules.
-                The locked rule failed at T+02; the later blood-pressure reading arrived at T+06.
+                {isPassed
+                  ? "For healthcare-agent evaluation and release teams: the baseline regression remains a portable failing test while a separate retained repair passes the unchanged locked rules and scoped controls."
+                  : "For healthcare-agent evaluation and release teams: WitnessPatch turns this failure into a red Node test, then checks a separate repair against the same locked rules. The rule failed at T+02; the later blood-pressure reading arrived at T+06."}
               </p>
             </div>
             <div className="header-action-wrap">
@@ -674,12 +710,12 @@ export function WitnessPatchLab() {
                 {score}
               </span>
               <span>
-                <small>CONTRACT SCORE</small>
+                <small>{isPassed ? "RETAINED REPAIR SCORE" : "BASELINE CONTRACT SCORE"}</small>
                 <strong>{isPassed ? "Deterministic pass" : "Contract failed"}</strong>
               </span>
             </div>
             <div className="score-cell">
-              <small>CRITICAL BREACHES</small>
+              <small>{isPassed ? "REPAIR CRITICAL BREACHES" : "BASELINE CRITICAL BREACHES"}</small>
               <strong className={isPassed ? "metric-good" : "metric-bad"}>
                 {criticalFailures}
                 {isPassed && criticalFailureDelta > 0 && (
@@ -693,9 +729,9 @@ export function WitnessPatchLab() {
               <span>response held fixed · smallest set for INV-02</span>
             </div>
             <div className="score-cell">
-              <small>FIRST CRITICAL DEADLINE MISSED</small>
+              <small>BASELINE FIRST CRITICAL DEADLINE</small>
               <strong>T+02</strong>
-              <span>blood pressure arrives T+06</span>
+              <span>{isPassed ? "original failure · repair acts at T+02" : "blood pressure arrives T+06"}</span>
             </div>
             <div className="score-cell source-cell">
               <small>GRADER</small>
@@ -945,20 +981,30 @@ export function WitnessPatchLab() {
                     <div className="code-topline">
                       <span>
                         {compilationReceipt
-                          ? "regression.test.mjs · generated in this browser"
+                          ? showFullTest
+                            ? "regression.test.mjs · complete generated source"
+                            : "9-file bundle · generated in this browser"
                           : "regression.test.mjs · not generated"}
                       </span>
-                      <span>
-                        {compilationReceipt
-                          ? isPassed
-                            ? `${compilationReceipt.file_count}-file baseline bundle · RED / repair PASS`
-                            : `${compilationReceipt.file_count}-file baseline bundle · RED`
-                          : "select Compile failure"}
-                      </span>
+                      {compilationReceipt ? (
+                        <button
+                          className="code-view-toggle"
+                          type="button"
+                          onClick={() => setShowFullTest((current) => !current)}
+                        >
+                          {showFullTest ? "View bundle map" : "View complete test"}
+                        </button>
+                      ) : (
+                        <span>select Compile failure</span>
+                      )}
                     </div>
-                    <pre aria-label={compilationReceipt ? "Live browser-generated executable regression test" : "Compiler waiting state"}>
+                    <pre aria-label={compilationReceipt ? showFullTest ? "Complete browser-generated executable regression test" : "Generated nine-file bundle map and expected first run" : "Compiler waiting state"}>
                       <code>
-                        {compilationReceipt?.regression_source ??
+                        {compilationReceipt
+                          ? showFullTest
+                            ? compilationReceipt.regression_source
+                            : buildBundlePreview(compilationReceipt)
+                          :
                           "// No regression is pre-rendered here.\n// Select “Compile failure” to hash the retained synthetic inputs\n// and generate the exact red node:test bundle in this browser."}
                       </code>
                     </pre>
@@ -1044,18 +1090,30 @@ export function WitnessPatchLab() {
                       </span>
                       <small>{isPassed ? "reference holdout checks passing" : "replay verified result"}</small>
                     </div>
-                    <div className="twin-proof" aria-label="Paired case result">
+                    <div className="twin-proof" aria-label="Four-path repair closure">
                       <div>
-                        <span className={isPassed ? "twin-status pass" : "twin-status"}>
-                          {isPassed ? <MarkIcon kind="pass" /> : "—"}
+                        <span className={isPassed ? "twin-status fail" : "twin-status"}>
+                          {isPassed ? <MarkIcon kind="fail" /> : "—"}
                         </span>
-                        <span><strong>Urgent trace</strong><small>escalates at T+02</small></span>
+                        <span><strong>Original baseline · {runManifest.comparison.baseline_score}/100</strong><small>portable regression remains RED</small></span>
                       </div>
                       <div>
                         <span className={isPassed ? "twin-status pass" : "twin-status"}>
                           {isPassed ? <MarkIcon kind="pass" /> : "—"}
                         </span>
-                        <span><strong>Exact-fact control</strong><small>rejects one always-escalate mutant</small></span>
+                        <span><strong>Retained repair · {runManifest.comparison.repaired_score}/100</strong><small>urgent trace passes at T+02</small></span>
+                      </div>
+                      <div>
+                        <span className={isPassed ? "twin-status pass" : "twin-status"}>
+                          {isPassed ? <MarkIcon kind="pass" /> : "—"}
+                        </span>
+                        <span><strong>Exact-fact control · {runManifest.comparison.near_neighbor_safe_score}/100</strong><small>scoped control remains passing</small></span>
+                      </div>
+                      <div>
+                        <span className={isPassed ? "twin-status fail" : "twin-status"}>
+                          {isPassed ? <MarkIcon kind="fail" /> : "—"}
+                        </span>
+                        <span><strong>Always-escalate mutant · {runManifest.comparison.near_neighbor_overfit_score}/100</strong><small>expected overreach is rejected</small></span>
                       </div>
                     </div>
                   </div>

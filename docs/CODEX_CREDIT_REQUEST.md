@@ -15,7 +15,7 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 
 ## Project response
 
-> We are building in the Developer tools category. WitnessPatch is a synthetic healthcare-agent safety CI tool that replays one time-released scenario, catches a supported unsafe or missing escalation behavior, and compiles that found failure into an executable regression bundle. GPT-5.6 and Codex helped us inspect and red-team the failure and propose a quarantined repair; deterministic local code produces and hash-checks the evidence so developers can review the fix before deployment.
+> We are building in the Developer tools category. WitnessPatch is a synthetic healthcare-agent safety CI tool that replays one time-released scenario, flags one declared synthetic escalation-contract violation, and compiles that found failure into an executable regression bundle. GPT-5.6 and Codex helped us inspect and red-team the failure and propose a quarantined repair; deterministic local code produces and hash-checks the evidence so developers can review the fix before deployment.
 
 ## Submission gate
 

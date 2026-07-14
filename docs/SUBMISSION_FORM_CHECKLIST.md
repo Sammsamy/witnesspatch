@@ -8,10 +8,11 @@ This file separates confirmed public requirements from authenticated fields and 
 - [x] Elevator pitch frozen at 185/200 characters in `docs/SUBMISSION_DRAFT.md`.
 - [x] Category: `Developer Tools`.
 - [x] English project description and 22/25 truthful “Built with” tags frozen in `docs/SUBMISSION_DRAFT.md`.
-- [x] Four final direct 1200 x 800 PNG media assets were recaptured from the feature-frozen production build and recorded by exact byte size, SHA-256, and thirteen rendered/computed source fingerprints in `submission/media/MANIFEST.md`; no upload has occurred.
+- [x] Four candidate direct 1200 x 800 PNG media assets were recaptured from the current source-hash-bound production build and recorded by exact byte size, SHA-256, and thirteen rendered/computed source fingerprints in `submission/media/MANIFEST.md`; no upload has occurred and final external-field freeze remains pending.
 - [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6.
 - [ ] Repository URL: either public with relevant licensing or private and shared with both `testing@devpost.com` and `build-week-event@openai.com`.
-- [ ] README includes setup, sample data, supported platforms, no-rebuild judge path, Codex collaboration, GPT-5.6 contribution, and human decisions.
+- [x] README includes local setup, sample inputs, supported and unverified platform boundaries, Codex collaboration, GPT-5.6 contribution, and retained human decisions.
+- [ ] Add the final public no-rebuild URL and exact submitted release fingerprint to the README after deployment.
 - [ ] In this primary Codex build task, open `/feedback`, choose to share the existing session, submit the feedback, and copy the returned Session ID. Do not substitute the technical task/thread UUID.
 - [ ] Free working demo, functioning test build, or equivalent no-rebuild path available through at least August 9 at 5:00 PM PDT.
 
@@ -59,6 +60,7 @@ The joined challenge's authenticated submission manager was inspected read-only 
 ## No-cost boundary
 
 - [x] The judge-facing build requires no API key, payment, login, or request-time model call.
+- [ ] Obtain organizer confirmation that meaningful development-time GPT-5.6/Codex use plus deterministic retained-artifact replay satisfies Stage One without a runtime OpenAI API or SDK call.
 - [x] The current creator supplied the credit form's name, country, and Devpost-account email in the private task context; no personal data was copied into the repository.
 - [x] Exact Devpost username confirmed read-only from the authenticated account menu; the value remains in private task context.
 - [x] Save the authenticated credit-form draft with the exact three-sentence `Developer tools` response in `docs/CODEX_CREDIT_REQUEST.md`; no submission was made.
@@ -78,11 +80,11 @@ The joined challenge's authenticated submission manager was inspected read-only 
 ## Final release audit
 
 - [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0 (`94/94` core, `4/4` rendered); rule-audit checkpoint `950fea6` also passed from a fresh clone on Node 24.14.0 (`94/94` core, `5/5` rendered).
-- [x] Release-code checkpoint `214854a` passes the full release verifier from clean macOS and local Debian clones: macOS `125/125` core tests; Debian `124` pass plus one expected filesystem skip; both `5/5` rendered tests, `1/1` real development-server HTTP smoke, `5/5` submission-package checks, the distribution-license gate, a 59-asset deployment dry run, and byte-identical physical 55-file `dist/client` snapshots.
+- [x] Claim-hardened checkpoint `04ffd9f` passes the full release verifier from clean macOS and local Debian clones: macOS `125/125` core tests; Debian `124` pass plus one expected filesystem skip; both `5/5` rendered tests, `1/1` real development-server HTTP smoke, `5/5` submission-package checks, the distribution-license gate, a 59-asset deployment dry run, and byte-identical physical 55-file `dist/client` snapshots after canonical path-prefix normalization.
 - [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, Wrangler dry run reporting 56 assets).
 - [x] Release-code checkpoint `9f2cd8d` fixes the development-server first-request failure and passes the expanded verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, Wrangler dry run reporting 59 assets).
 - [x] Submission-package checkpoint `b4c8217` passes `npm ci` and the full expanded release verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, `4/4` submission checks, Wrangler dry run reporting 59 assets, zero install vulnerabilities).
-- [x] Final local production-browser reference and local-input desktop QA passes with zero console errors or warnings; the exact 390 x 844 hero, compiled local result, and verified receipt have no horizontal overflow, visible controls, and zero console errors or warnings. This does not replace logged-out testing of the eventual public URL.
+- [x] Current source-hash-bound local production-browser reference and included-sample desktop QA passes with zero console errors or warnings, no `/.rsc`/`404` same-page navigation, and no requests after the two expected sample fetches; exact 390 x 844 reference and local replays have no horizontal overflow. This does not replace logged-out testing of the eventual public URL.
 - [x] Submission title, pitch, tags, four-image count, PNG geometry, byte limits, and refreshed media/source-manifest hashes pass the automated release gate.
 - [ ] Repeat the clean-checkout release verifier on the exact final submitted commit.
 - [ ] Remote GitHub Actions CI passes on the exact submitted commit and is visible inside the judge-shared private repository.

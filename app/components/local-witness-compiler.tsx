@@ -109,6 +109,7 @@ export function LocalWitnessCompiler({ onReturn }: LocalWitnessCompilerProps) {
   const [runFile, setRunFile] = useState<File | null>(null);
   const [syntheticConfirmed, setSyntheticConfirmed] = useState(false);
   const [compileState, setCompileState] = useState<CompileState>("idle");
+  const [sampleLoading, setSampleLoading] = useState(false);
   const [compilationReceipt, setCompilationReceipt] =
     useState<LocalCompilationReceipt | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -139,11 +140,82 @@ export function LocalWitnessCompiler({ onReturn }: LocalWitnessCompilerProps) {
   function invalidateResult(nextAnnouncement = "Inputs changed. Compile a new witness.") {
     generationRef.current += 1;
     revokeObjectUrl();
+    setSampleLoading(false);
     setCompileState("idle");
     setCompilationReceipt(null);
     setErrorMessage("");
     setBundleExported(false);
     setAnnouncement(nextAnnouncement);
+  }
+
+  function reflectSelectedFile(
+    input: HTMLInputElement | null,
+    file: File,
+  ) {
+    if (!input || typeof DataTransfer === "undefined") return;
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    input.files = transfer.files;
+  }
+
+  async function loadIncludedSample() {
+    invalidateResult("Loading the included fully synthetic sample inputs.");
+    const generation = generationRef.current;
+    setSampleLoading(true);
+    setCaseFile(null);
+    setRunFile(null);
+    setSyntheticConfirmed(false);
+
+    try {
+      const routes = [
+        "/runs/v2/postpartum-warning-signs-case.json",
+        "/runs/v2/postpartum-warning-signs-baseline.json",
+      ];
+      const responses = await Promise.all(
+        routes.map((route) =>
+          window.fetch(route, { cache: "no-store", redirect: "error" }),
+        ),
+      );
+      for (const [index, response] of responses.entries()) {
+        if (!response.ok || response.redirected) {
+          throw new Error(
+            `Included sample ${index + 1} returned HTTP ${response.status}.`,
+          );
+        }
+      }
+      const [caseBuffer, runBuffer] = await Promise.all(
+        responses.map((response) => response.arrayBuffer()),
+      );
+      if (generationRef.current !== generation) return;
+
+      const includedCase = new File(
+        [caseBuffer],
+        "postpartum-warning-signs-case.json",
+        { type: "application/json" },
+      );
+      const includedRun = new File(
+        [runBuffer],
+        "postpartum-warning-signs-baseline.json",
+        { type: "application/json" },
+      );
+      assertJsonFile(includedCase, "Included case input");
+      assertJsonFile(includedRun, "Included run input");
+      setCaseFile(includedCase);
+      setRunFile(includedRun);
+      reflectSelectedFile(caseInputRef.current, includedCase);
+      reflectSelectedFile(runInputRef.current, includedRun);
+      setAnnouncement(
+        "Included synthetic sample loaded. Review and select the synthetic-data confirmation before compiling; the local receipt will still report zero externally verified inputs.",
+      );
+    } catch (error) {
+      if (generationRef.current !== generation) return;
+      const message = conciseError(error);
+      setCompileState("error");
+      setErrorMessage(message);
+      setAnnouncement(`Included sample loading failed closed. ${message}`);
+    } finally {
+      if (generationRef.current === generation) setSampleLoading(false);
+    }
   }
 
   function handleCaseFile(event: ChangeEvent<HTMLInputElement>) {
@@ -277,7 +349,8 @@ export function LocalWitnessCompiler({ onReturn }: LocalWitnessCompilerProps) {
     caseFile !== null &&
     runFile !== null &&
     syntheticConfirmed &&
-    !isCompiling;
+    !isCompiling &&
+    !sampleLoading;
 
   return (
     <section className="local-workspace" id="top" aria-labelledby="local-title">
@@ -310,6 +383,40 @@ export function LocalWitnessCompiler({ onReturn }: LocalWitnessCompilerProps) {
           Your declaration is not a PHI scanner. WitnessPatch cannot detect
           protected health information or prove that data is deidentified.
         </p>
+      </section>
+
+      <section className="local-sample-tools" aria-labelledby="local-sample-title">
+        <div>
+          <p className="local-sample-kicker">NO-REBUILD JUDGE PATH</p>
+          <h2 id="local-sample-title">Try the included synthetic pair</h2>
+          <p>
+            Load the manifest-listed case and failed run into the same local-input
+            path, or download both files and inspect them first.
+          </p>
+        </div>
+        <div className="local-sample-actions">
+          <button
+            type="button"
+            onClick={() => void loadIncludedSample()}
+            disabled={sampleLoading || isCompiling}
+          >
+            {sampleLoading ? "Loading sample…" : "Load included sample"}
+          </button>
+          <span className="local-sample-downloads">
+            <a
+              href="/runs/v2/postpartum-warning-signs-case.json"
+              download="postpartum-warning-signs-case.json"
+            >
+              Download case
+            </a>
+            <a
+              href="/runs/v2/postpartum-warning-signs-baseline.json"
+              download="postpartum-warning-signs-baseline.json"
+            >
+              Download failed run
+            </a>
+          </span>
+        </div>
       </section>
 
       <form
@@ -382,7 +489,7 @@ export function LocalWitnessCompiler({ onReturn }: LocalWitnessCompilerProps) {
 
       {compileState === "error" ? (
         <section className="local-error" role="alert" aria-labelledby="local-error-title">
-          <h2 id="local-error-title">Compilation stopped</h2>
+          <h2 id="local-error-title">Workspace stopped</h2>
           <p>{errorMessage}</p>
         </section>
       ) : null}

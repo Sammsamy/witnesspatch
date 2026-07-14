@@ -4,15 +4,17 @@ This is an internal decision tool, not a prediction of anyone's private views. T
 
 The [Official Rules](https://openai.devpost.com/rules) score technological implementation, design, potential impact, and quality of the idea on a 1–10 scale with equal weight. Technical implementation is the first tie-break. The rules also say only meaningful post-start extensions to an existing project are judged, so V1 lineage cannot inflate the Build Week score.
 
-## Current honest score
+## Current evidence-based range
 
-| Official criterion | Now | Defensible finalist target | Main gap |
+The latest independent hostile review scored the pre-polish candidate `29.1/40`; the table below is the project's more optimistic internal planning estimate after the resulting baseline/repair, artifact-map, sample-loader, navigation, and legibility fixes. Treat `29–31/40` as the honest current range, not `30.5` as a measured judge prediction.
+
+| Official criterion | Internal estimate | Defensible finalist target | Main gap |
 |---|---:|---:|---|
 | Technological implementation | 9.3 / 10 | 9.5 | Post-start work includes a model-free browser and CLI compiler, content-bound bundle identities, schema and semantic validation, bounded browser work, portable unverified-input disclosures, an executable red regression, exact manifest, retained target diff, 23-file verifier, and adversarial fail-closed tests. For the two manifest-listed public inputs, the CLI with `--fact-scope failure-prefix` produces the same nine file contents as the browser. Clean macOS and local Debian replays produce byte-identical static snapshots. Remote CI, exact submitted-commit replay after external-field freeze, and public hosting remain. |
-| Design | 8.5 / 10 | 9.0 | The reference flow begins failed, compiles a visible `BASELINE RED` ZIP, then separately verifies the repair. A new isolated workspace accepts a judge's synthetic case and failed run without mixing imported data into the maternal dashboard or retained proof. The feature-frozen production-browser flow is clean, four source-bound media frames are captured, and the 2:53 founder script demonstrates custom input. The public video and logged-out deployed replay remain. |
+| Design | 8.5 / 10 | 9.0 | The reference flow begins failed, compiles a visible `BASELINE RED` ZIP and judge-readable bundle map, then separately verifies the repair while keeping the baseline visibly red. An isolated workspace can load the included synthetic pair or accept a judge's files without mixing imported data into the maternal dashboard or retained proof. The current source-hash-bound production-browser flow is clean, four source-bound media frames are captured, and the 2:53 founder script demonstrates custom input. The public video and logged-out deployed replay remain. |
 | Potential impact | 5.4 / 10 | 8.0 | The user and release-gating job are specific, but there is still no external healthcare-AI builder workflow observation, measured time-to-regression baseline, adoption evidence, or licensed-physician review. Synthetic software checks cannot fill this gap. |
 | Quality of the idea | 7.3 / 10 | 8.2 | The broad failure-to-regression framing directly collides with Trajectly, ORP, Braintrust, Promptfoo, Pacific AI Gatekeeper, and AgentRx. The narrower composition binds authored facts to reveal times and actions to deadlines, then exports a conventional test with a separate repair, exact-fact control, and mutation closure. Only one healthcare vertical slice is implemented and exercised, so portability and differentiation remain bounded. |
-| **Planning total** | **30.5 / 40** | **34.7 / 40** | Technically credible, visually coherent, and now usable on local inputs, but not yet a defensible winning submission. External workflow and physician evidence, verified public access, and the public video are the highest-value remaining work. |
+| **Internal planning total** | **30.5 / 40** | **34.7 / 40** | The hostile-review floor is `29.1/40`. The project is technically credible, visually coherent, and usable on local inputs, but not yet a defensible winning submission. External workflow and physician evidence, verified public access, and the public video are the highest-value remaining work. |
 
 No honest process can guarantee `40/40`, a prize, or employment. Today the impact score is the hard ceiling: more polish cannot substitute for external evidence.
 
@@ -73,10 +75,10 @@ No honest process can guarantee `40/40`, a prize, or employment. Today the impac
 - [x] Capture a fresh post-start candidate under a recorded `gpt-5.6-sol` / `ultra` request, keep it quarantined, and verify its exact browser-IR and Node signatures without claiming served-model attestation.
 - [x] Create the first dated post-start checkpoint (`21405c8`) and preserve the non-rewritten provenance ledger.
 - [x] Pass `npm ci` and the complete release verifier from fresh local clones on macOS with Node 22.15.0 and 24.14.0 at checkpoint `a056fe3`.
-- [x] Pass release-code checkpoint `214854a` through the complete release verifier from clean macOS and local Debian clones, including `125/125` core tests on macOS, `124` pass plus one expected filesystem skip on Debian, `5/5` rendered tests, `1/1` HTTP smoke, `5/5` submission checks, and a 59-asset Wrangler dry run; confirm byte-identical physical 55-file `dist/client` snapshots across both environments.
+- [x] Pass claim-hardened checkpoint `04ffd9f` through the complete release verifier from clean macOS and local Debian clones, including `125/125` core tests on macOS, `124` pass plus one expected filesystem skip on Debian, `5/5` rendered tests, `1/1` HTTP smoke, `5/5` submission checks, and a 59-asset Wrangler dry run; confirm byte-identical physical 55-file `dist/client` snapshots across both environments after canonical path-prefix normalization.
 - [x] Pass `npm ci` and the complete release verifier from a fresh local clone of release-code checkpoint `15f1aee` on Node 24.14.0.
 - [x] Fix the README development-server first-request failure and pass the expanded verifier from a fresh clone of `9f2cd8d`, including the real HTTP smoke.
-- [x] Recapture four direct 1200 x 800 product screenshots from the feature-frozen build and bind their bytes to thirteen final source fingerprints; the 2:53 founder script and captions are prepared but the public video is not recorded.
+- [x] Recapture four direct 1200 x 800 product screenshots from the current source-hash-bound candidate and bind their bytes to thirteen source fingerprints; the 2:53 founder script and captions are prepared but the public video is not recorded.
 - [ ] Obtain at least one health-AI builder workflow interview.
 - [ ] Obtain a scoped licensed-physician fixture review, or preserve `pending` everywhere.
 - [ ] Create the selected private all-rights-reserved repository, share it with both judging addresses, and verify access and CI visibility from a judge-equivalent account.

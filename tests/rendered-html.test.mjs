@@ -60,6 +60,14 @@ test("keeps the judge replay keyboard and screen-reader legible", async () => {
   assert.doesNotMatch(html, /Suite options|>Reproduce</);
 });
 
+test("keeps same-page controls out of static RSC navigation", async () => {
+  const html = await readExportedHtml();
+
+  assert.match(html, /<button[^>]*aria-label="Scroll to the top of WitnessPatch"/);
+  assert.match(html, /<button[^>]*>How it works<\/button>/);
+  assert.doesNotMatch(html, /href="#(?:top|method)"/);
+});
+
 test("exports a judge-ready static replay without a request-time Worker", async () => {
   const exportedHtmlUrl = new URL("../dist/client/index.html", import.meta.url);
   const exportedRscUrl = new URL("../dist/client/index.rsc", import.meta.url);
