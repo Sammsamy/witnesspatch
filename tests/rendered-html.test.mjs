@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile, stat } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 function readExportedHtml() {
@@ -65,16 +65,18 @@ test("exports a judge-ready static replay without a request-time Worker", async 
   const exportedRscUrl = new URL("../dist/client/index.rsc", import.meta.url);
   const staticConfigUrl = new URL("../wrangler.static.jsonc", import.meta.url);
 
-  const [html, rscStats, staticConfig] = await Promise.all([
+  const [html, rsc, staticConfig] = await Promise.all([
     readFile(exportedHtmlUrl, "utf8"),
-    stat(exportedRscUrl),
+    readFile(exportedRscUrl, "utf8"),
     readFile(staticConfigUrl, "utf8").then(JSON.parse),
   ]);
 
   assert.match(html, /<title>Replayable safety tests for healthcare agents · WitnessPatch/);
   assert.match(html, /Compile failure/);
   assert.match(html, /Compile your files/);
-  assert.ok(rscStats.size > 0, "static export must retain its RSC payload");
+  assert.ok(rsc.length > 0, "static export must retain its RSC payload");
+  assert.match(html, /witnesspatch-v2-c9fb4568/);
+  assert.match(rsc, /"deploymentVersion":"witnesspatch-v2-c9fb4568"/);
   assert.equal(staticConfig.assets.directory, "./dist/client");
   assert.equal(staticConfig.assets.run_worker_first, false);
   assert.equal("main" in staticConfig, false);
