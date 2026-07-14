@@ -117,7 +117,7 @@ test("Devpost media are exact 3:2 PNGs within the declared upload boundary", asy
 
   assert.match(manifest, /fully synthetic/i);
   assert.match(manifest, /not clinical decision support/i);
-  assert.match(manifest, /Physician validation remains pending/i);
+  assert.match(manifest, /Licensed-physician fixture review remains pending/i);
 });
 
 test("authenticated overview copy stays inside the recorded field limits", async () => {

@@ -1,6 +1,6 @@
 # External review packet
 
-Use this packet with `docs/SAME_DAY_VALIDATION_PROTOCOL.md` and record the result in `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. Do not prefill agreement, invent a reviewer, coach toward approval, or describe a medical-student review as licensed-physician validation.
+Use this packet with `docs/SAME_DAY_VALIDATION_PROTOCOL.md` and record the result in `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. Do not prefill agreement, invent a reviewer, coach toward approval, or describe a medical-student review as a licensed-physician review or clinical validation.
 
 ## A. Health-AI builder workflow review
 
@@ -32,7 +32,7 @@ Do not turn an estimate into a published time-saved claim without observing a re
 
 This review is only about the two authored V2 postpartum fixtures, their public sources, and their wording. It is not product approval, a clinical study, patient-care advice, or validation of the software.
 
-Use the visually checked five-page handoff generated from `docs/PHYSICIAN_REVIEW_PACKET.md`. Show Page 1 and record the independent first-look answers before revealing Pages 2–5. The participant must complete Pages 2–5 of that PDF; it is the authoritative participant record. This document is a facilitator mirror of the prompts, not a substitute record. The generated packet uses only the five source URLs embedded in the V2 fixtures, fingerprints the exact wording artifacts, includes complete retained-display and executable-reference messages and all seven UI contract cards, and separately flags exact route and repeat-reading phrases for disposition.
+Use the visually checked five-page handoff generated from `docs/PHYSICIAN_REVIEW_PACKET.md`. Show Page 1 and record the unaided first-look answers before revealing Pages 2–5. The participant must complete Pages 2–5 of that PDF; it is the authoritative participant record. This document is a facilitator mirror of the prompts, not a substitute record. The generated packet uses only the five source URLs embedded in the V2 fixtures, fingerprints the exact wording artifacts, includes complete retained-display and executable-reference messages and all seven UI contract cards, and separately flags exact route and repeat-reading phrases for disposition.
 
 **Reviewer credentials and jurisdiction:**  
 **Relevant practice area:**  
@@ -40,7 +40,9 @@ Use the visually checked five-page handoff generated from `docs/PHYSICIAN_REVIEW
 **Conflict disclosure:**  
 **Name/quote permission:** yes / no / anonymous credentials only
 
-First show only the two synthetic timelines, their declared limits, and public sources. Record the physician's independently stated implications, misleading implications, omissions, and local-policy boundaries before revealing the project rules or copy.
+Stop and keep the review pending if active licensure cannot be established, the practice area is inappropriate for the requested judgments, any source cannot be opened, patient-specific advice or sensitive information appears, or the participant is asked to approve the product rather than the bounded claims. A disclosed conflict must be recorded and the review must not be called independent.
+
+First show only the two synthetic timelines, their declared limits, and public sources. Record the physician's unaided implications, misleading implications, omissions, and local-policy boundaries before revealing the project rules or copy.
 
 Then, for each item, record **supported as scoped / revise / outside reviewer scope / unresolved**, the reason in the reviewer's words, and the exact requested change. Use these neutral prompts:
 
@@ -91,7 +93,7 @@ Ask a software/evaluation reviewer to confirm that the public wording matches wh
 - A review of these fixtures does not validate other cases, the grader, the product, or patient outcomes.
 - A builder interview is problem/workflow evidence, not clinical validation.
 - A single clean run is usability evidence for one environment, not adoption or time-saved evidence.
-- If no qualified physician review is completed, keep `licensed physician validation pending` everywhere.
+- Unless a qualified physician completes the bounded review, all five sources are opened, all material items are resolved, and required revisions are re-reviewed, keep `licensed physician fixture review pending` everywhere.
 
 ## Recruitment messages
 

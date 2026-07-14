@@ -37,8 +37,8 @@ The exact routing phrases `obstetric triage`, `do not wait for another reply or 
 
 ## Permitted closeout language
 
-Only after all requested revisions are re-reviewed may the project use a participant-approved statement of this form:
+Only after active licensure is established, the practice area is appropriate, all five sources were opened, any conflict is disclosed without calling the review independent, all material items are resolved, and all requested revisions are re-reviewed may the project use a participant-approved statement of this form:
 
 > One licensed [practice area] physician in [jurisdiction] reviewed two synthetic V2 fixtures and nine bounded wording/source claims at commit [hash]: [x] supported as scoped, [y] revise, [z] outside scope, and [u] unresolved. This was fixture-level wording and source review, not product approval, clinical validation, medical advice, or evidence of patient outcomes.
 
-If any material item is unresolved, any required revision has not been re-reviewed, or the reviewer declines that scope statement, keep `licensed physician fixture review pending` everywhere.
+If any condition above is not met or the reviewer declines that scope statement, keep `licensed physician fixture review pending` everywhere.

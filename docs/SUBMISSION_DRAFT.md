@@ -87,7 +87,7 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Reference browser recomputation: `2/2` fresh regrades and `4/4` V2 holdouts.
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
-- Local release verification: the feature-frozen working tree passed `npm run verify:release` on macOS 26.5.2 arm64 with Node 24.14.0 and npm 11.9.0: `125/125` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `5/5` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 59-file Wrangler dry run. Clean replay of the new commit remains pending.
+- Local release verification: release-code checkpoint `214854a` passed `npm ci` and `npm run verify:release` from clean clones on macOS 26.5.2 arm64/Node 24.14.0 and a local Debian 12 arm64 container/Node 22.23.1. macOS passed `125/125` core tests; Debian passed `124` and expectedly skipped one case-insensitive-filesystem test. Both passed `5/5` rendered-product tests, the `1/1` real development-server HTTP smoke, `5/5` submission-package checks, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run; their physical 55-file `dist/client` snapshots were byte-identical.
 - Final real-Chrome QA: the reference path visibly completed `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, and fresh IR `2/2` plus `4/4`. The local path produced a nine-file `50/100` red bundle with `2` hashes computed and `0` externally verified, no post-load requests, exact CLI byte parity, red/green executable closure, and zero console errors or warnings. An exact 390 x 844 replay of the hero, compiled local result, and verified receipt had no horizontal overflow and zero console errors or warnings.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
@@ -130,7 +130,7 @@ npm run verify:release
 npm run dev
 ```
 
-Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Treat Linux as verified only after the remote GitHub Actions check visible inside the judge-shared private repository is green. Windows is not tested.
+Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Source install, build, and release verification also pass in the exact local Debian 12 arm64/Node 22.23.1 environment documented above; no Linux browser matrix is claimed. Remote GitHub Actions and Windows remain unverified.
 
 ## Form placeholders that must remain blank until real
 

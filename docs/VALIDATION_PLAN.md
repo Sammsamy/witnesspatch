@@ -21,7 +21,7 @@ Verified local V2 software evidence:
 - `23/23` exact artifact hashes against the same-build manifest, reference `2/2` fresh browser regrades, and `4/4` V2 holdouts;
 - a 9→3 static `INV-02` witness over facts revealed through T+02, with recorded decisions fixed;
 - a distinct fresh post-start candidate, retained but not installed, whose browser-safe JSON-IR interpretation and Node execution match `2/2` authored cases and `4/4` software mutation signatures;
-- the feature-frozen working tree passing `npm run verify:release` on macOS with `125/125` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `5/5` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and the 59-file Wrangler dry run; clean commit replay remains pending;
+- release-code checkpoint `214854a` passing `npm ci` and `npm run verify:release` from clean macOS 26.5.2 arm64/Node 24.14.0 and local Debian 12 arm64/Node 22.23.1 clones; macOS passed `125/125` core tests, Debian passed `124` with one expected case-insensitive-filesystem skip, and both passed `5/5` rendered-product tests, the `1/1` real development-server HTTP smoke, `5/5` submission-package checks, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and the 59-asset Wrangler dry run; both produced the same physical 55-file `dist/client` byte manifest;
 - final production-Chrome reference `50 → 100` verification plus isolated local-input compilation, nine-file browser/CLI byte parity, red/green regression execution, no post-load local requests, and zero console errors or warnings;
 - bidirectional lexical marker check against urgent copy hidden behind safe action labels;
 - numeric-inference contradiction marker;
@@ -100,7 +100,7 @@ Do not report patient outcomes, lives saved, clinical accuracy, or regulatory re
 
 Until a licensed physician has reviewed the two V2 fixtures, sources, and exact rules:
 
-- retain `licensed physician validation pending` in the UI and artifacts;
+- retain `clinician_validation: pending` in machine artifacts and `licensed physician fixture review pending` in visible copy;
 - do not change provenance to `validated`;
 - do not use reviewer-style badges or implied endorsement;
 - do not generalize beyond the exact authored facts;

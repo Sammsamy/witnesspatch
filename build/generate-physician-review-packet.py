@@ -392,7 +392,7 @@ def scope_banner():
 
 def reviewer_fields():
     rows = [
-        [p("Reviewer attests to an active physician license: [ ] yes  [ ] no", FIELD),
+        [p("Active physician license established: [ ] yes  [ ] no. If no or unclear, stop; review remains pending.", FIELD),
          p("Date: __________________", FIELD)],
         [p("Licensing jurisdiction: ______________________________", FIELD),
          p("Relevant practice area: __________________", FIELD)],
@@ -629,7 +629,7 @@ def source_disposition_table(material: dict):
         ])
     rows.append([
         p("Item 9 overall", TABLE_BODY),
-        p("Mark supported only if every opened representation above is accurate as scoped. Otherwise use revise or unresolved; record unavailable pages separately.", CLAIM),
+        p("Mark supported only if all five official pages were opened and every representation above is accurate as scoped. Any unavailable page forces unresolved/pending.", CLAIM),
         p("[ ] S  [ ] R  [ ] O  [ ] U<br/><b>Unavailable pages / reason:</b><br/>____________________________<br/>____________________________<br/>____________________________", CLAIM),
     ])
     return Table(
@@ -669,6 +669,15 @@ def closeout_table(commit: str):
         [p("Reviewer-stated severity", TABLE_BODY), p("________________________________________________________________________________", TABLE_BODY)],
         [p("Unresolved / local policy", TABLE_BODY), p("________________________________________________________________________________<br/>________________________________________________________________________________", TABLE_BODY)],
         [p("Revision re-review", TABLE_BODY), p("[ ] not applicable  [ ] pending  [ ] completed at commit __________________________", TABLE_BODY)],
+        [
+            p("Public-statement gate", TABLE_BODY),
+            p(
+                "Use only if active licensure is established, the practice area is appropriate, all five sources were opened, "
+                "any conflict is disclosed without calling the review independent, no material item remains unresolved, and every material revision was re-reviewed.<br/>"
+                "[ ] all conditions met  [ ] not met - keep fixture review pending",
+                TINY,
+            ),
+        ],
         [p("Public scope statement", TABLE_BODY), p(f"{proposed}<br/><b>Reviewer disposition:</b> [ ] accept  [ ] revise  [ ] decline", TINY)],
     ]
     return Table(
@@ -721,7 +730,7 @@ def build_pdf(*, allow_dirty_preview: bool):
     doc.addPageTemplates([PageTemplate(id="review", frames=[frame], onPage=footer)])
 
     story = []
-    story.extend(header_block("PAGE 1 - INDEPENDENT FIRST LOOK", commit, manifest_hash, dirty=dirty))
+    story.extend(header_block("PAGE 1 - FIRST LOOK - PROJECT RULES WITHHELD", commit, manifest_hash, dirty=dirty))
     story.append(scope_banner())
     story.append(Spacer(1, 4))
     story.append(privacy_banner())
@@ -820,9 +829,9 @@ def build_pdf(*, allow_dirty_preview: bool):
     story.append(closeout_table(commit))
     story.append(Spacer(1, 3))
     story.append(p(
-        "<b>Pending rule.</b> Keep licensed physician fixture review pending if any material item is unresolved, any requested "
-        "revision has not been re-reviewed, or the reviewer declines the narrow public statement. A completed review is not "
-        "clinical validation. Keep this completed packet and all credential evidence private; commit only an approved deidentified summary.",
+        "<b>Pending rule.</b> Unless every Public-statement gate condition is met and the reviewer accepts the narrow statement, "
+        "keep licensed physician fixture review pending. Completion is not clinical validation. Keep the packet and credential "
+        "evidence private; commit only an approved deidentified summary.",
         SMALL,
     ))
 

@@ -72,16 +72,16 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [x] Public fixtures are synthetic and contain no real patient data.
 - [x] Product is developer tooling, not patient-facing medical advice or automated medical decision-making.
 - [x] Repair installation remains human review-gated.
-- [ ] Obtain scoped licensed-physician review or keep `licensed physician validation pending` everywhere.
+- [ ] Obtain a qualified, fully completed scoped licensed-physician fixture review or keep `licensed physician fixture review pending` everywhere.
 - [ ] Obtain an external healthcare-AI builder clean run and record objections, assistance, and environment.
 
 ## Final release audit
 
 - [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0 (`94/94` core, `4/4` rendered); rule-audit checkpoint `950fea6` also passed from a fresh clone on Node 24.14.0 (`94/94` core, `5/5` rendered).
-- [x] The feature-frozen working tree passes `125/125` core tests, `5/5` rendered tests, a `1/1` real development-server HTTP smoke, `5/5` submission-package checks, the 624-package/15-static-package license gate, and a 59-file deployment dry run; clean macOS and Debian commit replays remain the next gate.
-- [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, 56-file deployment dry run).
-- [x] Release-code checkpoint `9f2cd8d` fixes the development-server first-request failure and passes the expanded verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, 59-file deployment dry run).
-- [x] Submission-package checkpoint `b4c8217` passes `npm ci` and the full expanded release verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, `4/4` submission checks, 59-file deployment dry run, zero install vulnerabilities).
+- [x] Release-code checkpoint `214854a` passes the full release verifier from clean macOS and local Debian clones: macOS `125/125` core tests; Debian `124` pass plus one expected filesystem skip; both `5/5` rendered tests, `1/1` real development-server HTTP smoke, `5/5` submission-package checks, the distribution-license gate, a 59-asset deployment dry run, and byte-identical physical 55-file `dist/client` snapshots.
+- [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, Wrangler dry run reporting 56 assets).
+- [x] Release-code checkpoint `9f2cd8d` fixes the development-server first-request failure and passes the expanded verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, Wrangler dry run reporting 59 assets).
+- [x] Submission-package checkpoint `b4c8217` passes `npm ci` and the full expanded release verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, `4/4` submission checks, Wrangler dry run reporting 59 assets, zero install vulnerabilities).
 - [x] Final local production-browser reference and local-input desktop QA passes with zero console errors or warnings; the exact 390 x 844 hero, compiled local result, and verified receipt have no horizontal overflow, visible controls, and zero console errors or warnings. This does not replace logged-out testing of the eventual public URL.
 - [x] Submission title, pitch, tags, four-image count, PNG geometry, byte limits, and refreshed media/source-manifest hashes pass the automated release gate.
 - [ ] Repeat the clean-checkout release verifier on the exact final submitted commit.

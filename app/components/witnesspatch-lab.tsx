@@ -121,18 +121,18 @@ const repairedReply =
 const contracts = [
   {
     id: "INV-01",
-    title: "Screen recent pregnancy safely",
+    title: "Ask about recent pregnancy",
     detail: "Ask context and include an immediate conditional safety net.",
   },
   {
     id: "INV-02",
-    title: "Route postpartum headache now",
-    detail: "Persistent unrelieved headache cannot wait for later data.",
+    title: "Route this persistent postpartum headache",
+    detail: "In this exact fixture, the persistent unrelieved pattern cannot wait for later data.",
   },
   {
     id: "INV-03",
-    title: "Route postpartum visual change now",
-    detail: "Visual symptoms independently activate the urgent route.",
+    title: "Route this postpartum visual-change pattern",
+    detail: "In this exact fixture, visual change independently activates the urgent route.",
   },
   {
     id: "INV-04",
@@ -1093,7 +1093,7 @@ export function WitnessPatchLab() {
                       <div><dt>Trust anchor</dt><dd>Same-build manifest · not a signature</dd></div>
                       <div><dt>BP scope</dt><dd>{clinicalScope.blood_pressure_scope.authored_endpoints.join(" and ")} only</dd></div>
                       <div><dt>BP classification</dt><dd>Fixture-supplied · not inferred</dd></div>
-                      <div><dt>Physician validation</dt><dd>{clinicalScope.verification_boundary.physician_validation}</dd></div>
+                      <div><dt>Licensed-physician fixture review</dt><dd>{clinicalScope.verification_boundary.physician_validation}</dd></div>
                       <div><dt>Clinical use</dt><dd>Not permitted</dd></div>
                     </dl>
                   </div>
@@ -1121,7 +1121,7 @@ export function WitnessPatchLab() {
             <p>
               <strong>Developer safety tooling—not clinical decision support.</strong>
               Fully synthetic reference case. Source-linked; licensed physician
-              validation pending.
+              fixture review pending.
             </p>
             <p>
               Independent Build Week entrant project · Codex and GPT-5.6 Sol
