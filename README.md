@@ -11,7 +11,7 @@ The reference case is not clinical decision support, does not process patient da
 1. A fully synthetic agent receives facts on a locked timeline.
 2. At T+02 it knows the patient is eight days postpartum, has a persistent unrelieved headache, and reports visual changes, but it delays the declared urgent route.
 3. Locked, source-ID-linked action contracts score the baseline `50/100` with two critical failures.
-4. The live browser compiler hashes the exact synthetic case and failing run, freshly regrades them, and turns the earliest failed critical contract into an exportable nine-file red regression ZIP plus a static recorded-decision witness, reducing the T+02 predicate from 9 facts to 3 while holding recorded decisions fixed. Its generated files match the Node compiler byte for byte.
+4. The live browser compiler hashes the exact synthetic case and failing run, freshly regrades them, and turns the earliest failed critical contract into an exportable nine-file red regression ZIP plus a static recorded-decision witness, reducing the T+02 predicate from 9 facts to 3 while holding recorded decisions fixed. For the two manifest-listed public inputs, the shipped CLI with `--fact-scope failure-prefix` produces the same nine file contents as the browser; generic inputs and full-trace scope are outside that byte-parity claim.
 5. A retained V2 reference patch changes the executable target policy, not the case or grader.
 6. The unchanged urgent fixture passes at `100/100`; an exact-fact negative control remains at `100/100`; and an always-escalate mutant fails at `25/100`.
 7. Only after the red bundle exists does the browser verify `23/23` exact retained-artifact hashes, freshly regrade both reference runs, and rerun `4/4` reference software holdouts before showing the repaired state.
@@ -32,9 +32,17 @@ npm run dev
 
 Open `http://localhost:3000`. First select **Compile failure**: the browser verifies the exact case and baseline bytes, applies the same schema and semantic input validation as Node, freshly regrades the failure, and materializes the nine-file red bundle—including the generated `node:test` regression, receipt, and manifest. **Export complete 9-file ZIP** downloads the usable bundle. Then select **Verify retained repair**. The browser hashes the complete 23-artifact same-build V2 profile, checks its case fingerprint, recomputes the 9→3 static witness, regrades the two retained reference runs, and reruns four reference holdouts locally. It also verifies the fresh model receipt, exact input and prompt links, proposal, compiled candidate, and patch, then safely interprets the declarative JSON IR across two cases and four mutation holdouts. It does **not** execute the generated test or retained JavaScript candidates, rerun a target, invoke a model, or apply either patch in-browser; `npm run artifacts:v2:verify` performs the Node-side policy execution and exact-signature checks. Any compilation or verification error fails closed and leaves the failing baseline active.
 
+### Compile your own synthetic trace
+
+Select **Compile your files** in the top bar to open the separate local-input workspace. Choose a schema-valid synthetic `case.json` and failing raw or evaluated `run.json`, confirm that neither contains patient or production data, and select **Compile red witness**. The workspace validates declarations and schema shape, checks the embedded case identity, freshly regrades any claimed evaluation, bounds browser work, and exports the same nine-file red regression format without unlocking the retained-reference repair view.
+
+Selected bytes are processed in the browser and are not submitted by WitnessPatch. Each file is limited to 512 KiB. The returned receipt deliberately says `2 hashes computed · 0 externally verified`: local SHA-256 values establish byte identity for the export, not publisher provenance. WitnessPatch enforces the synthetic-data declarations in its schemas but cannot detect undisclosed PHI or prove de-identification. The fixed maternal reference remains available as a one-click judge path.
+
 The verifier's trust anchor is the manifest shipped with the same app build; it is an integrity check, not a publisher signature. Judges need no OpenAI API key, model call, database, or hosting login to inspect or replay the reference.
 
-The current two-stage build passed a real Chrome replay with a visible `50 → nine-file RED bundle → 100` flow: `2/2` exact compiler inputs, `INV-02` at T+02, `9→3` facts, `23/23` retained artifact responses, reference `2/2` regrades plus `4/4` holdouts, fresh-candidate IR `2/2` plus `4/4`, all artifact requests HTTP 200, and zero console warnings or errors. The downloaded ZIP passed `unzip -t` for all nine files; its default regression exited red and the supplied repaired candidate exited green. Submission-package checkpoint `b4c8217` passed `npm ci` followed by `npm run verify:release` from a fresh local clone on Node 24.14.0: `104/104` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `4/4` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 59-file Wrangler dry run. The smoke proves the README's first page request and retained manifest return HTTP 200; the submission gate binds the three media hashes to their visual-source fingerprints. At checkpoint `a056fe3`, the earlier documented path also passed from fresh local clones on macOS with Node 22.15.0 and Node 24.14.0. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). The exact submitted commit must still be replayed after the repository URL, deployment, video, and final form copy are frozen; these remain local macOS results, not Linux or Windows verification.
+The feature-frozen working tree passed production Chrome replay on both paths. The reference flow showed `50 → nine-file RED bundle → 100`, with `2/2` exact manifest inputs, `INV-02` at T+02, `9→3` facts, `23/23` retained artifact responses, reference `2/2` regrades plus `4/4` holdouts, and fresh-candidate IR `2/2` plus `4/4`. The separate local-input flow freshly produced `50/100`, `INV-02` and `INV-03`, `9→3` facts, and `2 hashes computed · 0 externally verified` with no post-load network requests. Both flows recorded zero console warnings or errors. The local ZIP passed `unzip -t`; all nine files were byte-identical to the shipped CLI output, the default regression exited red, and the supplied repaired candidate exited green.
+
+On macOS 26.5.2 arm64 with Node 24.14.0 and npm 11.9.0, that same working tree passed `npm run verify:release`: `125/125` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `5/5` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 59-file Wrangler dry run. The submission gate binds four media assets to thirteen rendered/computed source fingerprints. Earlier committed checkpoints retain clean macOS evidence; the new feature-freeze commit still requires clean macOS and Linux replay. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). The exact submitted commit must be replayed again after the repository URL, deployment, video, and final form copy are frozen; no Windows verification is claimed.
 
 The release bundle can also be built and checked without publishing:
 
@@ -48,10 +56,10 @@ Publication remains an explicit release action. The selected route is a public s
 
 | Surface | Current evidence | Claim boundary |
 | --- | --- | --- |
-| Source install and release verification | Submission-package checkpoint `b4c8217` passed from a fresh local clone on macOS 26.5.2 Apple silicon with Node 24.14.0 and npm 11.9.0, including the real development-server smoke and `4/4` submission checks; earlier checkpoint `a056fe3` also passed on Node 22.15.0 and 24.14.0 | macOS is verified; rerun the exact submitted commit after final freeze |
-| Browser replay | Two-stage live compile and retained-repair verification passed a real Chrome session on macOS with zero console warnings or errors | Chrome on macOS is verified; no broad browser matrix is claimed |
+| Source install and release verification | The feature-frozen working tree passes the complete verifier on macOS 26.5.2 arm64 with Node 24.14.0 and npm 11.9.0 (`125/125`, `5/5`, `1/1`, `5/5`, 59 static files); earlier checkpoints retain clean-clone evidence | Commit and replay the new freeze from clean macOS and Linux directories; rerun the exact submitted commit after final form freeze |
+| Browser replay | Production Chrome passed the manifest-bound reference compile/verify and isolated local-input compile/export, with exact CLI parity, red/green regression execution, no post-load local compile requests, and zero console warnings or errors; an exact 390 x 844 replay of the hero, local result, and verified receipt had no horizontal overflow | Chrome on macOS is verified for these paths and mobile viewport; no broad browser matrix is claimed |
 | Static hosting package | Wrangler dry run passes with 59 static files | Packaging is verified; no public deployment exists yet |
-| Linux | GitHub Actions workflow is authored but has not run remotely in the judge-shared private repository | Unverified |
+| Linux | GitHub Actions workflow is authored but has not run remotely in the judge-shared private repository | The new feature freeze is not yet locally or remotely verified on Linux |
 | Windows | No clean checkout or browser run | Unverified |
 
 ## Portable evaluator and compiler
@@ -69,12 +77,13 @@ The compiler converts a supported failing action-invariant trace into an atomic 
 
 ```bash
 npm run witnesspatch -- compile \
-  --case cases/v2/postpartum-warning-signs.json \
-  --run engine/fixtures/v2/postpartum-warning-signs-baseline.input.json \
-  --out-dir output/compiled-witness-v2
+  --case public/runs/v2/postpartum-warning-signs-case.json \
+  --run public/runs/v2/postpartum-warning-signs-baseline.json \
+  --out-dir output/compiled-witness-v2 \
+  --fact-scope failure-prefix
 ```
 
-It independently regrades the supplied run, selects the earliest failed critical action invariant by default, records earlier noncritical and coincident failures, and emits canonical snapshots, a failing prefix, static witness, red `node:test` regression, receipt, and exact-byte SHA-256 manifest. It refuses existing or symlinked output paths and invokes neither a model nor a target adapter.
+It independently regrades the supplied run, selects the earliest failed critical action invariant by default, records earlier noncritical and coincident failures, and emits canonical snapshots, a failing prefix, static witness, red `node:test` regression, receipt, and exact-byte SHA-256 manifest. With the two exact manifest-listed public inputs and `--fact-scope failure-prefix` above, the shipped CLI emits the same nine bytesets as the browser export. Use `--fact-scope full-trace` to begin reduction from every authored timeline fact instead. The CLI refuses existing or symlinked output paths and invokes neither a model nor a target adapter.
 
 The compiler holds the supplied decisions fixed while reducing fact identifiers for the encoded contract predicate. Its result is a static recorded-decision contract witness. It is not target-in-loop minimization, a counterfactual claim about what the agent would do on changed inputs, or clinical minimality.
 

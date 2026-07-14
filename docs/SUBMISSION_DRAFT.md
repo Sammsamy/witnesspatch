@@ -8,9 +8,9 @@ This draft is aligned to the published [OpenAI Build Week Official Rules](https:
 
 > WitnessPatch: Time-Fenced Contracts for Healthcare Agents
 
-**Elevator pitch — 199/200 characters**
+**Elevator pitch — 185/200 characters**
 
-> Compile a synthetic, time-fenced healthcare-agent contract failure into a red Node test bundle; verify a retained patch and exact-fact control with fail-closed checks—no API key or real patient data.
+> Turn a synthetic healthcare-agent failure into a replayable test, then check a fix a human must approve against locked rules—without patient data, an API key, or a model grading itself.
 
 **Category**
 
@@ -39,9 +39,10 @@ The retained V2 patch must fix the urgent fixture without changing the locked gr
 
 1. Execute a target against facts revealed on a fixed synthetic timeline.
 2. Regrade the recorded decisions with locked, source-ID-linked action contracts. Source linkage is checked mechanically; clinical meaning is not.
-3. In the browser, hash and fully validate the exact synthetic case and failing run, freshly regrade them, and compile the earliest failed critical contract into an exportable nine-file red regression ZIP and static witness. The browser-generated files match the Node compiler byte for byte. The compiler holds recorded decisions fixed; it makes no target-in-loop, counterfactual, or clinical-minimality claim and invokes neither a model nor a target.
-4. Apply a retained, inspectable V2 target-policy patch and execute four expected paths: urgent before, urgent after, exact-fact negative control, and always-escalate mutation.
-5. In the browser, verify `23/23` exact hashes, recompute the reference repair's `2/2` regrades and `4/4` holdouts, and separately interpret the fresh candidate's declarative JSON IR across `2/2` cases and `4/4` mutation holdouts before displaying the repaired score. Retained JavaScript is not executed in the browser.
+3. In the browser, hash and fully validate the exact synthetic reference case and failing run, freshly regrade them, and compile the earliest failed critical contract into an exportable nine-file red regression ZIP and static witness. For the two manifest-listed public inputs, the shipped CLI with `--fact-scope failure-prefix` produces the same nine file contents; generic inputs and full-trace scope are outside that byte-parity claim.
+4. In a separate local workspace, accept a schema-valid synthetic case plus failed raw or evaluated run, regrade it, and export the same nine-file format. The receipt says `2 hashes computed · 0 externally verified`; the files are not mixed into the fixed maternal dashboard or retained-repair proof.
+5. Apply a retained, inspectable V2 target-policy patch and execute four expected paths: urgent before, urgent after, exact-fact negative control, and always-escalate mutation.
+6. In the browser, verify `23/23` exact hashes, recompute the reference repair's `2/2` regrades and `4/4` holdouts, and separately interpret the fresh candidate's declarative JSON IR across `2/2` cases and `4/4` mutation holdouts before displaying the repaired score. Retained JavaScript is not executed in the browser.
 
 ## Built with
 
@@ -80,13 +81,14 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Urgent retained repair: `100/100`.
 - Exact-fact negative control under the repaired policy: `100/100`.
 - Always-escalate mutation on that exact control: `25/100`, expected failure.
-- Live browser compilation: `2/2` exact synthetic input hashes, full case/run validation, an exportable nine-file red ZIP for `INV-02` at T+02, and the same exact file bytes as the Node compiler. The exported default regression exits red; pointing it at the supplied repaired run exits green.
+- Live reference compilation: `2/2` exact synthetic input hashes, full case/run validation, and an exportable nine-file red ZIP for `INV-02` at T+02. For the two manifest-listed public inputs, the CLI with `--fact-scope failure-prefix` produces the same nine file contents. The exported default regression exits red; pointing it at the supplied repaired run exits green.
+- Local-input compilation: a separate browser workspace accepts a declared-synthetic case and failed run, freshly regrades it, exports the same nine-file format, and preserves `0 externally verified` in the portable receipt and manifest.
 - V2 artifact manifest: `23/23` exact hashes against the same-build manifest; this is integrity, not a publisher signature.
 - Reference browser recomputation: `2/2` fresh regrades and `4/4` V2 holdouts.
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
-- Local release verification: submission-package checkpoint `b4c8217` passed `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0: `104/104` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `4/4` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 59-file Wrangler dry run; npm reported zero known vulnerabilities at install time.
-- Final real-Chrome QA: visible `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, all artifact requests HTTP 200, and zero console errors or warnings.
+- Local release verification: the feature-frozen working tree passed `npm run verify:release` on macOS 26.5.2 arm64 with Node 24.14.0 and npm 11.9.0: `125/125` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `5/5` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and a 59-file Wrangler dry run. Clean replay of the new commit remains pending.
+- Final real-Chrome QA: the reference path visibly completed `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, and fresh IR `2/2` plus `4/4`. The local path produced a nine-file `50/100` red bundle with `2` hashes computed and `0` externally verified, no post-load requests, exact CLI byte parity, red/green executable closure, and zero console errors or warnings. An exact 390 x 844 replay of the hero, compiled local result, and verified receipt had no horizontal overflow and zero console errors or warnings.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
 

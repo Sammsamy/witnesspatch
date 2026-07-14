@@ -772,7 +772,7 @@ function verifySolV2ProofClaims(
 
   return {
     reference_v2: {
-      role: "retained_reviewed_reference_repair",
+      role: "retained_reference_repair",
       run_id: coreArtifacts.repaired.run_id,
       status: coreArtifacts.repaired.evaluation.status,
       score: coreArtifacts.repaired.evaluation.score,

@@ -19,6 +19,24 @@ const SAFE_RUN_PATH =
   /^\/runs\/(?:[A-Za-z0-9][A-Za-z0-9._-]*\/)*[A-Za-z0-9][A-Za-z0-9._-]*$/u;
 const SHA256_HEX = /^[a-f0-9]{64}$/u;
 const REQUIRED_INPUT_IDS = Object.freeze(["case", "baseline"]);
+const COMPILED_FILE_NAMES = Object.freeze([
+  "case.json",
+  "run.json",
+  "evaluated-run.json",
+  "failing-prefix.json",
+  "static-witness.json",
+  "regression.json",
+  "regression.test.mjs",
+  "receipt.json",
+  "manifest.json"
+]);
+export const MAX_LOCAL_INPUT_BYTES = 512 * 1024;
+const MAX_LOCAL_JSON_DEPTH = 32;
+const MAX_LOCAL_JSON_NODES = 20_000;
+const MAX_LOCAL_TIMELINE_STEPS = 32;
+const MAX_LOCAL_RULES = 32;
+const MAX_LOCAL_ACTIONS = 64;
+const MAX_LOCAL_REDUCTION_FACTS = 16;
 
 const isObject = (value) =>
   value !== null && typeof value === "object" && !Array.isArray(value);
@@ -68,6 +86,50 @@ function parseJsonArtifact(bytes, id) {
     return JSON.parse(text);
   } catch {
     throw new Error(`Browser compilation failed: ${id} is not valid JSON.`);
+  }
+}
+
+function normalizeLocalBytes(value, id) {
+  let bytes;
+  if (value instanceof Uint8Array) {
+    bytes = value;
+  } else if (value instanceof ArrayBuffer) {
+    bytes = new Uint8Array(value);
+  } else if (ArrayBuffer.isView(value)) {
+    bytes = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+  }
+  requireValue(bytes, `${id} must be supplied as bytes.`);
+  requireValue(bytes.byteLength > 0, `${id} is empty.`);
+  requireValue(
+    bytes.byteLength <= MAX_LOCAL_INPUT_BYTES,
+    `${id} exceeds the 512 KiB local-input limit.`
+  );
+  return bytes;
+}
+
+function assertJsonShapeBudget(value, id) {
+  const pending = [{ value, depth: 0 }];
+  let nodes = 0;
+  while (pending.length > 0) {
+    const current = pending.pop();
+    nodes += 1;
+    requireValue(
+      nodes <= MAX_LOCAL_JSON_NODES,
+      `${id} exceeds the 20,000-node JSON limit.`
+    );
+    requireValue(
+      current.depth <= MAX_LOCAL_JSON_DEPTH,
+      `${id} exceeds the maximum JSON depth of ${MAX_LOCAL_JSON_DEPTH}.`
+    );
+    if (Array.isArray(current.value)) {
+      for (const item of current.value) {
+        pending.push({ value: item, depth: current.depth + 1 });
+      }
+    } else if (isObject(current.value)) {
+      for (const item of Object.values(current.value)) {
+        pending.push({ value: item, depth: current.depth + 1 });
+      }
+    }
   }
 }
 
@@ -173,6 +235,47 @@ function assertSyntheticInputs(caseData, baselineArtifact, manifest) {
   );
 }
 
+function isArtifactShaped(runInput) {
+  return isObject(runInput) && [
+    "provenance_verification",
+    "evaluation",
+    "audit_log"
+  ].some((key) => Object.hasOwn(runInput, key));
+}
+
+function assertBrowserStructureBudget(caseData) {
+  requireValue(
+    caseData.timeline.length <= MAX_LOCAL_TIMELINE_STEPS,
+    `the case exceeds the ${MAX_LOCAL_TIMELINE_STEPS}-step browser limit.`
+  );
+  requireValue(
+    caseData.rules.length <= MAX_LOCAL_RULES,
+    `the case exceeds the ${MAX_LOCAL_RULES}-rule browser limit.`
+  );
+  requireValue(
+    caseData.action_vocabulary.length <= MAX_LOCAL_ACTIONS,
+    `the case exceeds the ${MAX_LOCAL_ACTIONS}-action browser limit.`
+  );
+}
+
+function assertBrowserReductionBudget(
+  caseData,
+  selectedTarget,
+  startingFactScope
+) {
+  const scopedSteps =
+    startingFactScope === "failure_prefix"
+      ? caseData.timeline.filter(
+          (step) => step.at_minute <= selectedTarget.deadline_minute
+        )
+      : caseData.timeline;
+  const facts = new Set(scopedSteps.flatMap((step) => step.facts_revealed));
+  requireValue(
+    facts.size <= MAX_LOCAL_REDUCTION_FACTS,
+    `the selected ${startingFactScope === "failure_prefix" ? "failure prefix" : "full trace"} exceeds the ${MAX_LOCAL_REDUCTION_FACTS}-fact browser reduction limit.`
+  );
+}
+
 function buildAuditLog(caseData, normalizedRun, evaluation) {
   const events = [
     {
@@ -236,48 +339,51 @@ function assertCompiledManifestBoundary(manifest) {
   return manifest;
 }
 
-export async function compileBrowserWitness({
-  manifest,
-  fetchImpl,
-  subtle,
-  baseUrl,
-  targetRuleId = undefined
-}) {
-  requireValue(typeof fetchImpl === "function", "fetch is unavailable.");
-  requireValue(subtle && typeof subtle.digest === "function", "WebCrypto is unavailable.");
-  const records = inputRecords(manifest, baseUrl);
-  const [caseInput, runInput] = await Promise.all(
-    REQUIRED_INPUT_IDS.map((id) =>
-      fetchExactInput({ id, ...records.get(id) }, fetchImpl, subtle)
-    )
+function assertCompiledFileSet(files) {
+  const names = [...files.keys()].sort();
+  requireValue(
+    stableStringify(names) === stableStringify([...COMPILED_FILE_NAMES].sort()),
+    "the compiled bundle does not contain the exact nine safe files."
   );
-  const caseData = caseInput.value;
-  const baselineArtifact = runInput.value;
-  assertSyntheticInputs(caseData, baselineArtifact, manifest);
+}
 
+async function compileValidatedInputPair({
+  caseData,
+  runInput,
+  caseDigest,
+  runDigest,
+  subtle,
+  targetRuleId,
+  startingFactScope,
+  expectedCaseFingerprint = undefined,
+  mode,
+  hashes,
+  sessionInputVerification,
+  trustBoundary
+}) {
   const caseFingerprint = await sha256Text(stableStringify(caseData), subtle);
-  requireValue(
-    caseFingerprint === manifest.case_fingerprint &&
-      baselineArtifact.case_sha256 === caseFingerprint,
-    "the case fingerprint does not match the release profile."
-  );
-  assertRunSchema(baselineArtifact);
-  assertRunInputAgainstFingerprint(
-    caseData,
-    baselineArtifact,
-    caseFingerprint
-  );
-  const normalizedRun = normalizeWitnessRunInput(baselineArtifact);
+  if (expectedCaseFingerprint !== undefined) {
+    requireValue(
+      caseFingerprint === expectedCaseFingerprint,
+      "the case fingerprint does not match the release profile."
+    );
+  }
+  if (isArtifactShaped(runInput)) {
+    assertRunSchema(runInput);
+  }
+  assertRunInputAgainstFingerprint(caseData, runInput, caseFingerprint);
+  const normalizedRun = normalizeWitnessRunInput(runInput);
+  assertBrowserStructureBudget(caseData);
   const evaluation = gradeRunKernel(caseData, normalizedRun);
+  if (isArtifactShaped(runInput)) {
+    requireValue(
+      stableStringify(evaluation) === stableStringify(runInput.evaluation),
+      "the supplied evaluated artifact disagrees with a fresh deterministic grade."
+    );
+  }
   requireValue(
-    stableStringify(evaluation) ===
-      stableStringify(baselineArtifact.evaluation),
-    "the retained baseline disagrees with a fresh deterministic grade."
-  );
-  requireValue(
-    evaluation.status === "fail" &&
-      evaluation.critical_failures.length > 0,
-    "the retained baseline is not a compilable critical failure."
+    evaluation.status === "fail",
+    "the supplied run is not a compilable failure."
   );
   const evaluatedRun = {
     schema_version: "1.0.0",
@@ -297,12 +403,15 @@ export async function compileBrowserWitness({
     evaluation,
     targetRuleId
   );
+  assertBrowserReductionBudget(caseData, selectedTarget, startingFactScope);
   const identityHash = (
     await sha256Text(
       stableStringify({
         case_sha256: caseFingerprint,
-        run_id: evaluatedRun.run_id,
-        target_rule_id: selectedTarget.id
+        normalized_run: normalizedRun,
+        target_rule_id: selectedTarget.id,
+        input_case_sha256: caseDigest,
+        input_run_sha256: runDigest
       }),
       subtle
     )
@@ -313,9 +422,9 @@ export async function compileBrowserWitness({
     evaluatedRun,
     identityHash,
     targetRuleId,
-    startingFactScope: "failure_prefix",
-    inputCaseSha256: caseInput.digest,
-    inputRunSha256: runInput.digest,
+    startingFactScope,
+    inputCaseSha256: caseDigest,
+    inputRunSha256: runDigest,
     validateStaticWitness: assertStaticWitnessBoundary
   });
   const fileRecords = await Promise.all(
@@ -333,14 +442,21 @@ export async function compileBrowserWitness({
     records: fileRecords,
     validateManifest: assertCompiledManifestBoundary
   });
+  assertCompiledFileSet(bundle.files);
   const manifestBytes = bundle.files.get("manifest.json");
   const manifestSha256 = await sha256Text(manifestBytes, subtle);
 
   return {
     status: "compiled_red",
-    hashes: { verified: REQUIRED_INPUT_IDS.length, total: REQUIRED_INPUT_IDS.length },
+    mode,
+    hashes,
+    session_input_verification: sessionInputVerification,
     bundle_id: bundle.bundleId,
+    case_id: caseData.id,
+    case_title: caseData.title,
+    source_run_id: normalizedRun.run_id,
     target_rule_id: bundle.targetRuleId,
+    fresh_evaluation: evaluation,
     file_count: bundle.files.size,
     manifest_sha256: manifestSha256,
     failure_known_at_minute: bundle.receipt.failure_known_at_minute,
@@ -353,7 +469,98 @@ export async function compileBrowserWitness({
       path,
       contents
     })),
-    trust_boundary:
-      "The browser generated a static recorded-decision software witness from two manifest-bound synthetic inputs. It did not rerun a target, invoke a model, establish clinical correctness, or install a repair."
+    trust_boundary: trustBoundary
   };
+}
+
+export async function compileBrowserWitness({
+  manifest,
+  fetchImpl,
+  subtle,
+  baseUrl,
+  targetRuleId = undefined
+}) {
+  requireValue(typeof fetchImpl === "function", "fetch is unavailable.");
+  requireValue(subtle && typeof subtle.digest === "function", "WebCrypto is unavailable.");
+  const records = inputRecords(manifest, baseUrl);
+  const [caseInput, runInput] = await Promise.all(
+    REQUIRED_INPUT_IDS.map((id) =>
+      fetchExactInput({ id, ...records.get(id) }, fetchImpl, subtle)
+    )
+  );
+  const caseData = caseInput.value;
+  const baselineArtifact = runInput.value;
+  assertSyntheticInputs(caseData, baselineArtifact, manifest);
+  requireValue(
+    baselineArtifact.case_sha256 === manifest.case_fingerprint,
+    "the case fingerprint does not match the release profile."
+  );
+  return compileValidatedInputPair({
+    caseData,
+    runInput: baselineArtifact,
+    caseDigest: caseInput.digest,
+    runDigest: runInput.digest,
+    subtle,
+    targetRuleId,
+    startingFactScope: "failure_prefix",
+    expectedCaseFingerprint: manifest.case_fingerprint,
+    mode: "manifest_verified_reference_inputs",
+    hashes: {
+      verified: REQUIRED_INPUT_IDS.length,
+      total: REQUIRED_INPUT_IDS.length
+    },
+    sessionInputVerification: {
+      mode: "manifest_verified_reference_inputs",
+      hashes_computed: REQUIRED_INPUT_IDS.length,
+      hashes_verified: REQUIRED_INPUT_IDS.length,
+      external_manifest_verified: true
+    },
+    trustBoundary:
+      "This browser session fetched and verified two exact manifest-bound synthetic inputs. The exported portable bundle deliberately records only computed source hashes and an unverified input declaration so its bytes match the CLI and local compiler; it is not publisher-provenance evidence. The compiler did not rerun a target, invoke a model, establish clinical correctness, or install a repair."
+  });
+}
+
+export async function compileBrowserWitnessFromBytes({
+  caseBytes,
+  runBytes,
+  subtle,
+  targetRuleId = undefined,
+  startingFactScope = "failure_prefix"
+}) {
+  requireValue(subtle && typeof subtle.digest === "function", "WebCrypto is unavailable.");
+  requireValue(
+    startingFactScope === "failure_prefix" || startingFactScope === "full_trace",
+    "startingFactScope must be failure_prefix or full_trace."
+  );
+  const normalizedCaseBytes = normalizeLocalBytes(caseBytes, "case.json");
+  const normalizedRunBytes = normalizeLocalBytes(runBytes, "run.json");
+  const caseData = parseJsonArtifact(normalizedCaseBytes, "case.json");
+  const runInput = parseJsonArtifact(normalizedRunBytes, "run.json");
+  assertJsonShapeBudget(caseData, "case.json");
+  assertJsonShapeBudget(runInput, "run.json");
+  assertCaseInput(caseData);
+  const [caseDigest, runDigest] = await Promise.all([
+    sha256Bytes(normalizedCaseBytes, subtle),
+    sha256Bytes(normalizedRunBytes, subtle)
+  ]);
+
+  return compileValidatedInputPair({
+    caseData,
+    runInput,
+    caseDigest,
+    runDigest,
+    subtle,
+    targetRuleId,
+    startingFactScope,
+    mode: "locally_hashed_unverified_inputs",
+    hashes: { computed: 2, verified: 0, total: 2 },
+    sessionInputVerification: {
+      mode: "locally_hashed_unverified_inputs",
+      hashes_computed: 2,
+      hashes_verified: 0,
+      external_manifest_verified: false
+    },
+    trustBoundary:
+      "The browser hashed, validated, and freshly graded two locally selected synthetic inputs, then generated a static recorded-decision software witness. Neither this session nor the portable bundle verified the inputs against an external manifest. WitnessPatch cannot detect undisclosed patient data or prove de-identification. It did not upload files, rerun a target, invoke a model, establish clinical correctness, or install a repair."
+  });
 }

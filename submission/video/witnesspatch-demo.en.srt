@@ -1,165 +1,147 @@
 1
 00:00:00,000 --> 00:00:04,000
 I’m a third-year medical student.
-Healthcare-agent failures often die
+Healthcare-agent failures die as
 
 2
 00:00:04,000 --> 00:00:08,000
-as screenshots. WitnessPatch locks when
-each synthetic fact appears, then emits
+screenshots. WitnessPatch records what
+the agent knew,
 
 3
-00:00:08,000 --> 00:00:12,000
-a standard red test and evidence chain.
+00:00:08,000 --> 00:00:13,000
+then turns a rule-breaking answer into
+a failing test.
 
 4
-00:00:12,000 --> 00:00:17,000
-At T-plus-two, the agent knows this
-patient is eight days postpartum,
+00:00:13,000 --> 00:00:18,000
+At T-plus-two, the agent knows the
+synthetic patient is eight days
 
 5
-00:00:17,000 --> 00:00:22,000
-with unrelieved headache and visual
-changes, but waits for blood pressure
+00:00:18,000 --> 00:00:23,000
+postpartum, with an unrelieved headache
+and visual changes. It still waits
 
 6
-00:00:22,000 --> 00:00:28,000
-arriving at T-plus-six. Locked code
-records two critical breaches.
+00:00:23,000 --> 00:00:29,000
+for blood pressure arriving four minutes
+later, breaking two locked rules.
 
 7
-00:00:28,000 --> 00:00:32,000
-I chose the synthetic fixture, narrow
-contract, and review gate.
+00:00:29,000 --> 00:00:34,000
+I chose the synthetic case and review
+boundary. During Build Week,
 
 8
-00:00:32,000 --> 00:00:36,000
-Codex built and attacked the post-start
-compiler and verifier.
+00:00:34,000 --> 00:00:40,000
+Codex built and stress-tested the
+compiler. A separate GPT-5.6 Sol run
 
 9
-00:00:36,000 --> 00:00:40,000
-A fresh Codex run requested GPT-5.6
-Sol with Ultra reasoning to propose
+00:00:40,000 --> 00:00:46,000
+proposed repair data; locked code decides
+every score.
 
 10
-00:00:40,000 --> 00:00:45,000
-declarative repair data. Neither model
-controls the grade.
+00:00:46,000 --> 00:00:50,000
+Compile Failure checks two saved inputs,
 
 11
-00:00:45,000 --> 00:00:49,000
-Compile Failure hashes and validates
-the two exact inputs, regrades the
+00:00:50,000 --> 00:00:55,000
+recalculates the baseline, and builds a
+nine-file Node test bundle.
 
 12
-00:00:49,000 --> 00:00:53,000
-recorded baseline, and generates a
-nine-file Node test bundle locally,
+00:00:55,000 --> 00:01:00,000
+It calls no model and does not rerun
+the agent.
 
 13
-00:00:53,000 --> 00:00:58,000
-with no model or target rerun.
+00:01:00,000 --> 00:01:04,000
+It pinpoints INV-02 at T-plus-two and
 
 14
-00:00:58,000 --> 00:01:03,000
-For encoded rule INV-02, the static
-witness reduces nine visible facts
+00:01:04,000 --> 00:01:09,000
+narrows nine facts to three with the
+response fixed.
 
 15
-00:01:03,000 --> 00:01:07,000
-to three at T-plus-two. The exported
-baseline bundle remains red;
+00:01:09,000 --> 00:01:14,000
+The exported test stays red; the repair
+is checked separately.
 
 16
-00:01:07,000 --> 00:01:12,000
-the retained repair is verified
-separately.
+00:01:14,000 --> 00:01:20,000
+But this is not just a canned replay.
+Compile Your Files accepts a
 
 17
-00:01:12,000 --> 00:01:18,000
-Now the separate verifier checks 23
-exact artifact hashes, recomputes two
+00:01:20,000 --> 00:01:26,000
+synthetic case and failed run, hashes and
+regrades them only in this browser,
 
 18
-00:01:18,000 --> 00:01:24,000
-reference grades, and runs four declared
-holdouts.
+00:01:26,000 --> 00:01:32,000
+labels them zero externally verified,
 
 19
-00:01:24,000 --> 00:01:28,000
-Same case, same locked grader: 50
-becomes 100,
+00:01:32,000 --> 00:01:38,000
+and exports the same nine-file format.
 
 20
-00:01:28,000 --> 00:01:32,000
-with zero critical breaches. This
-verified behavior-diff excerpt
+00:01:38,000 --> 00:01:43,000
+Back on the reference, the verifier
+checks 23 saved files, recalculates
 
 21
-00:01:32,000 --> 00:01:36,000
-changes the target policy, while the
-exact-fact control rejects an
+00:01:43,000 --> 00:01:49,000
+both scores, and runs four challenges.
+Same case and rules: 50 becomes 100
 
 22
-00:01:36,000 --> 00:01:41,000
-always-escalate mutant.
+00:01:49,000 --> 00:01:55,000
+with no critical failures.
 
 23
-00:01:41,000 --> 00:01:47,000
-The retained V2 reference is separate
-from the fresh Sol candidate.
+00:01:55,000 --> 00:02:02,000
+The retained reference repair and
+Sol’s proposal stay separate.
 
 24
-00:01:47,000 --> 00:01:53,000
-The reference passes four of four
-holdouts. The Sol proposal stays
+00:02:02,000 --> 00:02:09,000
+The reference repair passes four checks.
+Sol’s proposal remains quarantined;
 
 25
-00:01:53,000 --> 00:01:59,000
-quarantined and uninstalled. This
-browser interprets its declarative JSON;
+00:02:09,000 --> 00:02:17,000
+the browser reads constrained data, and
+only the local verifier runs its code.
 
 26
-00:01:59,000 --> 00:02:05,000
-only the Node verifier executes
-candidate JavaScript.
+00:02:17,000 --> 00:02:23,000
+The receipt records all 23 file checks,
+both new scores, and four checks on
 
 27
-00:02:05,000 --> 00:02:09,000
-The receipt shows 23 of 23 hashes,
-two of two regrades, and four of four
+00:02:23,000 --> 00:02:30,000
+Sol’s proposal. It records the requested
+model setup,
 
 28
-00:02:09,000 --> 00:02:14,000
-candidate mutation checks. It records
-the requested model configuration,
+00:02:30,000 --> 00:02:37,000
+not proof of which model was served.
 
 29
-00:02:14,000 --> 00:02:18,000
-not independently attested served
-identity. The disclosed pre-start V1
+00:02:37,000 --> 00:02:42,000
+No patient data, API key, or live model
+call. Blood-pressure labels come from
 
 30
-00:02:18,000 --> 00:02:23,000
-candidate remains unchanged and fails
-V2.
+00:02:42,000 --> 00:02:47,000
+the synthetic fixture. Physician review
+is pending; this is developer tooling,
 
 31
-00:02:23,000 --> 00:02:27,000
-No patient data, API key, or runtime
-model call. Both displayed
-
-32
-00:02:27,000 --> 00:02:31,000
-blood-pressure classes are
-fixture-supplied. Physician validation
-
-33
-00:02:31,000 --> 00:02:35,000
-remains pending; clinical use is
-prohibited. WitnessPatch makes failures
-
-34
-00:02:35,000 --> 00:02:38,000
-reproducible—it does not certify safety.
+00:02:47,000 --> 00:02:53,000
+not clinical use or safety certification.

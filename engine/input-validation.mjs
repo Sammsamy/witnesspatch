@@ -46,6 +46,14 @@ const RFC3339_DATE_TIME =
 const REPAIR_REVIEW_STATUS =
   "This case passes deterministic evaluation; declared regression assertions and physician validation remain pending.";
 
+export const MAX_TIMELINE_INTEGER = Number.MAX_SAFE_INTEGER;
+// These shared semantic limits bound lexical scans before either the Node or
+// browser grader runs while leaving ample headroom above retained fixtures.
+export const MAX_TOTAL_DECISION_MESSAGE_CHARACTERS = 256 * 1024;
+export const MAX_TOTAL_LEXICAL_MARKERS = 2_048;
+export const MAX_TOTAL_LEXICAL_MARKER_CHARACTERS = 256 * 1024;
+export const MAX_MESSAGE_MARKER_COMPARISON_PRODUCT = 16 * 1024 * 1024;
+
 function stableStringify(value) {
   if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
   if (isObject(value)) {
@@ -94,6 +102,46 @@ function assertNonEmptyString(value, label) {
   );
 }
 
+function lexicalMarkers(caseData) {
+  return caseData.controls.flatMap((control) => [
+    ...(control.future_fact_markers ?? []).flatMap(
+      (contract) => contract.markers
+    ),
+    ...(control.global_forbidden_markers ?? []),
+    ...(control.action_contracts ?? []).flatMap(
+      (contract) => contract.required_any_markers
+    )
+  ]);
+}
+
+function assertLexicalWorkBudget(caseData) {
+  const markers = lexicalMarkers(caseData);
+  requireValue(
+    markers.length <= MAX_TOTAL_LEXICAL_MARKERS,
+    `Cases may declare at most ${MAX_TOTAL_LEXICAL_MARKERS} lexical markers, got ${markers.length}.`
+  );
+  const characters = markers.reduce(
+    (total, marker) => total + marker.length,
+    0
+  );
+  requireValue(
+    characters <= MAX_TOTAL_LEXICAL_MARKER_CHARACTERS,
+    `Case lexical markers may contain at most ${MAX_TOTAL_LEXICAL_MARKER_CHARACTERS} total characters, got ${characters}.`
+  );
+  return { count: markers.length, characters };
+}
+
+function ruleTriggerMinute(caseData, rule) {
+  const available = new Set();
+  for (const step of caseData.timeline) {
+    for (const fact of step.facts_revealed) available.add(fact);
+    if (rule.when_all_facts.every((fact) => available.has(fact))) {
+      return step.at_minute;
+    }
+  }
+  throw new Error(`${rule.id} can never trigger from the case timeline.`);
+}
+
 export function assertCaseInput(caseData) {
   requireValue(isObject(caseData), "Case must be a JSON object.");
   requireValue(caseData.schema_version === "1.0.0", "Unsupported case schema version.");
@@ -118,6 +166,7 @@ export function assertCaseInput(caseData) {
     Array.isArray(caseData.action_vocabulary) && caseData.action_vocabulary.length > 0,
     "Action vocabulary is required."
   );
+  assertLexicalWorkBudget(caseData);
 
   const stepIds = caseData.timeline.map((step) => step.id);
   const evidenceIds = caseData.evidence.map((item) => item.id);
@@ -145,7 +194,12 @@ export function assertCaseInput(caseData) {
       typeof step.channel === "string" && LOWER_SNAKE_CASE.test(step.channel),
       `Step ${step.id} channel must be lower_snake_case.`
     );
-    requireValue(Number.isInteger(step.at_minute), `Step ${step.id} needs an integer at_minute.`);
+    requireValue(
+      Number.isSafeInteger(step.at_minute) &&
+        step.at_minute >= 0 &&
+        step.at_minute <= MAX_TIMELINE_INTEGER,
+      `Step ${step.id} needs a nonnegative safe-integer at_minute.`
+    );
     requireValue(step.at_minute > previousMinute, "Timeline minutes must be strictly increasing.");
     previousMinute = step.at_minute;
     requireValue(
@@ -159,6 +213,12 @@ export function assertCaseInput(caseData) {
   }
 
   for (const rule of caseData.rules) {
+    requireValue(
+      Number.isSafeInteger(rule.max_delay_minutes) &&
+        rule.max_delay_minutes >= 0 &&
+        rule.max_delay_minutes <= MAX_TIMELINE_INTEGER,
+      `${rule.id} max_delay_minutes must be a nonnegative safe integer.`
+    );
     const metricTags = rule.metric_tags ?? [];
     requireValue(Array.isArray(metricTags), `${rule.id} metric_tags must be an array.`);
     requireValue(unique(metricTags).length === metricTags.length, `${rule.id} metric_tags must be unique.`);
@@ -174,6 +234,11 @@ export function assertCaseInput(caseData) {
     for (const source of rule.source_refs) {
       requireValue(evidence.has(source), `${rule.id} references unknown evidence ${source}.`);
     }
+    const triggeredAt = ruleTriggerMinute(caseData, rule);
+    requireValue(
+      triggeredAt <= MAX_TIMELINE_INTEGER - rule.max_delay_minutes,
+      `${rule.id} deadline exceeds the maximum safe integer.`
+    );
   }
 
   const latencyConfig = caseData.metrics?.safe_action_latency;
@@ -273,6 +338,7 @@ export function assertCandidateInput(caseData, candidate) {
   const stepById = new Map(caseData.timeline.map((step) => [step.id, step]));
   const actions = new Set(caseData.action_vocabulary);
   const seenSteps = new Set();
+  let totalMessageCharacters = 0;
   for (const [index, decision] of candidate.decisions.entries()) {
     const expectedStep = caseData.timeline[index];
     requireValue(
@@ -283,9 +349,18 @@ export function assertCandidateInput(caseData, candidate) {
     requireValue(step, `Decision references unknown step ${decision.step_id}.`);
     requireValue(!seenSteps.has(decision.step_id), `Duplicate decision for ${decision.step_id}.`);
     seenSteps.add(decision.step_id);
+    requireValue(
+      Number.isSafeInteger(decision.at_minute) && decision.at_minute >= 0,
+      `Decision ${decision.step_id} needs a nonnegative safe-integer at_minute.`
+    );
     requireValue(decision.at_minute === step.at_minute, `Decision ${decision.step_id} must use the step's time lock (${step.at_minute}).`);
     requireValue(decision.clinical === true, `${decision.step_id} must set clinical to true; healthcare decisions cannot self-exempt from source linkage.`);
     requireValue(typeof decision.message === "string" && decision.message.length > 0, `${decision.step_id} needs a message.`);
+    totalMessageCharacters += decision.message.length;
+    requireValue(
+      totalMessageCharacters <= MAX_TOTAL_DECISION_MESSAGE_CHARACTERS,
+      `Run decision messages may contain at most ${MAX_TOTAL_DECISION_MESSAGE_CHARACTERS} total characters.`
+    );
     requireValue(Array.isArray(decision.actions) && decision.actions.length > 0, `${decision.step_id} needs actions.`);
     requireValue(Array.isArray(decision.fact_refs), `${decision.step_id} needs fact_refs.`);
     requireValue(Array.isArray(decision.evidence_refs), `${decision.step_id} needs evidence_refs.`);
@@ -296,6 +371,15 @@ export function assertCandidateInput(caseData, candidate) {
       requireValue(actions.has(action), `${decision.step_id} uses unknown action ${action}.`);
     }
   }
+  const lexicalWork = assertLexicalWorkBudget(caseData);
+  requireValue(
+    lexicalWork.count === 0 ||
+      totalMessageCharacters <=
+        Math.floor(
+          MAX_MESSAGE_MARKER_COMPARISON_PRODUCT / lexicalWork.count
+        ),
+    `Run exceeds the ${MAX_MESSAGE_MARKER_COMPARISON_PRODUCT} character-marker lexical comparison budget.`
+  );
   return candidate;
 }
 

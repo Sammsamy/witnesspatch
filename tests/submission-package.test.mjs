@@ -10,12 +10,23 @@ const mediaDirectory = new URL("../submission/media/", import.meta.url);
 const fiveMegabytes = 5 * 1024 * 1024;
 const expectedImages = [
   "01-thumbnail-failure.png",
-  "02-compiled-red-regression.png",
-  "03-verified-receipt.png",
+  "02-local-input-compiled-red.png",
+  "03-reference-compiled-red.png",
+  "04-reference-verified-receipt.png",
 ];
 const expectedVisualSources = [
   "app/components/witnesspatch-lab.tsx",
+  "app/components/local-witness-compiler.tsx",
   "app/globals.css",
+  "app/layout.tsx",
+  "app/page.tsx",
+  "engine/browser-witness-compiler.mjs",
+  "engine/browser-verifier.mjs",
+  "public/runs/v2/clinical-scope.json",
+  "public/runs/v2/manifest.json",
+  "public/runs/v2/postpartum-warning-signs-baseline.json",
+  "public/runs/v2/postpartum-warning-signs-case.json",
+  "public/runs/v2/postpartum-warning-signs-repaired.json",
   "public/favicon.svg",
 ];
 
@@ -115,7 +126,7 @@ test("authenticated overview copy stays inside the recorded field limits", async
     "utf8",
   );
   const title = extractQuotedField(draft, "Project name — 57/60 characters");
-  const pitch = extractQuotedField(draft, "Elevator pitch — 199/200 characters");
+  const pitch = extractQuotedField(draft, "Elevator pitch — 185/200 characters");
 
   assert.equal([...title].length, 57);
   assert.ok([...title].length <= 60);
@@ -123,11 +134,11 @@ test("authenticated overview copy stays inside the recorded field limits", async
     title,
     "WitnessPatch: Time-Fenced Contracts for Healthcare Agents",
   );
-  assert.equal([...pitch].length, 199);
+  assert.equal([...pitch].length, 185);
   assert.ok([...pitch].length <= 200);
   assert.equal(
     pitch,
-    "Compile a synthetic, time-fenced healthcare-agent contract failure into a red Node test bundle; verify a retained patch and exact-fact control with fail-closed checks—no API key or real patient data.",
+    "Turn a synthetic healthcare-agent failure into a replayable test, then check a fix a human must approve against locked rules—without patient data, an API key, or a model grading itself.",
   );
   assert.doesNotMatch(draft, /`OpenAI API`,/);
 
@@ -219,7 +230,7 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
 
   assert.equal(rows.length, 10);
   assert.equal(rows[0].start, 0);
-  assert.equal(rows.at(-1).end, 158);
+  assert.equal(rows.at(-1).end, 173);
   assert.ok(rows.at(-1).end < 180);
 
   for (const [index, row] of rows.entries()) {
@@ -287,7 +298,7 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
 
   assert.ok(captionRows.length >= 25 && captionRows.length <= 35);
   assert.equal(captionRows[0].startMs, 0);
-  assert.equal(captionRows.at(-1).endMs, 158_000);
+  assert.equal(captionRows.at(-1).endMs, 173_000);
 
   const captionsByScriptRow = rows.map(() => []);
   for (const [index, caption] of captionRows.entries()) {

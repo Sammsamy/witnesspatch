@@ -485,6 +485,24 @@ test("usage errors and policy-code arguments are rejected", () => {
   assert.equal(policyArgument.status, 2);
   assert.equal(policyArgument.stdout, "");
   assert.match(policyArgument.stderr, /Unknown argument --policy/);
+
+  const invalidFactScope = invoke([
+    "compile",
+    "--case",
+    urgentCasePath,
+    "--run",
+    baselineInputPath,
+    "--out-dir",
+    join(tmpdir(), "witnesspatch-invalid-fact-scope"),
+    "--fact-scope",
+    "prefix"
+  ]);
+  assert.equal(invalidFactScope.status, 2);
+  assert.equal(invalidFactScope.stdout, "");
+  assert.match(
+    invalidFactScope.stderr,
+    /--fact-scope must be either failure-prefix or full-trace/
+  );
 });
 
 test("compile emits a hash-listed static witness and executable red regression", async (t) => {
@@ -530,22 +548,22 @@ test("compile emits a hash-listed static witness and executable red regression",
   ];
   assert.deepEqual((await readdir(outDir)).sort(), expectedFiles);
 
-  const frozenPreRefactorHashes = {
+  const expectedIdentityBoundHashes = {
     "case.json": "69321eef40cddfbaf2e2a8ffc6b2ec2227221fe9d032f29f5c7f5f823e35c8f2",
     "evaluated-run.json": "32b47f900bb8e8702fcb2820cc3673e17de9d89c2ad5bfe975e06db0fdaa6662",
-    "failing-prefix.json": "49f7fe4c4afa2c96d2325d54bb5b4c33c5c409a5559e0aff39a9ed8d353c8564",
-    "manifest.json": "3307ced4fe475f8649d3a14b6ec1908d85d601e3a9f6b1ed4d3f2a043e19255b",
-    "receipt.json": "c1ea77c0d7b482f2c392cd555631fad9bc57366ca9765fa57bdc5c121407161d",
-    "regression.json": "0a4bd6d316930fde0c4b0af5cfa68ee2f9d2de7e5070bc190d100e04b470f1f6",
+    "failing-prefix.json": "db68844e451b4e8587b730f7c15f613b18819a19695f231571744a7722c67f90",
+    "manifest.json": "537049af9a83295af4fea788cc293e5ca11f5e4a4e477c5a3cac8c4d4d642317",
+    "receipt.json": "26f8dc3efd6f374db1eb4b5f465646b01168032ab2eecd470eeb4ef5055cad66",
+    "regression.json": "46049a5a8dc41ce663671b53c55ce8aed4f17c0e1976e4e93c65be611440f69d",
     "regression.test.mjs": "4f827bd1d9dc1efe9edc43faf063d9f6f41785bd1f3b83850bf0d9bb17165bc2",
     "run.json": "3c919a2c02c5a281f2c3af7032ab150cbf45c1feec0104f6327f3560224d4c1a",
-    "static-witness.json": "cead178b850aacf61800abeb47fc7d4d7fd3da7289d5702173f538dbe2fa461b"
+    "static-witness.json": "49c4dae9cd56ef794a11358624a89f2d9e6304b0b61908b5d986a5d4dbbd0c9b"
   };
-  for (const [name, expectedHash] of Object.entries(frozenPreRefactorHashes)) {
+  for (const [name, expectedHash] of Object.entries(expectedIdentityBoundHashes)) {
     assert.equal(
       createHash("sha256").update(await readFile(join(outDir, name))).digest("hex"),
       expectedHash,
-      `${name} changed across the shared-core refactor`
+      `${name} changed from the identity-bound compiler fixture`
     );
   }
 
@@ -710,7 +728,7 @@ test("compile emits a hash-listed static witness and executable red regression",
   assert.equal(green.status, 0, green.stdout + green.stderr);
 });
 
-test("compile preserves every frozen V2 output byte across the shared-core refactor", async (t) => {
+test("compile emits stable V2 bytes after identity and integrity hardening", async (t) => {
   const directory = await temporaryDirectory(t);
   const outDir = join(directory, "frozen-v2-bundle");
   const result = invoke([
@@ -724,22 +742,22 @@ test("compile preserves every frozen V2 output byte across the shared-core refac
   ]);
   assert.equal(result.status, 0, result.stderr);
 
-  const frozenHashes = {
+  const hardenedHashes = {
     "case.json": "4f28233289c2ed76a0d2b0135fa60c8a22a618e751859aca8c74d5fb8e493073",
     "evaluated-run.json": "c25e902a01ec119eceb1391f14136c9e1e96f27173b76d43788e1d8fc4169a47",
-    "failing-prefix.json": "922a873aede1ad76ec8fbb1849340a96dd4296840a8bdce5f51bf16913edb4d8",
-    "manifest.json": "a38b05e585e75d87e209e2a9c280742a3fc926b9e76ef5cd99629822cd9c1e73",
-    "receipt.json": "8c94c7d9619bca35f107e5713349d8ad6a95b54402e7f4df5574d2b509fc376d",
-    "regression.json": "f0bf189fdd5e5fd562037a713bd84742b13fc90237ba8a5bc42f1641a45ac365",
+    "failing-prefix.json": "00877986c4da2e7514881d6b5cc4c25b5b1600353b3c6cb6e790935016c39ee1",
+    "manifest.json": "20987a2cd281add31ad2492759c44e1221d27b2b5c62043c1d4e94f38fd9b972",
+    "receipt.json": "3bffef4f7fe5d698f2d8f5054e3f88343c49764a3c4de433544d7f6697f60187",
+    "regression.json": "69053f9a49868efe67c56d2734e73588fd3947a2e541aeb9d0b4d793055af324",
     "regression.test.mjs": "4f827bd1d9dc1efe9edc43faf063d9f6f41785bd1f3b83850bf0d9bb17165bc2",
     "run.json": "66d012c0e6ce304e0a7e4de4733abb712721abcc171ff6740a1d31af7e726afa",
-    "static-witness.json": "e2b4b7350b94e891555dbcd392ff8a744119ad37fc86743b40ae34a98ff5ec3c"
+    "static-witness.json": "5e0a791a8d9bdbab9a3d73e9a8c8c8e5279eafdd1d5c4e1c61ebc461fa3da0e3"
   };
-  for (const [name, expectedHash] of Object.entries(frozenHashes)) {
+  for (const [name, expectedHash] of Object.entries(hardenedHashes)) {
     assert.equal(
       createHash("sha256").update(await readFile(join(outDir, name))).digest("hex"),
       expectedHash,
-      `${name} changed from the frozen pre-refactor V2 bytes`
+      `${name} changed from the hardened V2 compiler fixture`
     );
   }
 });

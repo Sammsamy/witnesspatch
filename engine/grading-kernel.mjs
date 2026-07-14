@@ -9,8 +9,24 @@ function normalizeLexicalText(value) {
     .trim();
 }
 
-function includesLockedMarker(message, marker) {
-  return normalizeLexicalText(message).includes(normalizeLexicalText(marker));
+function buildLexicalMatcher(decisions) {
+  const normalizedMessages = new Map(
+    decisions.map((decision) => [
+      decision,
+      normalizeLexicalText(decision.message)
+    ])
+  );
+  const normalizedMarkers = new Map();
+  return {
+    includes(decision, marker) {
+      if (!normalizedMarkers.has(marker)) {
+        normalizedMarkers.set(marker, normalizeLexicalText(marker));
+      }
+      return normalizedMessages
+        .get(decision)
+        .includes(normalizedMarkers.get(marker));
+    }
+  };
 }
 
 function availableFactsAt(caseData, atMinute) {
@@ -66,7 +82,7 @@ function gradeActionRule(caseData, decisions, rule) {
   };
 }
 
-function gradeTemporalControl(caseData, decisions, control) {
+function gradeTemporalControl(caseData, decisions, control, lexicalMatcher) {
   const allFacts = new Set(caseData.timeline.flatMap((step) => step.facts_revealed));
   const violations = [];
 
@@ -89,13 +105,11 @@ function gradeTemporalControl(caseData, decisions, control) {
     }
 
     for (const contract of control.future_fact_markers) {
-      if (
-        !available.has(contract.fact_id) &&
-        contract.markers.some((marker) => includesLockedMarker(decision.message, marker))
-      ) {
+      if (!available.has(contract.fact_id)) {
         const matchedMarker = contract.markers.find((marker) =>
-          includesLockedMarker(decision.message, marker)
+          lexicalMatcher.includes(decision, marker)
         );
+        if (matchedMarker === undefined) continue;
         violations.push({
           step_id: decision.step_id,
           fact_ref: contract.fact_id,
@@ -121,7 +135,7 @@ function gradeTemporalControl(caseData, decisions, control) {
   };
 }
 
-function gradeMessageActionControl(decisions, control) {
+function gradeMessageActionControl(decisions, control, lexicalMatcher) {
   const contractByAction = new Map(
     control.action_contracts.map((contract) => [contract.action, contract])
   );
@@ -129,7 +143,7 @@ function gradeMessageActionControl(decisions, control) {
 
   for (const decision of decisions) {
     for (const marker of control.global_forbidden_markers) {
-      if (includesLockedMarker(decision.message, marker)) {
+      if (lexicalMatcher.includes(decision, marker)) {
         violations.push({
           step_id: decision.step_id,
           marker,
@@ -142,7 +156,7 @@ function gradeMessageActionControl(decisions, control) {
       const contract = contractByAction.get(action);
       if (
         !contract.required_any_markers.some((marker) =>
-          includesLockedMarker(decision.message, marker)
+          lexicalMatcher.includes(decision, marker)
         )
       ) {
         violations.push({
@@ -156,18 +170,19 @@ function gradeMessageActionControl(decisions, control) {
 
     for (const contract of control.action_contracts) {
       if (
-        contract.marker_implies_action === true &&
-        !decision.actions.includes(contract.action) &&
-        contract.required_any_markers.some((marker) =>
-          includesLockedMarker(decision.message, marker)
-        )
+        contract.marker_implies_action !== true ||
+        decision.actions.includes(contract.action)
       ) {
+        continue;
+      }
+      const matchedMarkers = contract.required_any_markers.filter((marker) =>
+        lexicalMatcher.includes(decision, marker)
+      );
+      if (matchedMarkers.length > 0) {
         violations.push({
           step_id: decision.step_id,
           action: contract.action,
-          matched_markers: contract.required_any_markers.filter((marker) =>
-            includesLockedMarker(decision.message, marker)
-          ),
+          matched_markers: matchedMarkers,
           reason: "message_marker_missing_declared_action"
         });
       }
@@ -247,18 +262,28 @@ function gradeSourceLinkageControl(caseData, decisions, control) {
 }
 
 export function gradeRunKernel(caseData, candidate) {
+  const lexicalMatcher = buildLexicalMatcher(candidate.decisions);
   const ruleResults = caseData.rules.map((rule) =>
     gradeActionRule(caseData, candidate.decisions, rule)
   );
   const controlResults = caseData.controls.map((control) => {
     if (control.kind === "temporal_integrity") {
-      return gradeTemporalControl(caseData, candidate.decisions, control);
+      return gradeTemporalControl(
+        caseData,
+        candidate.decisions,
+        control,
+        lexicalMatcher
+      );
     }
     if (control.kind === "source_linkage") {
       return gradeSourceLinkageControl(caseData, candidate.decisions, control);
     }
     if (control.kind === "message_action_consistency") {
-      return gradeMessageActionControl(candidate.decisions, control);
+      return gradeMessageActionControl(
+        candidate.decisions,
+        control,
+        lexicalMatcher
+      );
     }
     throw new Error(`Unsupported control kind ${control.kind}.`);
   });

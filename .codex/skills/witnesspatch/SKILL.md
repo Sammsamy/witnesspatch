@@ -42,7 +42,7 @@ Expected V2 result:
 - `23/23` exact hashes, reference `2/2` fresh regrades, and reference `4/4` V2 holdouts;
 - T+02 `INV-02` witness reduced from 9 facts to 3 with recorded decisions fixed;
 - fresh candidate browser-safe JSON-IR and Node execution each match `2/2` cases and `4/4` mutations; candidate quarantined and not installed;
-- `npm run verify:release` passes `94/94` core tests, `4/4` rendered-product tests, build, lint, typecheck, and Wrangler dry run; current `npm audit` reports zero known vulnerabilities;
+- `npm run verify:release` must pass completely on the frozen release; report the actual suite totals. On a case-sensitive filesystem, only the case-folded-output-alias test is expected to skip. Current `npm audit` must report zero known vulnerabilities;
 - unchanged pre-start Sol candidate rejected under V2.
 
 The four holdouts cover the repaired path, required consumption of a fixture-supplied classification, future-fact leakage, and numeric-inference contradiction copy. Additional engine tests close a bidirectional lexical-label bypass. None is clinical validation.
@@ -58,7 +58,7 @@ node bin/witnesspatch.mjs compile \
   --out-dir NEW_PATH
 ```
 
-The command must emit an atomic, hash-listed bundle and an initially red regression. It regrades the supplied recorded run, then holds those decisions fixed while reducing the encoded fact predicate. Never describe the result as target-in-loop minimization, a counterfactual target response, or clinical minimality. Verify that the bundle records earlier noncritical and coincident critical failures, contains no absolute source paths or credentials, and refuses existing or symlinked output paths.
+The command must emit an atomic, hash-listed bundle and an initially red regression. It regrades the supplied recorded run, then holds those decisions fixed while reducing the encoded fact predicate. Never describe the result as target-in-loop minimization, a counterfactual target response, or clinical minimality. Verify that the bundle records earlier noncritical and coincident critical failures, contains no absolute source paths or credentials, and refuses existing or symlinked output paths. Claim browser/CLI byte parity only for the two manifest-listed public inputs with explicit `--fact-scope failure-prefix`; generic inputs and full-trace scope are outside that claim.
 
 From the repository root, the generated test auto-detects `./bin/witnesspatch.mjs`; elsewhere it falls back to `witnesspatch` on `PATH`. `WITNESSPATCH_CLI` overrides either choice. Use `WITNESSPATCH_CANDIDATE` to point the same test at a repaired run for the green check.
 

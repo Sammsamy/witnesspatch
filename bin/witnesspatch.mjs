@@ -26,7 +26,7 @@ import {
 function usage() {
   return [
     "Usage: witnesspatch evaluate --case PATH --candidate PATH [--out PATH]",
-    "       witnesspatch compile --case PATH --run PATH --out-dir PATH [--rule ID]",
+    "       witnesspatch compile --case PATH --run PATH --out-dir PATH [--rule ID] [--fact-scope failure-prefix|full-trace]",
     "",
     "Re-grades a JSON run input or evaluated artifact against a fully synthetic",
     "case. The deterministic evaluator never imports policy code or invokes a model.",
@@ -57,7 +57,8 @@ function parseArguments(args) {
     runPath: null,
     outPath: null,
     outDir: null,
-    targetRuleId: null
+    targetRuleId: null,
+    factScope: null
   };
   const optionNames =
     subcommand === "evaluate"
@@ -70,7 +71,8 @@ function parseArguments(args) {
           ["--case", "casePath"],
           ["--run", "runPath"],
           ["--out-dir", "outDir"],
-          ["--rule", "targetRuleId"]
+          ["--rule", "targetRuleId"],
+          ["--fact-scope", "factScope"]
         ]);
 
   for (let index = 1; index < args.length; index += 1) {
@@ -84,9 +86,13 @@ function parseArguments(args) {
     }
     const value = args[index + 1];
     if (!value || value.startsWith("--")) {
-      throw new Error(
-        `${option} requires ${option === "--rule" ? "an ID" : "a path"}.`
-      );
+      const requiredValue =
+        option === "--rule"
+          ? "an ID"
+          : option === "--fact-scope"
+            ? "failure-prefix or full-trace"
+            : "a path";
+      throw new Error(`${option} requires ${requiredValue}.`);
     }
     parsed[field] = value;
     index += 1;
@@ -103,6 +109,15 @@ function parseArguments(args) {
     (!parsed.casePath || !parsed.runPath || !parsed.outDir)
   ) {
     throw new Error("compile requires --case, --run, and --out-dir.");
+  }
+  if (
+    parsed.factScope !== null &&
+    parsed.factScope !== "failure-prefix" &&
+    parsed.factScope !== "full-trace"
+  ) {
+    throw new Error(
+      "--fact-scope must be either failure-prefix or full-trace."
+    );
   }
   return parsed;
 }
@@ -220,6 +235,10 @@ async function main() {
       const runInput = JSON.parse(runBytes.toString("utf8"));
       const bundle = compileWitnessBundle(caseInput, runInput, {
         targetRuleId: options.targetRuleId,
+        startingFactScope:
+          options.factScope === "failure-prefix"
+            ? "failure_prefix"
+            : undefined,
         inputCaseSha256: sha256(caseBytes),
         inputRunSha256: sha256(runBytes)
       });

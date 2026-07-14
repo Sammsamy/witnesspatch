@@ -49,6 +49,6 @@ After someone agrees, send only the relevant logistics:
 
 - Do not recruit a teammate as external evidence.
 - Do not call a relative or financially connected reviewer independent; disclose the relationship.
-- Do not send repository access until the reviewed commit is frozen and contains no secrets.
+- Do not send repository access until the intended review commit is frozen and confirmed to contain no secrets.
 - Do not publish a name, role, organization, credential, quote, screenshot, recording, or contact detail without specific permission.
 - Preserve objections and failed runs. Never coach a participant toward a positive result or replace an unfavorable first record with an unlabeled rerun.

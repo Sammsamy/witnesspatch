@@ -7,6 +7,7 @@ This record separates the pre-start V1 model artifact from post-start V2 Build W
 The Codex working configuration used after the official July 13, 2026 start requests GPT-5.6 Sol with Ultra reasoning to implement and audit:
 
 - the portable, model-free static witness compiler and schemas;
+- the isolated local synthetic-input browser workspace, content-bound bundle identity, bounded parsing/reduction work, and portable unverified-input disclosures;
 - browser-safe grading and holdout kernels;
 - a fail-closed browser verifier with byte, path, regrade, and holdout attack tests;
 - the clinically narrower V2 case/control namespace and fixture-supplied classification boundary;
@@ -14,7 +15,7 @@ The Codex working configuration used after the official July 13, 2026 start requ
 - V1-under-V2 compatibility evaluation and honest rejection; and
 - submission, rules, clinical-claim, and judge-facing audits.
 
-The deterministic V2 reference repair was authored and reviewed within this workflow, then executed by fixed local code. It is not presented as a standalone live Sol policy completion. The browser's current pass means the retained V2 bytes and declared software expectations recompute correctly; it does not mean a model certified itself.
+The deterministic V2 reference repair was authored within this workflow, retained, and then executed by fixed local code. It is not presented as a standalone live Sol policy completion or as externally reviewed. The browser's current pass means the retained V2 bytes and declared software expectations recompute correctly; it does not mean a model certified itself.
 
 ## Fresh post-start V2 candidate
 
@@ -51,7 +52,7 @@ The official submission also requires the Codex Session ID returned after `/feed
 
 The four V2 holdouts cover the repaired path, consumption of the fixture-supplied severe-range classification, future fixture-classification leakage, and numeric-inference contradiction copy. Separate engine coverage checks the message-marker/action-label bypass. The fresh model run did not receive the holdout definition, but these remain four scoped mutations of the authored software oracle—not held-out clinical evidence or proof of generalization.
 
-Submission-package checkpoint `b4c8217` passed `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 with `104/104` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `4/4` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and the 59-file Wrangler dry run. Npm reported zero known vulnerabilities at install time. Hydrated browser QA passed the complete compile/export/verify/replay/recompile flow after moving Ajv initialization to browser actions. These results were exercised on macOS; they do not establish Linux or Windows support.
+The feature-frozen working tree passed `npm run verify:release` on macOS with `125/125` core tests, `5/5` rendered-product tests, a `1/1` real development-server HTTP smoke, `5/5` submission-package checks, build, lint, typecheck, the 624-package/15-static-package license gate, byte-identical deployed notices, and the 59-file Wrangler dry run. Production-browser QA passed both the manifest-bound reference compile/verify and isolated local-input compile/export; the local ZIP matched the CLI byte-for-byte across nine files and executed red by default and green with the supplied repair. The new feature-freeze commit still requires clean macOS and Linux replay. No Windows support is claimed.
 
 ## Pre-start V1 lineage — not Build Week work
 

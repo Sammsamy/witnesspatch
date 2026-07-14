@@ -11,6 +11,7 @@ import baselineRun from "@/public/runs/v2/postpartum-warning-signs-baseline.json
 import clinicalScope from "@/public/runs/v2/clinical-scope.json";
 import runManifest from "@/public/runs/v2/manifest.json";
 import repairedRun from "@/public/runs/v2/postpartum-warning-signs-repaired.json";
+import { LocalWitnessCompiler } from "./local-witness-compiler";
 
 type RunState =
   | "failed"
@@ -21,10 +22,17 @@ type RunState =
   | "error";
 type FailedStage = "compile" | "verify" | null;
 type View = "trace" | "repair" | "receipt";
+type WorkspaceMode = "reference" | "local";
 
 type BrowserCompilationReceipt = {
   status: "compiled_red";
   hashes: { verified: number; total: number };
+  session_input_verification: {
+    mode: "manifest_verified_reference_inputs";
+    hashes_computed: number;
+    hashes_verified: number;
+    external_manifest_verified: true;
+  };
   bundle_id: string;
   target_rule_id: string;
   file_count: number;
@@ -65,7 +73,7 @@ type BrowserVerificationReceipt = {
     clinical_scope_checked: boolean;
     v1_lineage_checked: boolean;
     reference_v2: {
-      role: "retained_reviewed_reference_repair";
+      role: "retained_reference_repair";
       run_id: string;
       status: string;
       score: number;
@@ -203,6 +211,8 @@ function MiniSpark() {
 }
 
 export function WitnessPatchLab() {
+  const [workspaceMode, setWorkspaceMode] =
+    useState<WorkspaceMode>("reference");
   const [runState, setRunState] = useState<RunState>("failed");
   const [failedStage, setFailedStage] = useState<FailedStage>(null);
   const [view, setView] = useState<View>("trace");
@@ -447,31 +457,64 @@ export function WitnessPatchLab() {
 
         <div className="topbar-center" aria-label="Run context">
           <span className="status-dot" />
-          <span>Software-verified reference artifact</span>
+          <span>
+            {workspaceMode === "reference"
+              ? "Software-verified reference artifact"
+              : "Local synthetic-input compiler"}
+          </span>
           <span className="topbar-separator" />
-          <span>PWS-V2-001</span>
+          <span>{workspaceMode === "reference" ? "PWS-V2-001" : "LOCAL ONLY"}</span>
         </div>
 
         <div className="topbar-actions">
-          <button
-            className="quiet-button"
-            onClick={copyCommand}
-            title="Copy: npm run artifacts:v2:verify"
-            type="button"
-          >
-            <svg viewBox="0 0 18 18" aria-hidden="true">
-              <rect x="6" y="2" width="10" height="10" rx="2" />
-              <rect x="2" y="6" width="10" height="10" rx="2" />
-            </svg>
-            {copied ? "Command copied" : "Copy verify command"}
-          </button>
-          <a className="github-link" href="#method">
-            How it works
-          </a>
+          {workspaceMode === "reference" ? (
+            <>
+              <button
+                className="local-mode-button"
+                onClick={() => setWorkspaceMode("local")}
+                aria-label="Compile your synthetic files locally"
+                aria-describedby="local-mode-boundary"
+                type="button"
+              >
+                Compile your files
+              </button>
+              <span className="sr-only" id="local-mode-boundary">
+                Selected synthetic JSON files are processed locally and are not
+                submitted by this workspace. WitnessPatch cannot detect PHI or
+                prove de-identification.
+              </span>
+              <button
+                className="quiet-button"
+                onClick={copyCommand}
+                title="Copy: npm run artifacts:v2:verify"
+                type="button"
+              >
+                <svg viewBox="0 0 18 18" aria-hidden="true">
+                  <rect x="6" y="2" width="10" height="10" rx="2" />
+                  <rect x="2" y="6" width="10" height="10" rx="2" />
+                </svg>
+                {copied ? "Command copied" : "Copy verify command"}
+              </button>
+              <a className="github-link" href="#method">
+                How it works
+              </a>
+            </>
+          ) : (
+            <button
+              className="quiet-button"
+              onClick={() => setWorkspaceMode("reference")}
+              type="button"
+            >
+              Reference demo
+            </button>
+          )}
         </div>
       </header>
 
-      <div className="workspace" id="top">
+      {workspaceMode === "local" ? (
+        <LocalWitnessCompiler onReturn={() => setWorkspaceMode("reference")} />
+      ) : (
+        <div className="workspace" id="top">
         <aside className="sidebar">
           <div className="sidebar-heading">
             <span>CRASH SUITE</span>
@@ -537,18 +580,17 @@ export function WitnessPatchLab() {
           <div className="case-header">
             <div>
               <div className="eyebrow">
-                <span>TEMPORAL COUNTEREXAMPLE</span>
+                <span>SYNTHETIC FAILURE REPLAY</span>
                 <span className="eyebrow-separator">/</span>
                 <span>8 days postpartum</span>
               </div>
               <h1>
-                The contract breach happened <em>before the blood pressure arrived.</em>
+                At T+02, the agent had the warning-sign facts—and <em>still waited.</em>
               </h1>
               <p>
-                WitnessPatch isolates the earliest critical contract-breaching prefix in a
-                synthetic time-fenced trace, reduces one breached rule to a
-                contract-cardinality-minimal static recorded-decision witness, and compiles
-                the failure into an executable test.
+                WitnessPatch turns that synthetic healthcare-agent failure into a red
+                Node test, then checks a separate repair against the same locked rules.
+                The locked rule failed at T+02; the later blood-pressure reading arrived at T+06.
               </p>
             </div>
             <div className="header-action-wrap">
@@ -646,17 +688,17 @@ export function WitnessPatchLab() {
               </strong>
             </div>
             <div className="score-cell">
-              <small>SOFTWARE COUNTEREXAMPLE</small>
-              <strong>{counterexampleMinimalFacts} facts</strong>
-              <span>contract-cardinality-minimal static for INV-02 · from {counterexampleStartingFacts}</span>
+              <small>FACTS KEPT FOR THIS CHECK</small>
+              <strong>{counterexampleMinimalFacts} of {counterexampleStartingFacts} facts</strong>
+              <span>response held fixed · smallest set for INV-02</span>
             </div>
             <div className="score-cell">
-              <small>EARLIEST CRITICAL PREFIX</small>
+              <small>FIRST CRITICAL DEADLINE MISSED</small>
               <strong>T+02</strong>
               <span>blood pressure arrives T+06</span>
             </div>
             <div className="score-cell source-cell">
-              <small>ORACLE</small>
+              <small>GRADER</small>
               <strong>
                 <MarkIcon kind="lock" /> Locked rules
               </strong>
@@ -668,7 +710,7 @@ export function WitnessPatchLab() {
             <section className="trace-panel" aria-labelledby="trace-heading">
               <div className="panel-heading">
                 <div>
-                  <span className="section-kicker">ORIGINAL PREFIX + INV-02 WITNESS</span>
+                  <span className="section-kicker">FAILURE TIMELINE + 3-FACT CHECK</span>
                   <h2 id="trace-heading">What the agent knew, exactly when it knew it</h2>
                 </div>
                 <span className="trace-count">
@@ -938,6 +980,7 @@ export function WitnessPatchLab() {
                         {` ${compilationReceipt.target_rule_id}`} witness is static,
                         contract-cardinality-minimal for the encoded rule, and reduced
                         {` ${compilationReceipt.starting_fact_count} → ${compilationReceipt.minimal_fact_count}`} facts.
+                        {" The portable ZIP records source hashes but deliberately carries no external-manifest or publisher attestation."}
                         {isPassed && " The separate retained repair now passes fresh browser verification; the exported bundle remains the baseline RED witness."}
                       </p>
                     ) : (
@@ -1026,7 +1069,7 @@ export function WitnessPatchLab() {
                     <dl>
                       <div><dt>Live browser compile</dt><dd>{compilationReceipt ? `${compilationReceipt.hashes.verified}/${compilationReceipt.hashes.total} exact inputs · ${compilationReceipt.file_count} files · red` : "compile to inspect"}</dd></div>
                       <div><dt>Compiled witness</dt><dd>{compilationReceipt ? `${compilationReceipt.target_rule_id} · T+${String(compilationReceipt.failure_known_at_minute).padStart(2, "0")} · ${compilationReceipt.starting_fact_count}→${compilationReceipt.minimal_fact_count} facts` : "compile to inspect"}</dd></div>
-                      <div><dt>Retained V2 reference</dt><dd>{verifiedRelease ? `${verifiedRelease.reference_v2.score}/100 · ${verifiedRelease.reference_v2.status} · reviewed reference` : "verify to inspect"}</dd></div>
+                      <div><dt>Retained V2 reference</dt><dd>{verifiedRelease ? `${verifiedRelease.reference_v2.score}/100 · ${verifiedRelease.reference_v2.status} · retained reference` : "verify to inspect"}</dd></div>
                       <div><dt>Reference holdouts</dt><dd>{verifiedRelease ? `${verifiedRelease.reference_v2.holdouts.passed}/${verifiedRelease.reference_v2.holdouts.total}` : "verify to inspect"}</dd></div>
                       <div><dt>Fresh post-start Sol</dt><dd>{verifiedRelease ? verifiedRelease.fresh_sol_v2.status.replaceAll("_", " ") : "verify to inspect"}</dd></div>
                       <div><dt>Fresh requested config</dt><dd>{verifiedRelease ? `${verifiedRelease.fresh_sol_v2.model} requested · ${verifiedRelease.fresh_sol_v2.reasoning_effort} requested` : "verify to inspect"}</dd></div>
@@ -1064,7 +1107,7 @@ export function WitnessPatchLab() {
                           : runState === "error"
                             ? verificationError
                             : compilationReceipt
-                              ? `${compilationReceipt.file_count} files generated from ${compilationReceipt.hashes.verified}/${compilationReceipt.hashes.total} exact inputs. The regression remains red until the separate retained repair verification passes.`
+                              ? `${compilationReceipt.file_count} files generated after this session verified ${compilationReceipt.hashes.verified}/${compilationReceipt.hashes.total} manifest inputs. The portable ZIP records hashes only, not publisher provenance. The regression remains red until the separate retained repair verification passes.`
                               : "Select Compile failure to hash, regrade, and materialize the red regression locally."}
                       </small>
                     </span>
@@ -1086,7 +1129,8 @@ export function WitnessPatchLab() {
             </p>
           </footer>
         </section>
-      </div>
+        </div>
+      )}
     </main>
   );
 }

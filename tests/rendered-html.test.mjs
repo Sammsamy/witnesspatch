@@ -8,10 +8,11 @@ function readExportedHtml() {
 
 test("the deployed static export contains the WitnessPatch product shell", async () => {
   const html = await readExportedHtml();
-  assert.match(html, /<title>Time-fenced contracts for healthcare agents · WitnessPatch/);
-  assert.match(html, /contract breach happened/);
-  assert.match(html, /before the blood pressure arrived/);
+  assert.match(html, /<title>Replayable safety tests for healthcare agents · WitnessPatch/);
+  assert.match(html, /At T\+02/);
+  assert.match(html, /still waited/);
   assert.match(html, /Compile failure/);
+  assert.match(html, /Compile your files/);
   assert.match(html, /Locked verifier/);
   assert.match(html, /not model-graded/);
   assert.match(html, /fully synthetic/i);
@@ -24,7 +25,7 @@ test("exposes the evidence, executable test, and safety boundary", async () => {
   assert.match(html, /AIM/);
   assert.match(html, /ACOG/);
   assert.match(html, /No regression is pre-rendered here/);
-  assert.match(html, /contract-cardinality-minimal static recorded-decision witness/);
+  assert.match(html, /response held fixed · smallest set for INV-02/);
   assert.doesNotMatch(
     html,
     /the repair passes the urgent trace and exact negative control/,
@@ -40,6 +41,8 @@ test("exposes the evidence, executable test, and safety boundary", async () => {
   assert.match(html, /GPT-5\.6 Sol requested/);
   assert.match(html, /no OpenAI or clinical-organization endorsement implied/);
   assert.match(html, /npm run artifacts:v2:verify/);
+  assert.match(html, /processed locally and are not submitted/);
+  assert.match(html, /cannot detect PHI or prove de-identification/);
   assert.doesNotMatch(html, /HIPAA compliant|clinically validated|medical advice/i);
 });
 
@@ -68,8 +71,9 @@ test("exports a judge-ready static replay without a request-time Worker", async 
     readFile(staticConfigUrl, "utf8").then(JSON.parse),
   ]);
 
-  assert.match(html, /<title>Time-fenced contracts for healthcare agents · WitnessPatch/);
+  assert.match(html, /<title>Replayable safety tests for healthcare agents · WitnessPatch/);
   assert.match(html, /Compile failure/);
+  assert.match(html, /Compile your files/);
   assert.ok(rscStats.size > 0, "static export must retain its RSC payload");
   assert.equal(staticConfig.assets.directory, "./dist/client");
   assert.equal(staticConfig.assets.run_worker_first, false);

@@ -21,6 +21,8 @@ import {
 
 export { NoCompilableFailureError } from "./compile-witness-core.mjs";
 
+const SHA256_HEX = /^[a-f0-9]{64}$/u;
+
 function fileRecord(path, kind, contents) {
   return {
     path,
@@ -44,11 +46,21 @@ export function compileWitnessBundle(caseInput, runInput, options = {}) {
     evaluatedRun.evaluation,
     options.targetRuleId
   );
+  if (
+    !SHA256_HEX.test(options.inputCaseSha256 ?? "") ||
+    !SHA256_HEX.test(options.inputRunSha256 ?? "")
+  ) {
+    throw new Error(
+      "compileWitnessBundle requires both inputCaseSha256 and inputRunSha256 as lowercase 64-character SHA-256 digests."
+    );
+  }
   const identityHash = sha256(
     stableStringify({
       case_sha256: caseFingerprint(caseData),
-      run_id: evaluatedRun.run_id,
-      target_rule_id: selectedTarget.id
+      normalized_run: normalizedRun,
+      target_rule_id: selectedTarget.id,
+      input_case_sha256: options.inputCaseSha256 ?? null,
+      input_run_sha256: options.inputRunSha256 ?? null
     })
   ).slice(0, 16);
   const base = buildWitnessBundleBase({

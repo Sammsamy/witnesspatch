@@ -60,7 +60,7 @@ The V2 reference must remain internally consistent:
 - `23/23` manifest files hash exactly; the reference `2/2` fresh regrades and `4/4` holdouts match;
 - the 9→3 T+02 `INV-02` witness is recomputed with recorded decisions fixed;
 - the fresh candidate remains quarantined/not installed; browser-safe JSON-IR interpretation and Node execution each match exact `2/2` case and `4/4` mutation signatures, and the browser never executes retained JavaScript;
-- `npm run verify:release` passes `94/94` core tests, `4/4` rendered tests, build, lint, typecheck, and Wrangler dry run; `npm audit` reports zero known vulnerabilities at check time;
+- `npm run verify:release` must pass completely on the frozen release; report the actual suite totals. On a case-sensitive filesystem, only the case-folded-output-alias test is expected to skip. `npm audit` must report zero known vulnerabilities at check time;
 - bidirectional lexical checking catches urgent wording hidden behind non-urgent action labels;
 - the numeric-inference contradiction marker fails even if a fixture-classification action label is present;
 - real-browser verification keeps the baseline active on any error.
@@ -73,7 +73,7 @@ These are declared software assertions, not clinical validation or generalizatio
 node bin/witnesspatch.mjs compile --case PATH --run PATH --out-dir NEW_PATH
 ```
 
-The compiler must freshly regrade the supplied run, select or explicitly name a failed action invariant, emit a red regression and exact-byte manifest atomically, and refuse existing or symlinked output paths. It invokes neither a model nor a target adapter. It holds recorded decisions fixed; its witness is not target-in-loop, counterfactual, or clinically minimal.
+The compiler must freshly regrade the supplied run, select or explicitly name a failed action invariant, emit a red regression and exact-byte manifest atomically, and refuse existing or symlinked output paths. It invokes neither a model nor a target adapter. It holds recorded decisions fixed; its witness is not target-in-loop, counterfactual, or clinically minimal. Claim browser/CLI byte parity only for the two manifest-listed public inputs with explicit `--fact-scope failure-prefix`; generic inputs and full-trace scope are outside that claim.
 
 ## Codex usage
 

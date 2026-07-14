@@ -280,7 +280,9 @@ export function buildWitnessBundleBase({
     selected_rule_id: target.id,
     selected_rule_reason: targetRuleId
       ? "explicit --rule selection"
-      : "earliest failed critical action invariant",
+      : target.critical
+        ? "earliest failed critical action invariant"
+        : "earliest failed action invariant",
     failure_known_at_minute: target.deadline_minute,
     starting_fact_count: staticWitness.starting_fact_count,
     minimal_fact_count: staticWitness.minimal_fact_count,
@@ -289,6 +291,14 @@ export function buildWitnessBundleBase({
     model_invoked: false,
     input_case_sha256: inputCaseSha256,
     input_run_sha256: inputRunSha256,
+    input_integrity: {
+      mode: "locally_hashed_unverified_inputs",
+      hashes_computed: [inputCaseSha256, inputRunSha256].filter(Boolean).length,
+      external_manifest_verified: false,
+      data_declaration_verification: "unverified_input_declaration",
+      limitation:
+        "The compiler enforces declared synthetic-data fields but does not detect PHI, prove de-identification, or establish publisher provenance."
+    },
     contains_real_patient_data: false,
     clinician_validation: "pending",
     manifest_file: "manifest.json"
@@ -328,11 +338,12 @@ export function buildWitnessBundleManifest({
     case_id: bundle.evaluatedRun.case_id,
     source_run_id: bundle.evaluatedRun.run_id,
     target_rule_id: bundle.targetRuleId,
+    input_integrity: bundle.receipt.input_integrity,
     files: [...records].sort((left, right) =>
       left.path.localeCompare(right.path)
     ),
     verification:
-      "Every listed SHA-256 digest covers the exact UTF-8 bytes in this bundle. The manifest does not list itself."
+      "Every listed SHA-256 digest covers the exact UTF-8 bytes in this bundle. The manifest does not list itself. Source-input hashes are locally computed and are not publisher provenance."
   });
   const files = new Map(bundle.files);
   files.set("manifest.json", jsonWitnessFile(manifest));

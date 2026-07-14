@@ -9,6 +9,13 @@ import {
   readJson
 } from "../core.mjs";
 import { runHoldoutSuite } from "../holdouts.mjs";
+import {
+  MAX_MESSAGE_MARKER_COMPARISON_PRODUCT,
+  MAX_TIMELINE_INTEGER,
+  MAX_TOTAL_DECISION_MESSAGE_CHARACTERS,
+  MAX_TOTAL_LEXICAL_MARKER_CHARACTERS,
+  MAX_TOTAL_LEXICAL_MARKERS
+} from "../input-validation.mjs";
 import { minimizeCounterexample } from "../minimize-counterexample.mjs";
 
 const testDir = dirname(fileURLToPath(import.meta.url));
@@ -200,6 +207,118 @@ test("declared case schema blocks score corruption and malformed required fields
     mutate(caseData);
     assert.throws(() => assertCase(caseData), /Case schema validation failed/);
   }
+});
+
+test("timeline validation accepts the safe boundary and rejects unsafe or overflowing deadlines", async () => {
+  const safeBoundary = await readJson(casePath);
+  safeBoundary.timeline.at(-1).at_minute = MAX_TIMELINE_INTEGER;
+  const validatedBoundary = assertCase(safeBoundary);
+  assert.equal(validatedBoundary, safeBoundary);
+  const safeBoundaryRun = await fixture(
+    "postpartum-warning-signs-baseline.input.json"
+  );
+  safeBoundaryRun.decisions.at(-1).at_minute = MAX_TIMELINE_INTEGER;
+  const safeBoundaryEvaluation = gradeRun(
+    validatedBoundary,
+    safeBoundaryRun
+  );
+  const boundaryResult = safeBoundaryEvaluation.results.find(
+    (result) => result.triggered_at_minute === MAX_TIMELINE_INTEGER
+  );
+  assert.ok(boundaryResult);
+  assert.equal(boundaryResult.deadline_minute, MAX_TIMELINE_INTEGER);
+  assert.doesNotMatch(
+    JSON.stringify(safeBoundaryEvaluation),
+    /"(?:triggered_at_minute|deadline_minute)":null/
+  );
+
+  const unsafeMinute = await readJson(casePath);
+  unsafeMinute.timeline.at(-1).at_minute = MAX_TIMELINE_INTEGER + 1;
+  assert.throws(
+    () => assertCase(unsafeMinute),
+    /Case schema validation failed/
+  );
+
+  const enormousMinute = await readJson(casePath);
+  enormousMinute.timeline.at(-1).at_minute = 1e308;
+  assert.throws(
+    () => assertCase(enormousMinute),
+    /Case schema validation failed/
+  );
+
+  const unsafeDelay = await readJson(casePath);
+  unsafeDelay.rules.at(-1).max_delay_minutes = MAX_TIMELINE_INTEGER + 1;
+  assert.throws(
+    () => assertCase(unsafeDelay),
+    /Case schema validation failed/
+  );
+
+  const overflowingDeadline = await readJson(casePath);
+  overflowingDeadline.timeline.at(-1).at_minute = MAX_TIMELINE_INTEGER;
+  overflowingDeadline.rules.at(-1).max_delay_minutes = 1;
+  assert.throws(
+    () => assertCase(overflowingDeadline),
+    /deadline exceeds the maximum safe integer/
+  );
+});
+
+test("semantic work budgets reject oversized messages, marker counts, and their product before grading", async () => {
+  const tooManyMarkers = await readJson(casePath);
+  const messageControl = tooManyMarkers.controls.find(
+    (control) => control.kind === "message_action_consistency"
+  );
+  messageControl.global_forbidden_markers = Array.from(
+    { length: MAX_TOTAL_LEXICAL_MARKERS + 1 },
+    (_, index) => `blocked marker ${index}`
+  );
+  assert.throws(
+    () => assertCase(tooManyMarkers),
+    /may declare at most .* lexical markers/
+  );
+
+  const oversizedMarkerText = await readJson(casePath);
+  const oversizedMarkerControl = oversizedMarkerText.controls.find(
+    (control) => control.kind === "message_action_consistency"
+  );
+  oversizedMarkerControl.global_forbidden_markers = [
+    "x".repeat(MAX_TOTAL_LEXICAL_MARKER_CHARACTERS + 1)
+  ];
+  assert.throws(
+    () => assertCase(oversizedMarkerText),
+    /lexical markers may contain at most/
+  );
+
+  const caseData = assertCase(await readJson(casePath));
+  const oversizedMessage = await fixture(
+    "postpartum-warning-signs-baseline.input.json"
+  );
+  oversizedMessage.decisions[0].message = "x".repeat(
+    MAX_TOTAL_DECISION_MESSAGE_CHARACTERS + 1
+  );
+  assert.throws(
+    () => gradeRun(caseData, oversizedMessage),
+    /decision messages may contain at most/
+  );
+
+  const productCase = await readJson(casePath);
+  const productControl = productCase.controls.find(
+    (control) => control.kind === "message_action_consistency"
+  );
+  productControl.global_forbidden_markers = Array.from(
+    { length: 1_024 },
+    (_, index) => `product marker ${index}`
+  );
+  const boundedProductCase = assertCase(productCase);
+  const productRun = await fixture(
+    "postpartum-warning-signs-baseline.input.json"
+  );
+  productRun.decisions[0].message = "x".repeat(
+    Math.floor(MAX_MESSAGE_MARKER_COMPARISON_PRODUCT / 1_024) + 1
+  );
+  assert.throws(
+    () => gradeRun(boundedProductCase, productRun),
+    /character-marker lexical comparison budget/
+  );
 });
 
 test("candidate validation requires one ordered decision per timeline step", async () => {
