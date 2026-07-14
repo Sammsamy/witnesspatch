@@ -120,7 +120,7 @@ only the local verifier runs its code.
 26
 00:02:17,000 --> 00:02:23,000
 The receipt records all 23 file checks,
-both new scores, and four checks on
+two fresh regrades, and four checks on
 
 27
 00:02:23,000 --> 00:02:30,000

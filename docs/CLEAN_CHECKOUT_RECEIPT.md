@@ -2,7 +2,21 @@
 
 This is a retained local reproducibility record, not independent third-party validation. It verifies the exact local macOS and Debian environments named below; it is not proof of remote CI, a broad Linux compatibility matrix, or Windows support.
 
-## Prior claim-hardened clean-clone checkpoint supporting the current candidate
+## Current pre-publication cross-platform checkpoint
+
+- Commit: `d17d075da6a31d1e7ddc853b6a225b26bd9bf083`
+- Source: fresh local clones with no inherited `node_modules`, generated output, or ignored workspace files
+- Commands in each clone: `npm ci` followed by `npm run verify:release`
+- macOS host: macOS 26.5.2 arm64; Node `v24.14.0`; npm `11.9.0`
+- macOS result: exit code `0`; 495 packages installed, 496 audited, zero vulnerabilities; `131/131` core tests passed; 150 total `node:test` executions passed with zero failures or skips
+- Linux host: local Docker container running Debian GNU/Linux 12 (bookworm) arm64; Node `v22.23.1`; npm `10.9.8`
+- Linux result: exit code `0`; 502 packages installed, 503 audited, zero vulnerabilities; 131 core tests discovered, 130 passed, and the one case-insensitive-output-alias test was expectedly skipped on the case-sensitive filesystem
+- Shared verified outcomes: both artifact profiles, production build, `6/6` rendered-product checks, a `1/1` real development-server HTTP smoke, `6/6` submission-package checks, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a Wrangler static-deployment dry run with 59 assets
+- Two-environment static snapshot: each `dist/client` directory contained 55 physical files; every canonical path and file SHA-256 row matched, and the SHA-256 of each identical canonical manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
+
+Neither temporary clone was used to edit the repository. This verifies the exact pre-publication source-and-media checkpoint above. Later CI and documentation hardening do not change the static client and now fail closed against that fingerprint. The final repository, deployment, video, reviewer evidence, and submission metadata are not frozen, so the exact submitted commit still requires remote CI and a final replay.
+
+## Earlier claim-hardened clean-clone checkpoint
 
 - Commit: `04ffd9feaac99b7e3c064cb19ba9159cfaec2fca`
 - Source: local `git clone --no-local` into new temporary directories, with no inherited `node_modules`, generated output, or ignored workspace files

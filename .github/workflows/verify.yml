@@ -3,6 +3,7 @@ name: Verify
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,23 +14,54 @@ concurrency:
 
 jobs:
   deterministic-proof:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Confirm clean source checkout
+        run: |
+          test ! -e node_modules
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
       - name: Use Node.js 22.15.0
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22.15.0
           cache: npm
 
+      - name: Record runner and toolchain
+        run: |
+          uname -a
+          node --version
+          npm --version
+
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Verify artifacts, tests, build, lint, types, and static release packaging
+        run: |
+          set -o pipefail
+          mkdir -p output/release
+          npm run verify:release | tee output/release/verify-release.log
+
+      - name: Preserve exact release evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: witnesspatch-static-release-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            output/release/verify-release.log
+            output/release/dist-client.sha256
+            dist/client
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Confirm verification did not alter tracked source
+        run: test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
       - name: Reject known moderate-or-higher advisories
         run: npm audit --audit-level=moderate
-
-      - name: Verify artifacts, tests, build, lint, types, and static release packaging
-        run: npm run verify:release

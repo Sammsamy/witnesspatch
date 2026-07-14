@@ -1,6 +1,6 @@
 # Devpost media manifest
 
-Recaptured on July 13, 2026 from the claim-hardened production candidate identified by the exact source hashes below. The images bind those bytes directly. Checkpoint `04ffd9feaac99b7e3c064cb19ba9159cfaec2fca` remains the prior clean-clone reproducibility record; the exact final submitted commit still requires its own replay after external release fields are frozen.
+Recaptured on July 13, 2026 from the claim-hardened production candidate identified by the exact source hashes below. The images bind those bytes directly. Pre-publication checkpoint `d17d075da6a31d1e7ddc853b6a225b26bd9bf083` passed fresh macOS and Debian clean-clone replays with the same 55-file static-client fingerprint; the exact final submitted commit still requires its own replay after external release fields are frozen.
 
 ## Source state
 

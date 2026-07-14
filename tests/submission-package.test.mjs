@@ -238,6 +238,84 @@ test("judge-facing current V2 fingerprints match the exact release manifest", as
   );
 });
 
+test("the reviewed static-client fingerprint is enforced and documented", async () => {
+  const [recordBytes, packageBytes, workflow, ...documents] = await Promise.all([
+    readFile(
+      new URL(
+        "../submission/release/static-client-fingerprint.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(
+      new URL("../.github/workflows/verify.yml", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(
+      new URL("../docs/CLEAN_CHECKOUT_RECEIPT.md", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../docs/SUBMISSION_DRAFT.md", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../docs/OFFICIAL_REQUIREMENTS_AUDIT.md", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  const record = JSON.parse(recordBytes);
+  const packageData = JSON.parse(packageBytes);
+
+  assert.equal(record.schema_version, "1.0.0");
+  assert.equal(record.algorithm, "sha256");
+  assert.equal(record.root, "dist/client");
+  assert.equal(record.file_count, 55);
+  assert.match(record.manifest_sha256, /^[0-9a-f]{64}$/u);
+  for (const document of documents) {
+    assert.ok(
+      document.includes(record.manifest_sha256),
+      "A current release-evidence document has a stale static fingerprint",
+    );
+  }
+
+  assert.equal(
+    packageData.scripts["release:fingerprint"],
+    "node build/verify-static-fingerprint.mjs",
+  );
+  assert.match(
+    packageData.scripts["deploy:dry-run"],
+    /npm run release:static:check && npm run release:fingerprint && CI=1 wrangler deploy/u,
+  );
+  assert.match(
+    packageData.scripts["deploy:free"],
+    /npm run release:static:check && npm run release:fingerprint && wrangler deploy/u,
+  );
+  assert.match(
+    packageData.scripts["verify:release"],
+    /&& npm run deploy:dry-run$/u,
+  );
+  assert.match(workflow, /npm run verify:release/u);
+  assert.match(workflow, /output\/release\/dist-client\.sha256/u);
+  assert.match(workflow, /include-hidden-files:\s+true/u);
+  assert.match(workflow, /persist-credentials:\s+false/u);
+  assert.match(workflow, /github\.run_attempt/u);
+
+  const actionRefs = [...workflow.matchAll(/^\s*uses:\s+\S+@(\S+)/gmu)].map(
+    (match) => match[1],
+  );
+  assert.ok(actionRefs.length > 0, "The workflow must use pinned actions");
+  for (const actionRef of actionRefs) {
+    assert.match(
+      actionRef,
+      /^[0-9a-f]{40}$/u,
+      `Workflow action is not pinned to a full commit SHA: ${actionRef}`,
+    );
+  }
+});
+
 test("founder demo timeline stays continuous, speakable, and below three minutes", async () => {
   const [script, captions] = await Promise.all([
     readFile(new URL("../docs/DEMO_SCRIPT.md", import.meta.url), "utf8"),
