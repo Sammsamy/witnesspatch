@@ -32,7 +32,7 @@ Do not turn an estimate into a published time-saved claim without observing a re
 
 This review is only about the two authored V2 postpartum fixtures, their public sources, and their wording. It is not product approval, a clinical study, patient-care advice, or validation of the software.
 
-Use the visually checked five-page handoff generated from `docs/PHYSICIAN_REVIEW_PACKET.md`. Show Page 1 and record the unaided first-look answers before revealing Pages 2–5. The participant must complete Pages 2–5 of that PDF; it is the authoritative participant record. This document is a facilitator mirror of the prompts, not a substitute record. The generated packet uses only the five source URLs embedded in the V2 fixtures, fingerprints the exact wording artifacts, includes complete retained-display and executable-reference messages and all seven UI contract cards, and separately flags exact route and repeat-reading phrases for disposition.
+Use the visually checked split handoffs generated from `docs/PHYSICIAN_REVIEW_PACKET.md`. First send only `output/pdf/witnesspatch-physician-first-look.pdf`, have the participant record and return the unaided first-look answers, and do not expose the complete archive. Only then send `output/pdf/witnesspatch-physician-revealed-review.pdf` for the numbered dispositions and closeout. The participant-completed first-look and revealed-review PDFs together are the authoritative participant record; the complete five-page PDF is the frozen blank archive. This document is a facilitator mirror of the prompts, not a substitute record. The generated handoffs use only the five source URLs embedded in the V2 fixtures, fingerprint the exact wording artifacts, include complete retained-display and executable-reference messages and all seven UI contract cards, and separately flag exact route and repeat-reading phrases for disposition.
 
 **Reviewer credentials and jurisdiction:**  
 **Relevant practice area:**  
@@ -93,7 +93,7 @@ Ask a software/evaluation reviewer to confirm that the public wording matches wh
 - A review of these fixtures does not validate other cases, the grader, the product, or patient outcomes.
 - A builder interview is problem/workflow evidence, not clinical validation.
 - A single clean run is usability evidence for one environment, not adoption or time-saved evidence.
-- Unless a qualified physician completes the bounded review, all five sources are opened, all material items are resolved, and required revisions are re-reviewed, keep `licensed physician fixture review pending` everywhere.
+- Any current `revise`, `outside reviewer scope`, or `unresolved` disposition on Items 1–9 keeps `licensed physician fixture/wording review pending`. Completion additionally requires established active licensure and relevant scope, all five sources opened, separately preserved re-review of every revision, and private confirmation of the exact deidentified summary. `clinical validation` remains `not claimed` regardless of the fixture/wording-review outcome.
 
 ## Recruitment messages
 

@@ -4,7 +4,7 @@
 
 Here, time-fenced means every authored fact has a reveal time and every action contract has a deadline. WitnessPatch is synthetic developer safety tooling for teams building patient-facing healthcare agents. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic software owns every displayed verdict. The post-start V2 reference demonstrates a real executable policy change, an exact-fact negative control, a portable static witness compiler, and browser-side verification that fails closed.
 
-The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. Licensed-physician review and external health-AI builder validation are still pending.
+The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. Licensed-physician fixture/wording review is pending, clinical validation is not claimed, and external health-AI builder validation is still pending.
 
 ## The judge proof
 

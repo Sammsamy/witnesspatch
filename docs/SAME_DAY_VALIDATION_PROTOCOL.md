@@ -14,7 +14,7 @@ git rev-parse HEAD
 shasum -a 256 public/runs/v2/manifest.json
 ```
 
-The first command must return no output. Put the commit and manifest hash on the participant's task card and in the session record. If either value changes, close the current record and begin a separately labeled rerun; never replace an unfavorable result with a patched rerun under the same session ID.
+The first command must return no output. Send the repository clone URL, commit, and manifest hash to the participant out of band after the pre-exposure interview, and put the fingerprints in the session record. Do not edit the checked-in placeholders in `docs/BUILDER_REVIEW_START.md`; doing so would dirty the reviewed tree. The participant's preflight must compare the supplied fingerprints before and after dependency installation. If either value changes, close the current record and begin a separately labeled rerun; never replace an unfavorable result with a patched rerun under the same session ID.
 
 Before either session, read this boundary aloud:
 
@@ -57,21 +57,23 @@ Before opening the repository, record the participant's forecast in minutes and 
 
 ### Clean-run observation
 
-The participant uses a fresh directory or clean clone on their own machine and follows the checked-in instructions. Record, without exposing hostnames or usernames:
+The participant uses a fresh directory or clean clone on their own machine and follows the checked-in instructions. Start the independent timer before cloning so access and install failures remain visible, while separately timestamping clone complete, install complete, server ready, browser task start, ZIP exported, and bundle execution complete. Record, without exposing hostnames or usernames:
 
 - OS family and version, architecture, Node version, npm version, browser and version;
 - repository-access method, network or policy constraints, and whether dependencies were already cached;
+- the preflight result, exact local server URL/port, and each setup/task sub-time without treating setup time as product-navigation time;
 - start time, end time, and time to each independently recognized milestone;
 - every warning, failed command, broken link, and participant question verbatim;
 - each facilitator intervention, its exact wording, and whether it supplied navigation, a command, interpretation, or a workaround;
-- whether the participant independently observed the failing baseline, a runnable red regression, the repaired result, the exact-fact control, and the evidence receipt;
+- whether the participant independently observed the failing baseline, exported the exact nine-file ZIP, obtained `9/9` browser/CLI byte parity, executed its Node regression red on the baseline, executed the same regression green with the supplied repair, found the exact-fact control, and inspected the evidence receipt;
+- the private bundle-execution receipt SHA-256 plus the baseline and repaired test exit codes; seeing or downloading a ZIP alone does not establish a runnable regression;
 - whether the participant noticed any hash, verifier, browser, or build failure.
 
 Do not answer product questions during the independent window. A safety/privacy intervention does not count as product help, but it must still be logged. After the window, assistance is allowed and the result must be labeled `assisted`.
 
 Classify the run before discussing the product:
 
-- `independent completion`: all five milestones, no substantive product help;
+- `independent completion`: all five milestones, including a passing bundle-execution receipt with baseline `RED exit 1`, supplied-repair `PASS exit 0`, and `9/9` byte parity, with no substantive product help;
 - `assisted completion`: all five milestones after one to three substantive interventions;
 - `incomplete`: a milestone is missing at 20 minutes or more than three substantive interventions were required;
 - `invalid`: wrong commit, changed manifest, prior UI/repository/task-card/artifact/demo exposure beyond the permitted recruiting blurb, or unusable record.
@@ -113,7 +115,7 @@ This is a fixture and wording review. The participant must not be asked to appro
 
 ### Pre-wording measures
 
-First show only Page 1 of the handoff generated from `docs/PHYSICIAN_REVIEW_PACKET.md`: the two synthetic timelines, declared intended-use limits, and linked source material—without the project's rules, repaired responses, scores, proposed review statement, or Pages 2–5. Ask:
+First show only `output/pdf/witnesspatch-physician-first-look.pdf`, generated as instructed in `docs/PHYSICIAN_REVIEW_PACKET.md`: the two synthetic timelines, declared intended-use limits, and linked source material—without the project's rules, repaired responses, scores, proposed review statement, or Pages 2–5. Do not send the complete archive yet. Ask:
 
 1. “Which clinical implications, if any, are supportable from these exact authored facts and sources?”
 2. “Which implications would be misleading or exceed the sources?”
@@ -124,7 +126,7 @@ Record the participant's concerns before revealing project wording. This is a pr
 
 ### Exact claim review
 
-Reveal Pages 2–5 of the frozen generated PDF, including the exact messages and fingerprints, all seven UI contract cards, numbered Items 1–9, source-support statements, and closeout. Require the participant to complete those pages and record one disposition for each numbered item:
+After the first-look answers are recorded and returned, reveal `output/pdf/witnesspatch-physician-revealed-review.pdf`, containing frozen Pages 2–5: the exact messages and fingerprints, all seven UI contract cards, numbered Items 1–9, source-support statements, and closeout. Require the participant to complete those pages and record one disposition for each numbered item:
 
 - `supported as scoped`;
 - `revise`;
@@ -133,9 +135,9 @@ Reveal Pages 2–5 of the frozen generated PDF, including the exact messages and
 
 Record the reason and exact requested change in the participant's own words. The facilitator must not paraphrase a `revise`, `outside reviewer scope`, or `unresolved` disposition into agreement.
 
-The generated PDF is the authoritative participant record. `docs/EXTERNAL_REVIEW_PACKET.md` and facilitator notes mirror the prompts only and may not replace Pages 2–5. Count dispositions for Items 1–9 only; preserve the five source-specific sub-dispositions under Item 9 as audit detail, but do not add them to the closeout totals as five extra claims.
+The participant-completed first-look and revealed-review PDFs together are the authoritative participant record; the complete five-page PDF is the frozen blank archive. The participant may print or annotate the handoffs and must return them privately. `docs/EXTERNAL_REVIEW_PACKET.md` and facilitator notes mirror the prompts only and may not replace the completed PDFs. Count dispositions for Items 1–9 only; preserve the five source-specific sub-dispositions under Item 9 as audit detail, but do not add them to the closeout totals as five extra claims.
 
-Do not edit a fixture during the session. If changes are requested, preserve the original disposition, make a new commit after the session, and ask the same physician to re-review only the changed lines. Until that re-review is confirmed, `licensed physician fixture review pending` remains the public status.
+Do not edit a fixture during the session. Any current `revise`, `outside reviewer scope`, or `unresolved` disposition on Items 1–9 keeps the fixture/wording review pending. Preserve the original disposition. A revision requires a new commit and a separately retained same-physician re-review; an outside-scope or unresolved item requires removing or narrowing the claim, or appropriate additional expertise. Never overwrite the original packet or counts.
 
 ### Physician post measures
 
@@ -154,7 +156,7 @@ There is no aggregate clinical score and no majority vote. A completed review wi
 
 ### Physician stop rules
 
-Stop if active licensure cannot be established, the participant is outside the scope they are being asked to judge, source material cannot be accessed, the discussion becomes patient-specific advice, sensitive information appears, or the participant asks to approve the product rather than the bounded claims. Keep the fixture review `pending` if any required revision has not been re-reviewed, any material item remains unresolved, or the participant does not approve the narrow public summary. Never set a `clinician_validation` or equivalent field to `validated` from this review.
+Stop if active licensure cannot be established, the participant is outside the scope they are being asked to judge, source material cannot be accessed, the discussion becomes patient-specific advice, sensitive information appears, or the participant asks to approve the product rather than the bounded claims. Keep `fixture_wording_review: pending` if any Item 1–9 disposition is currently `revise`, `outside reviewer scope`, or `unresolved`, a required re-review is incomplete, or the participant does not approve the narrow public summary. `clinical_validation` remains `not_claimed` regardless of the fixture-review outcome. Per-artifact records retain the legacy `clinician_validation: pending` field for schema and provenance compatibility; never interpret it as the canonical fixture-review or clinical-validation state.
 
 ## Evidence tiers and judge-safe reporting
 
@@ -162,7 +164,7 @@ Assign each session one evidence tier:
 
 - `E1 — facilitator record`: dated notes only;
 - `E2 — participant-confirmed`: participant confirmed the deidentified summary by reply or signature;
-- `E3 — reproducible`: E2 plus a frozen commit/hash and, for the builder, timestamped clean-run output or a consented recording.
+- `E3 — reproducible`: E2 plus a frozen commit/hash and, for the builder, timestamped clean-run output or a consented recording. The builder record must include the preflight output, private terminal-transcript SHA-256, and private bundle-execution receipt SHA-256; the generated receipt does not replace participant confirmation.
 
 Do not publish raw personal data to raise the tier. A reviewer-confirmed deidentified record is stronger than an unapproved named quote.
 

@@ -18,7 +18,8 @@
     "fresh_v2_sol_candidate_installed": false
   },
   "clinical_scope": {
-    "physician_validation": "pending",
+    "fixture_wording_review": "pending",
+    "clinical_validation": "not_claimed",
     "authored_bp_endpoints": [
       "118/74",
       "168/112"
@@ -102,8 +103,8 @@
       "id": "clinical_scope",
       "kind": "clinical_claim_boundary_v2",
       "path": "/runs/v2/clinical-scope.json",
-      "sha256": "e5ddcc02adc9bd8e2e354bc1cd2b65bd7c1c2a480310b214eb8d5652b68bea1d",
-      "bytes": 1501
+      "sha256": "0aa11e0ccf7cafbd6027289d098ea0c69bd6371c332bb6c6bfbaf16e3570e8c8",
+      "bytes": 1760
     },
     {
       "id": "archived_sol_v1_under_v2_evaluation",
@@ -226,5 +227,5 @@
     "fresh_sol_v2_holdouts_passed": 4,
     "fresh_sol_v2_holdouts_total": 4
   },
-  "provenance_notice": "V2 is a post-start, synthetic developer-safety extension. A fresh post-start GPT-5.6 Sol Ultra proposal is retained with its reconstructed prompt, exact inputs, receipt, compiled candidate, and patch; the candidate passed the deterministic V2 signature but remains quarantined and was not installed as the reference repair. The unchanged pre-start Sol candidate is retained as lineage and rejected under V2; it is not presented as a V2 model repair. The fixed manifest generated_at is deterministic release bookkeeping after proof integration, not an independent attestation of origin. Browser verification checks same-build integrity, fresh deterministic regrades, declared software holdouts, and retained proof byte links, but does not execute the fresh JavaScript candidate or prove publisher authenticity, semantic correctness, physician review, clinical validity, or real-world safety. The BP classes are fixture-supplied for exactly 118/74 and 168/112; numeric threshold inference and all middle, borderline, discordant, or repeat-reading behavior are outside scope."
+  "provenance_notice": "V2 is a post-start, synthetic developer-safety extension. A fresh post-start GPT-5.6 Sol Ultra proposal is retained with its reconstructed prompt, exact inputs, receipt, compiled candidate, and patch; the candidate passed the deterministic V2 signature but remains quarantined and was not installed as the reference repair. The unchanged pre-start Sol candidate is retained as lineage and rejected under V2; it is not presented as a V2 model repair. The fixed manifest generated_at is deterministic release bookkeeping after proof integration, not an independent attestation of origin. Browser verification checks same-build integrity, fresh deterministic regrades, declared software holdouts, and retained proof byte links, but does not execute the fresh JavaScript candidate or prove publisher authenticity, semantic correctness, physician review, clinical validity, or real-world safety. Per-artifact records retain the legacy clinician_validation=pending field for schema and provenance compatibility; it is not the canonical fixture-review or clinical-validation state. The canonical current boundary separately records fixture_wording_review=pending and clinical_validation=not_claimed. The BP classes are fixture-supplied for exactly 118/74 and 168/112; numeric threshold inference and all middle, borderline, discordant, or repeat-reading behavior are outside scope."
 }

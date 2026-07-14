@@ -58,7 +58,7 @@ WitnessPatch remains aligned only while it:
 - evaluates developer-authored workflow contracts rather than giving patient-specific advice;
 - keeps every proposed repair review-gated and never automates a real medical decision;
 - tests only the team's own reference target or systems whose owners authorized testing; and
-- preserves the machine-readable `clinician_validation: pending` boundary and displays `licensed physician fixture review pending` until a qualified scoped review is fully completed.
+- preserves canonical machine-readable `fixture_wording_review: pending` and `clinical_validation: not_claimed` boundaries, while the legacy per-artifact `clinician_validation: pending` field remains for schema and provenance compatibility and is not treated as either canonical state; the UI displays the fixture/wording review as pending and clinical validation as not claimed.
 
 ## Intellectual property and publicity
 
@@ -74,7 +74,7 @@ WitnessPatch remains aligned only while it:
 - Stage Two weights Technological Implementation, Design, Potential Impact, and Quality of the Idea equally at 25% each. The controlling Quality-of-the-Idea wording asks whether the concept is creative, novel, and different from existing concepts, so the submission must distinguish the closest prior art rather than rely on a broad category claim.
 - Tie-break order is Technological Implementation, Design, Potential Impact, then Quality of the Idea, followed by a panel vote if still tied.
 - Judges may choose not to test and may judge only from the description, images, and video. The proof must therefore be visible in the first minute.
-- Three official surfaces conflict: the rules define judging as July 22 at 10:00 AM through August 5 at 5:00 PM PDT; OpenAI's Build Week page says July 22 through August 7; and the Devpost schedule says July 22 at 9:00 AM through August 9 at 5:00 PM PDT. The July 13 update also mislabels July 21, 2026 as Monday; the overview correctly says Tuesday and all sources agree on the July 21 at 5:00 PM PT submission cutoff. The rules control, but keep all access working through August 9 as the conservative operational boundary.
+- Three official surfaces conflict: the rules define judging as July 22 at 10:00 AM through August 5 at 5:00 PM PDT; OpenAI's Build Week page says July 22 through August 7; and the Devpost schedule says July 22 at 9:00 AM through August 9 at 5:00 PM PDT. The July 13 update also mislabels July 21, 2026 as Monday; July 21, 2026 is Tuesday, and all sources agree on the July 21 at 5:00 PM PT submission cutoff. The rules control, but keep all access working through August 9 as the conservative operational boundary.
 - The published Developer Tools prizes are $15,000 for first and $10,000 for second. First also includes up to two DevDay/Exchange passes, OpenAI Developers promotion, a Codex team meeting, and one year of Pro. None of these benefits is an employment offer or hiring guarantee.
 
 ## Organizer clarification draft — do not send without the team

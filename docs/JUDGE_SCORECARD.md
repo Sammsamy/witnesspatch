@@ -80,7 +80,7 @@ No honest process can guarantee `40/40`, a prize, or employment. Today the impac
 - [x] Fix the README development-server first-request failure and pass the expanded verifier from a fresh clone of `9f2cd8d`, including the real HTTP smoke.
 - [x] Recapture four direct 1200 x 800 product screenshots from the current source-hash-bound candidate and bind their bytes to thirteen source fingerprints; the 2:53 founder script and captions are prepared but the public video is not recorded.
 - [ ] Obtain at least one health-AI builder workflow interview.
-- [ ] Obtain a scoped licensed-physician fixture review, or preserve `pending` everywhere.
+- [ ] Obtain a scoped licensed-physician fixture/wording review, or preserve `fixture_wording_review: pending`; keep `clinical_validation: not_claimed` regardless of that review's outcome.
 - [ ] Create the selected private all-rights-reserved repository, share it with both judging addresses, and verify access and CI visibility from a judge-equivalent account.
 - [ ] Deploy the replay and verify it from a clean browser with no privileged session.
 - [ ] Record and upload the founder-voiced public video under three minutes with audio explaining both Codex and GPT-5.6.

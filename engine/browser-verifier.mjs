@@ -944,7 +944,7 @@ function verifyV2ReleaseClaims(
   );
 
   requireValue(
-    clinicalScope.status === "source_linked_physician_validation_pending" &&
+    clinicalScope.status === "source_linked_fixture_wording_review_pending" &&
       clinicalScope.blood_pressure_scope?.classification_source ===
         "fixture_supplied" &&
       clinicalScope.blood_pressure_scope?.grader_infers_numeric_threshold ===
@@ -953,7 +953,10 @@ function verifyV2ReleaseClaims(
         false &&
       clinicalScope.negative_control_scope
         ?.proves_real_world_deferral_is_safe === false &&
-      clinicalScope.verification_boundary?.physician_validation === "pending",
+      clinicalScope.verification_boundary?.fixture_wording_review === "pending" &&
+      clinicalScope.verification_boundary?.clinical_validation === "not_claimed" &&
+      clinicalScope.verification_boundary?.legacy_artifact_field ===
+        "clinician_validation=pending is retained as a legacy per-artifact field for schema and provenance compatibility; it is not the canonical fixture-review or clinical-validation state",
     "V2 clinical-scope boundary is invalid."
   );
   assertCanonicalEqual(
@@ -962,7 +965,8 @@ function verifyV2ReleaseClaims(
     "V2 manifest BP endpoints"
   );
   requireValue(
-    manifest.clinical_scope.physician_validation === "pending" &&
+    manifest.clinical_scope.fixture_wording_review === "pending" &&
+      manifest.clinical_scope.clinical_validation === "not_claimed" &&
       manifest.clinical_scope.classification_source === "fixture_supplied" &&
       manifest.clinical_scope.grader_infers_numeric_threshold === false &&
       manifest.clinical_scope.exact_negative_control_only === true,

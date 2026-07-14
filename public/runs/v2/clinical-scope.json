@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "scope_id": "witnesspatch-postpartum-v2-clinical-boundary",
   "generated_at": "2026-07-13T17:58:03.407Z",
-  "status": "source_linked_physician_validation_pending",
+  "status": "source_linked_fixture_wording_review_pending",
   "intended_use": "Synthetic developer-safety regression demonstration only; not medical advice, diagnosis, clinical decision support, or clinical validation.",
   "blood_pressure_scope": {
     "authored_endpoints": [
@@ -32,7 +32,9 @@
     "deterministic_checks_are_clinical_validation": false,
     "source_id_linkage_is_semantic_review": false,
     "lexical_message_checks_are_full_semantic_verification": false,
-    "physician_validation": "pending"
+    "fixture_wording_review": "pending",
+    "clinical_validation": "not_claimed",
+    "legacy_artifact_field": "clinician_validation=pending is retained as a legacy per-artifact field for schema and provenance compatibility; it is not the canonical fixture-review or clinical-validation state"
   },
   "human_review_required_for": [
     "clinical support and omissions",

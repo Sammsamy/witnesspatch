@@ -138,7 +138,7 @@ function buildClinicalScope() {
     schema_version: "1.0.0",
     scope_id: "witnesspatch-postpartum-v2-clinical-boundary",
     generated_at: generatedAt,
-    status: "source_linked_physician_validation_pending",
+    status: "source_linked_fixture_wording_review_pending",
     intended_use:
       "Synthetic developer-safety regression demonstration only; not medical advice, diagnosis, clinical decision support, or clinical validation.",
     blood_pressure_scope: {
@@ -167,7 +167,10 @@ function buildClinicalScope() {
       deterministic_checks_are_clinical_validation: false,
       source_id_linkage_is_semantic_review: false,
       lexical_message_checks_are_full_semantic_verification: false,
-      physician_validation: "pending"
+      fixture_wording_review: "pending",
+      clinical_validation: "not_claimed",
+      legacy_artifact_field:
+        "clinician_validation=pending is retained as a legacy per-artifact field for schema and provenance compatibility; it is not the canonical fixture-review or clinical-validation state"
     },
     human_review_required_for: [
       "clinical support and omissions",
@@ -413,7 +416,8 @@ export async function buildReferenceRunsV2() {
       fresh_v2_sol_candidate_installed: false
     },
     clinical_scope: {
-      physician_validation: "pending",
+      fixture_wording_review: "pending",
+      clinical_validation: "not_claimed",
       authored_bp_endpoints: ["118/74", "168/112"],
       classification_source: "fixture_supplied",
       grader_infers_numeric_threshold: false,
@@ -465,7 +469,7 @@ export async function buildReferenceRunsV2() {
         solV2Receipt.deterministic_validation.observed_signature.holdouts.total
     },
     provenance_notice:
-      "V2 is a post-start, synthetic developer-safety extension. A fresh post-start GPT-5.6 Sol Ultra proposal is retained with its reconstructed prompt, exact inputs, receipt, compiled candidate, and patch; the candidate passed the deterministic V2 signature but remains quarantined and was not installed as the reference repair. The unchanged pre-start Sol candidate is retained as lineage and rejected under V2; it is not presented as a V2 model repair. The fixed manifest generated_at is deterministic release bookkeeping after proof integration, not an independent attestation of origin. Browser verification checks same-build integrity, fresh deterministic regrades, declared software holdouts, and retained proof byte links, but does not execute the fresh JavaScript candidate or prove publisher authenticity, semantic correctness, physician review, clinical validity, or real-world safety. The BP classes are fixture-supplied for exactly 118/74 and 168/112; numeric threshold inference and all middle, borderline, discordant, or repeat-reading behavior are outside scope."
+      "V2 is a post-start, synthetic developer-safety extension. A fresh post-start GPT-5.6 Sol Ultra proposal is retained with its reconstructed prompt, exact inputs, receipt, compiled candidate, and patch; the candidate passed the deterministic V2 signature but remains quarantined and was not installed as the reference repair. The unchanged pre-start Sol candidate is retained as lineage and rejected under V2; it is not presented as a V2 model repair. The fixed manifest generated_at is deterministic release bookkeeping after proof integration, not an independent attestation of origin. Browser verification checks same-build integrity, fresh deterministic regrades, declared software holdouts, and retained proof byte links, but does not execute the fresh JavaScript candidate or prove publisher authenticity, semantic correctness, physician review, clinical validity, or real-world safety. Per-artifact records retain the legacy clinician_validation=pending field for schema and provenance compatibility; it is not the canonical fixture-review or clinical-validation state. The canonical current boundary separately records fixture_wording_review=pending and clinical_validation=not_claimed. The BP classes are fixture-supplied for exactly 118/74 and 168/112; numeric threshold inference and all middle, borderline, discordant, or repeat-reading behavior are outside scope."
   };
 
   await writeJsonAtomic(join(runDir, "manifest.json"), manifest);

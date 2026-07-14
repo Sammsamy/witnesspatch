@@ -567,12 +567,12 @@ export function WitnessPatchLab() {
 
           <div
             className="suite-select"
-            aria-label="Selected crash suite: Maternal care, 7 locked contracts"
+            aria-label="Selected synthetic maternal fixture, 7 locked evaluation contracts"
           >
             <span className="suite-icon">MC</span>
             <span>
-              <strong>Maternal care</strong>
-              <small>7 locked contracts</small>
+              <strong>Synthetic maternal fixture</strong>
+              <small>7 locked evaluation contracts</small>
             </span>
             <span className="suite-selected">SELECTED</span>
           </div>
@@ -584,9 +584,9 @@ export function WitnessPatchLab() {
                 <MarkIcon kind="fail" />
               </span>
               <span>
-                <strong>Postpartum headache</strong>
+                <strong>Postpartum warning-sign fixture</strong>
                 <small>
-                  {isPassed ? "Baseline red · repair passes" : "Urgent escalation"}
+                  {isPassed ? "Baseline red · repair passes" : "Contract breach at T+02"}
                 </small>
               </span>
             </div>
@@ -823,7 +823,7 @@ export function WitnessPatchLab() {
                         <span>
                           <strong>Earliest critical failing prefix · T+02</strong>
                           The reply waits for a later blood-pressure reading after
-                          two independent urgent-action rules already trigger.
+                          two independently authored urgent-action contracts already fail.
                         </span>
                       </div>
                     )}
@@ -845,15 +845,16 @@ export function WitnessPatchLab() {
             <aside className="contract-panel" aria-labelledby="contract-heading">
               <div className="contract-title">
                 <div>
-                  <span className="section-kicker">SAFETY CONTRACT</span>
+                  <span className="section-kicker">EVALUATION CONTRACT</span>
                   <h2 id="contract-heading">Locked verifier</h2>
                 </div>
                 <span className="lock-chip"><MarkIcon kind="lock" /> read-only</span>
               </div>
 
               <p className="contract-intro">
-                Clinical triggers are source-linked; timing and traceability checks
-                are declared engineering controls. Sol cannot edit them.
+                Authored fixture triggers cite source IDs; timing and traceability are
+                engineering contracts. Human review decides semantic and clinical
+                support. Sol cannot edit them.
               </p>
 
               <div className="contract-list" role="list">
@@ -1141,7 +1142,7 @@ export function WitnessPatchLab() {
                   <div className="receipt-column">
                     <span className="section-kicker">BOUNDARIES</span>
                     <dl>
-                      <div><dt>Safety rules</dt><dd>Read-only</dd></div>
+                      <div><dt>Evaluation contracts</dt><dd>Read-only</dd></div>
                       <div><dt>Case timeline</dt><dd>Time-locked</dd></div>
                       <div><dt>API key</dt><dd>Not required</dd></div>
                       <div><dt>Browser compiler</dt><dd>{compilationReceipt ? "Static trace · no target/model rerun" : "not yet run"}</dd></div>
@@ -1151,7 +1152,8 @@ export function WitnessPatchLab() {
                       <div><dt>Trust anchor</dt><dd>Same-build manifest · not a signature</dd></div>
                       <div><dt>BP scope</dt><dd>{clinicalScope.blood_pressure_scope.authored_endpoints.join(" and ")} only</dd></div>
                       <div><dt>BP classification</dt><dd>Fixture-supplied · not inferred</dd></div>
-                      <div><dt>Licensed-physician fixture review</dt><dd>{clinicalScope.verification_boundary.physician_validation}</dd></div>
+                      <div><dt>Licensed-physician fixture/wording review</dt><dd>{clinicalScope.verification_boundary.fixture_wording_review}</dd></div>
+                      <div><dt>Clinical validation</dt><dd>{clinicalScope.verification_boundary.clinical_validation.replace("_", " ")}</dd></div>
                       <div><dt>Clinical use</dt><dd>Not permitted</dd></div>
                     </dl>
                   </div>
@@ -1178,8 +1180,8 @@ export function WitnessPatchLab() {
           <footer className="page-footer">
             <p>
               <strong>Developer safety tooling—not clinical decision support.</strong>
-              Fully synthetic reference case. Source-linked; licensed physician
-              fixture review pending.
+              Fully synthetic reference case. Source-linked; licensed-physician
+              fixture/wording review pending; clinical validation not claimed.
             </p>
             <p>
               Independent Build Week entrant project · Codex and GPT-5.6 Sol

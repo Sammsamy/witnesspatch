@@ -26,11 +26,16 @@ from reportlab.platypus import (
     Table,
     TableStyle,
 )
+from pypdf import PdfReader, PdfWriter
 
 
 ROOT = Path(__file__).resolve().parents[1]
 FINAL_OUTPUT = ROOT / "output" / "pdf" / "witnesspatch-physician-review-packet.pdf"
+FINAL_FIRST_LOOK_OUTPUT = ROOT / "output" / "pdf" / "witnesspatch-physician-first-look.pdf"
+FINAL_REVEALED_OUTPUT = ROOT / "output" / "pdf" / "witnesspatch-physician-revealed-review.pdf"
 PREVIEW_OUTPUT = ROOT / "tmp" / "pdfs" / "witnesspatch-physician-review-packet-preview.pdf"
+PREVIEW_FIRST_LOOK_OUTPUT = ROOT / "tmp" / "pdfs" / "witnesspatch-physician-first-look-preview.pdf"
+PREVIEW_REVEALED_OUTPUT = ROOT / "tmp" / "pdfs" / "witnesspatch-physician-revealed-review-preview.pdf"
 MANIFEST = ROOT / "public" / "runs" / "v2" / "manifest.json"
 CASE_URGENT = ROOT / "cases" / "v2" / "postpartum-warning-signs.json"
 CASE_CONTROL = ROOT / "cases" / "v2" / "postpartum-exact-negative-control.json"
@@ -421,10 +426,10 @@ def reviewer_fields():
 def privacy_banner():
     return Table(
         [[p(
-            "<b>PRIVATE EVIDENCE.</b> Keep this completed packet, credential-check evidence, conflict details, contact data, "
-            "signatures, and raw notes outside the repository. Commit only a participant-approved deidentified summary at "
-            "the permission level selected above.",
-            SMALL,
+            "<b>COMPLETE AND RETURN PRIVATELY.</b> Print or annotate in Preview, Adobe, or another PDF editor. "
+            "Keep completed PDFs and personal evidence outside the repository. Confirm any deidentified summary by private "
+            "reply or signature; commit only the participant-approved summary.",
+            TINY,
         )]],
         colWidths=[7.15 * inch],
         style=TableStyle([
@@ -474,7 +479,7 @@ def source_table(material: dict):
         data.append([
             p(f"<b>S{index} - {item['publisher']}</b><br/><link href='{item['url']}' color='#087E8B'>{item['title']}</link>", TINY),
             p("________________________________________________________________________________<br/>________________________________________________________________________________", TINY),
-            p("[ ] opened<br/>[ ] unavailable", CENTER_TINY),
+            p("[ ] O&nbsp;&nbsp; [ ] U&nbsp;&nbsp; [ ] X", CENTER_TINY),
         ])
     return Table(
         data,
@@ -625,12 +630,12 @@ def source_disposition_table(material: dict):
         rows.append([
             p(f"S{index}<br/>{item['publisher']}", TABLE_BODY),
             p(summary, CLAIM),
-            p("[ ] S  [ ] R  [ ] O  [ ] U<br/><b>Reason / exact change:</b><br/>____________________________<br/>____________________________<br/>____________________________", CLAIM),
+            p("[ ] S  [ ] R  [ ] O  [ ] U<br/><b>Reason / exact change:</b><br/>____________________________<br/>____________________________", CLAIM),
         ])
     rows.append([
         p("Item 9 overall", TABLE_BODY),
-        p("Mark supported only if all five official pages were opened and every representation above is accurate as scoped. Any unavailable page forces unresolved/pending.", CLAIM),
-        p("[ ] S  [ ] R  [ ] O  [ ] U<br/><b>Unavailable pages / reason:</b><br/>____________________________<br/>____________________________<br/>____________________________", CLAIM),
+        p("Mark supported only if all five official pages were opened and every representation above is accurate as scoped. Any unavailable or outside-scope page keeps Item 9 and the public status pending.", CLAIM),
+        p("[ ] S  [ ] R  [ ] O  [ ] U<br/><b>Unavailable / outside-scope page:</b><br/>____________________________<br/>____________________________", CLAIM),
     ])
     return Table(
         rows,
@@ -672,13 +677,21 @@ def closeout_table(commit: str):
         [
             p("Public-statement gate", TABLE_BODY),
             p(
-                "Use only if active licensure is established, the practice area is appropriate, all five sources were opened, "
-                "any conflict is disclosed without calling the review independent, no material item remains unresolved, and every material revision was re-reviewed.<br/>"
-                "[ ] all conditions met  [ ] not met - keep fixture review pending",
+                "Any current R, O, or U on Items 1-9 keeps review pending. Resolve R by a separately preserved same-physician "
+                "re-review at a new commit; resolve O/U by removing or narrowing the claim, or appropriate additional expertise. "
+                "Never overwrite this packet.<br/>[ ] all nine current S and every gate met  [ ] not met - keep pending",
                 TINY,
             ),
         ],
         [p("Public scope statement", TABLE_BODY), p(f"{proposed}<br/><b>Reviewer disposition:</b> [ ] accept  [ ] revise  [ ] decline", TINY)],
+        [
+            p("Reviewer completion", TABLE_BODY),
+            p(
+                "My dispositions are my own: initials/signature __________________  date __________. A deidentified public "
+                "summary still requires separate private confirmation.",
+                TINY,
+            ),
+        ],
     ]
     return Table(
         rows,
@@ -702,9 +715,80 @@ def footer(canvas, doc):
     canvas.line(0.7 * inch, 0.45 * inch, 7.8 * inch, 0.45 * inch)
     canvas.setFont("Helvetica", 6.5)
     canvas.setFillColor(MUTED)
-    canvas.drawString(0.7 * inch, 0.29 * inch, "WitnessPatch - synthetic fixture review - physician validation not claimed")
+    canvas.drawString(
+        0.7 * inch,
+        0.29 * inch,
+        "WitnessPatch - fixture/wording review pending - clinical validation not claimed",
+    )
     canvas.drawRightString(7.8 * inch, 0.29 * inch, f"Page {doc.page}")
     canvas.restoreState()
+
+
+def write_page_subset(source: Path, destination: Path, page_indexes: list[int], *, title: str) -> None:
+    reader = PdfReader(source)
+    writer = PdfWriter()
+    for page_index in page_indexes:
+        writer.add_page(reader.pages[page_index])
+    writer.add_metadata({
+        "/Title": title,
+        "/Author": "WitnessPatch Build Week team",
+        "/Subject": "Bounded review of two fully synthetic fixtures and nine wording/source claims",
+    })
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with destination.open("wb") as handle:
+        writer.write(handle)
+
+
+def validate_pdf_outputs(
+    complete: Path,
+    first_look: Path,
+    revealed: Path,
+    *,
+    dirty: bool,
+    expected_source_urls: list[str],
+) -> None:
+    complete_reader = PdfReader(complete)
+    first_reader = PdfReader(first_look)
+    revealed_reader = PdfReader(revealed)
+    if (len(complete_reader.pages), len(first_reader.pages), len(revealed_reader.pages)) != (5, 1, 4):
+        raise RuntimeError("Physician review PDFs must contain 5, 1, and 4 pages")
+
+    normalize = lambda value: " ".join(value.split())
+    complete_text = normalize("\n".join(page.extract_text() or "" for page in complete_reader.pages))
+    first_text = normalize(first_reader.pages[0].extract_text() or "")
+    revealed_text = normalize("\n".join(page.extract_text() or "" for page in revealed_reader.pages))
+    required_first = [
+        "PAGE 1 - FIRST LOOK - PROJECT RULES WITHHELD",
+        "COMPLETE AND RETURN PRIVATELY",
+        "O = opened, U = unavailable, X = outside reviewer scope",
+    ]
+    required_revealed = [
+        "PAGE 2 - EXACT WORDING REVEALED",
+        "PAGE 5 - ITEM 9 AND CLOSEOUT",
+        "Any current R, O, or U on Items 1-9 keeps review pending",
+        "A deidentified public summary still requires separate private confirmation",
+    ]
+    if any(value not in first_text for value in required_first):
+        raise RuntimeError("First-look PDF is missing a required completion or access instruction")
+    if any(value not in revealed_text for value in required_revealed):
+        raise RuntimeError("Revealed-review PDF is missing a required closeout instruction")
+    if "PAGE 2 - EXACT WORDING REVEALED" in first_text or "PAGE 1 - FIRST LOOK" in revealed_text:
+        raise RuntimeError("Split physician PDFs violate the staged-exposure boundary")
+    if complete_text != normalize(first_text + " " + revealed_text):
+        raise RuntimeError("Split physician PDFs do not reproduce the complete archive text")
+
+    linked_urls = set()
+    for annotation_ref in first_reader.pages[0].get("/Annots", []):
+        annotation = annotation_ref.get_object()
+        uri = annotation.get("/A", {}).get("/URI")
+        if uri:
+            linked_urls.add(str(uri))
+    if linked_urls != set(expected_source_urls):
+        raise RuntimeError("First-look PDF does not preserve all five exact source links")
+
+    preview_marker_present = "DIRTY PREVIEW - DO NOT USE" in complete_text
+    if preview_marker_present != dirty:
+        raise RuntimeError("Physician review PDF preview watermark does not match tree state")
 
 
 def build_pdf(*, allow_dirty_preview: bool):
@@ -713,6 +797,8 @@ def build_pdf(*, allow_dirty_preview: bool):
     commit = git_commit()
     manifest_hash = file_sha256(MANIFEST)
     output = PREVIEW_OUTPUT if dirty else FINAL_OUTPUT
+    first_look_output = PREVIEW_FIRST_LOOK_OUTPUT if dirty else FINAL_FIRST_LOOK_OUTPUT
+    revealed_output = PREVIEW_REVEALED_OUTPUT if dirty else FINAL_REVEALED_OUTPUT
     output.parent.mkdir(parents=True, exist_ok=True)
 
     doc = BaseDocTemplate(
@@ -740,7 +826,10 @@ def build_pdf(*, allow_dirty_preview: bool):
     story.append(p("Show only this page first. Record the four first-look answers before revealing project rules, response copy, scores, or Page 2.", SMALL))
     story.append(timeline_table(material))
     story.append(p("Case-embedded official sources", SECTION))
-    story.append(p("Read each linked page directly and record what it supports. Project summaries are intentionally withheld until Page 2.", SMALL))
+    story.append(p(
+        "Open each link and note support before Page 2. Access codes: O = opened, U = unavailable, X = outside reviewer scope.",
+        SMALL,
+    ))
     story.append(source_table(material))
     story.append(p("Record before revealing Page 2", SECTION))
     first_look = [
@@ -788,8 +877,10 @@ def build_pdf(*, allow_dirty_preview: bool):
     story.append(p(
         "The seven rows below are structurally extracted from the contract-card block in "
         "<font name='Courier'>app/components/witnesspatch-lab.tsx</font>. The Page 2 UI-source fingerprint covers that block only; "
-        "it does not imply review of every string in the UI file. Exact case and run clinical copy is disclosed on Pages 1-2. "
-        "The fresh Sol candidate remains separate and quarantined.",
+        "it does not imply review of every string in the UI file. Exact clinical response copy is disclosed on Pages 1-2, and "
+        "all clinical-facing contract-card copy is below. Surrounding product labels now describe a synthetic fixture, authored "
+        "evaluation contracts, source-ID linkage, and clinical validation not claimed; those are engineering/scope labels rather "
+        "than physician-reviewed clinical conclusions. The fresh Sol candidate remains separate and quarantined.",
         SMALL,
     ))
     story.append(p("Complete contract-card set", SECTION))
@@ -830,13 +921,34 @@ def build_pdf(*, allow_dirty_preview: bool):
     story.append(Spacer(1, 3))
     story.append(p(
         "<b>Pending rule.</b> Unless every Public-statement gate condition is met and the reviewer accepts the narrow statement, "
-        "keep licensed physician fixture review pending. Completion is not clinical validation. Keep the packet and credential "
+        "keep licensed-physician fixture/wording review pending. Completion is not clinical validation. Keep the packet and credential "
         "evidence private; commit only an approved deidentified summary.",
         SMALL,
     ))
 
     doc.build(story)
-    print(f"Generated {output}")
+    write_page_subset(
+        output,
+        first_look_output,
+        [0],
+        title="WitnessPatch V2 Physician Review - First Look",
+    )
+    write_page_subset(
+        output,
+        revealed_output,
+        [1, 2, 3, 4],
+        title="WitnessPatch V2 Physician Review - Revealed Wording and Closeout",
+    )
+    validate_pdf_outputs(
+        output,
+        first_look_output,
+        revealed_output,
+        dirty=dirty,
+        expected_source_urls=[item["url"] for item in material["sources"]],
+    )
+    print(f"Generated complete archive {output}")
+    print(f"Generated first-look handoff {first_look_output}")
+    print(f"Generated revealed-review handoff {revealed_output}")
     if dirty:
         print("DIRTY PREVIEW ONLY - do not give this PDF to a reviewer")
     print(f"Frozen commit {commit}")

@@ -10,6 +10,9 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Frozen commit:**
 **V2 manifest SHA-256:**
 **Repository clean before handoff:** yes / no
+**Repository access method and URL label (never credentials):**
+**Frozen preflight result:** pass / fail
+**Frozen commit and manifest matched before and after install:** yes / no
 **Recruitment route:** warm introduction / MDplus / MLCommons / clinicians.dev / academic directory / other
 **Reviewer relationship/conflict:** none / disclosed:
 **Current supervisory, grading, or evaluator relationship:** none / disclosed:
@@ -39,8 +42,12 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Node/npm:**
 **Browser/version:**
 **Fresh directory or clean clone:**
+**Git version:**
 **Dependency cache known:** yes / no / unknown
 **Network or policy constraints:**
+**Exact local browser URL/port:**
+**Terminal transcript location:** private; do not paste personal path publicly
+**Terminal transcript SHA-256:**
 
 ### Pre-exposure workflow baseline
 
@@ -60,18 +67,37 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Timer start/end:**
 **Final label:** independent completion / assisted completion / incomplete / invalid
 **Observed completion time:**
+**Setup and task sub-times:**
+
+| Milestone | Time | Outcome or exact warning |
+| --- | --- | --- |
+| Clone complete | | |
+| First frozen preflight | | pass / fail |
+| `npm ci` complete | | |
+| Repeated preflight and V2 verifier complete | | pass / fail |
+| Development server ready | | |
+| Browser task started | | |
+| Nine-file ZIP exported | | |
+| Bundle execution complete | | pass / fail |
+
 **Five milestones:**
 
 | Milestone | Observed | Time | Participant evidence or note |
 | --- | --- | --- | --- |
 | Failing baseline | yes / no | | |
-| Runnable red regression | yes / no | | |
-| Repaired result | yes / no | | |
+| Runnable red regression | yes / no | | require `RED exit 1`, not ZIP visibility alone |
+| Repaired result | yes / no | | require same regression `PASS exit 0` with supplied repair |
 | Exact-fact control | yes / no | | |
 | Evidence receipt | yes / no | | |
 
 **Warnings/errors/broken links:**
 **Substantive assistance count:**
+**Browser-exported ZIP SHA-256:**
+**Bundle/CLI byte parity:** 9/9 / fail / not reached
+**Baseline regression result:** RED exit 1 / other / not reached
+**Supplied-repair regression result:** PASS exit 0 / other / not reached
+**Private bundle-execution receipt location:**
+**Private bundle-execution receipt SHA-256:**
 
 | Time | Participant question or observed block | Facilitator intervention, verbatim | Type: navigation / command / interpretation / workaround / safety |
 | --- | --- | --- | --- |

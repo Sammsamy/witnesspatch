@@ -1,6 +1,6 @@
 # Build Week submission form checklist
 
-This file separates confirmed public requirements from authenticated fields and human facts that Codex cannot invent or submit. No Devpost project content has been saved or submitted. The separate Codex-credit request is saved only as an unsubmitted draft.
+This file separates confirmed public requirements from authenticated fields and human facts that Codex cannot invent or submit. No Devpost project content has been saved or submitted. The separately authorized Codex-credit request was submitted July 13 and received a Google Forms success receipt; approval and delivery remain unconfirmed.
 
 ## Confirmed public fields and evidence
 
@@ -63,8 +63,10 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [ ] Obtain organizer confirmation that meaningful development-time GPT-5.6/Codex use plus deterministic retained-artifact replay satisfies Stage One without a runtime OpenAI API or SDK call.
 - [x] The current creator supplied the credit form's name, country, and Devpost-account email in the private task context; no personal data was copied into the repository.
 - [x] Exact Devpost username confirmed read-only from the authenticated account menu; the value remains in private task context.
-- [x] Save the authenticated credit-form draft with the exact three-sentence `Developer tools` response in `docs/CODEX_CREDIT_REQUEST.md`; no submission was made.
-- [ ] Request the optional $100 Codex credits by July 17 at 12:00 PM PT only after the representative approves the frozen response, explicitly accepts the OpenAI Services Agreement, and authorizes the consequential Submit action. The representative chose the privately supplied Devpost-account email for the form's generically labeled `Email` field.
+- [x] Submit the authenticated credit form with the exact three-sentence `Developer Tools` response only after the representative approved the response, explicitly accepted the OpenAI Services Agreement, and authorized the consequential Submit action; preserve the success receipt without committing personal data.
+- [x] Request the optional $100 Codex credits before July 17 at 12:00 PM PT. Approval is first-come, first-served while supplies last and is not guaranteed.
+- [ ] Confirm that the supplied form email corresponds to the intended ChatGPT/Codex account before treating any balance as mapped correctly; do not submit a duplicate request blindly.
+- [ ] Monitor official Build Week channels and the supplied inbox for delivery/redemption instructions; the published materials do not specify the delivery channel or redemption flow.
 - [x] The optional request is Codex credits only; it does not provide API credits and will not become a judge-runtime dependency.
 - [ ] Confirm Auto top-up remains disabled in the relevant OpenAI account; Codex cannot infer account settings.
 - [ ] Do not purchase credits or add a paid runtime dependency.
@@ -74,7 +76,7 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [x] Public fixtures are synthetic and contain no real patient data.
 - [x] Product is developer tooling, not patient-facing medical advice or automated medical decision-making.
 - [x] Repair installation remains human review-gated.
-- [ ] Obtain a qualified, fully completed scoped licensed-physician fixture review or keep `licensed physician fixture review pending` everywhere.
+- [ ] Obtain a qualified, fully completed scoped licensed-physician fixture/wording review or keep `fixture_wording_review: pending` and the visible pending wording everywhere; `clinical_validation` remains `not_claimed` regardless of the review outcome.
 - [ ] Obtain an external healthcare-AI builder clean run and record objections, assistance, and environment.
 
 ## Final release audit

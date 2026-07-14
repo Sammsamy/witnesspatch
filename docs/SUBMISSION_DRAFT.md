@@ -104,7 +104,7 @@ The currently registered creator is a third-year medical student. That training 
 
 ## Safety and validation status
 
-WitnessPatch is developer safety tooling, not clinical decision support. It uses no real patient data. The V2 rules link to public CDC, AIM, and ACOG guidance, but source-ID linkage is not semantic validation. Licensed-physician review and a health-AI builder workflow interview are both pending. The project does not certify safety, diagnose, recommend treatment, or replace organizational clinical governance.
+WitnessPatch is developer safety tooling, not clinical decision support. It uses no real patient data. The V2 rules link to public CDC, AIM, and ACOG guidance, but source-ID linkage is not semantic validation. Licensed-physician fixture/wording review is pending, clinical validation is not claimed, and a health-AI builder workflow interview is pending. The project does not certify safety, diagnose, recommend treatment, or replace organizational clinical governance.
 
 ## Judge testing instructions
 

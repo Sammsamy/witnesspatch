@@ -100,13 +100,14 @@ Do not report patient outcomes, lives saved, clinical accuracy, or regulatory re
 
 Until a licensed physician has reviewed the two V2 fixtures, sources, and exact rules:
 
-- retain `clinician_validation: pending` in machine artifacts and `licensed physician fixture review pending` in visible copy;
+- retain canonical `fixture_wording_review: pending` and `clinical_validation: not_claimed` in the V2 clinical scope and visible receipt; per-artifact inputs, outputs, receipts, and captured model-provenance records keep the legacy `clinician_validation: pending` field for schema and provenance compatibility, not as a review-completion or clinical-validation state;
+- retain `licensed-physician fixture/wording review pending; clinical validation not claimed` in visible copy;
 - do not change provenance to `validated`;
 - do not use reviewer-style badges or implied endorsement;
 - do not generalize beyond the exact authored facts;
 - keep classifications fixture-supplied and the two-endpoint boundary visible.
 
-After a real review, preserve reviewer scope, date, requested changes, conflicts, disagreements, and limitations. Validation of two fixtures is not validation of the product.
+After a real review, preserve reviewer scope, date, requested changes, conflicts, disagreements, and limitations. Only the fixture/wording-review field may move to a completed state after every closeout gate passes; clinical validation remains `not_claimed`. Review of two fixtures is not validation of the product.
 
 ## Submission evidence gates
 
