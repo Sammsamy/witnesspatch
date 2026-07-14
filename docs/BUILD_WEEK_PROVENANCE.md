@@ -88,7 +88,7 @@ V2 adds:
 The current V2 manifest hash is:
 
 ```text
-c9fb456837b1f12b0c9c8a24558fdbca9360cda1be5ced6b7cdc4d3650709522  public/runs/v2/manifest.json
+46542e562fe15b7fcec50f5a42d45e145614791c2bac7432ce5289440b9597f2  public/runs/v2/manifest.json
 ```
 
 ## Honest model-lineage and post-start capture

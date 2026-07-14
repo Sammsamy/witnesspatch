@@ -212,6 +212,32 @@ test("judge-facing clinical source lists match the exact V2 fixture evidence", a
   );
 });
 
+test("judge-facing current V2 fingerprints match the exact release manifest", async () => {
+  const [manifestBytes, provenance, reviewPrompt] = await Promise.all([
+    readFile(new URL("../public/runs/v2/manifest.json", import.meta.url)),
+    readFile(
+      new URL("../docs/BUILD_WEEK_PROVENANCE.md", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../docs/GPT56_PRO_REVIEW_PROMPT.md", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  const manifestSha256 = sha256(manifestBytes);
+
+  assert.match(
+    provenance,
+    new RegExp(
+      `The current V2 manifest hash is:[\\s\\S]*?${manifestSha256}  public/runs/v2/manifest\\.json`,
+    ),
+  );
+  assert.match(
+    reviewPrompt,
+    new RegExp("Current manifest SHA-256: `" + manifestSha256 + "`"),
+  );
+});
+
 test("founder demo timeline stays continuous, speakable, and below three minutes", async () => {
   const [script, captions] = await Promise.all([
     readFile(new URL("../docs/DEMO_SCRIPT.md", import.meta.url), "utf8"),
