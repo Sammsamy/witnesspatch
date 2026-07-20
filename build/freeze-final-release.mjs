@@ -406,7 +406,7 @@ async function verifyVideo({ video, videoFile, fetchImpl, commandRunner }) {
     "Final video must be a real regular file, not a link.",
   );
   const probeOutput = commandRunner(
-    "ffprobe",
+    process.env.WITNESSPATCH_FFPROBE_BIN?.trim() || "ffprobe",
     [
       "-v",
       "error",

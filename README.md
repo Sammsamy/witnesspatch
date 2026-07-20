@@ -60,6 +60,14 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
+To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:53 screen cut, run the fail-closed assembler below. It refuses the wrong screen geometry, a non-silent or wrong-duration master, founder audio outside the narrow timing window, existing outputs, and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths; the final release freeze honors the same `ffprobe` override.
+
+```bash
+npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"
+```
+
+The assembler cannot identify the speaker or verify the spoken words. Audition the entire output against [the timed script](docs/DEMO_SCRIPT.md), and upload `submission/video/witnesspatch-demo.en.srt` separately.
+
 After the public repository, deployment, founder-voice YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip and has a successful completed public `Verify` push run from `.github/workflows/verify.yml`; byte-checks the deployed V2 manifest; decodes the local video below 180 seconds with audio and video streams; checks YouTube oEmbed reachability; and requires explicit human confirmations for public visibility, founder voice, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit:
 
 ```bash

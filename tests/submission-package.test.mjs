@@ -14,6 +14,10 @@ import { isAbsolute, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
+  parseFounderVideoArguments,
+  validateFounderMedia,
+} from "../build/assemble-founder-video.mjs";
+import {
   freezeFinalRelease,
   parseFfprobeReport,
   parseFreezeArguments,
@@ -716,6 +720,60 @@ test("the final release template binds local artifacts but cannot masquerade as 
 });
 
 test("founder demo timeline stays continuous, speakable, and below three minutes", async () => {
+  const founderVideoArguments = parseFounderVideoArguments([
+    "--audio-file",
+    "/tmp/founder-voice.m4a",
+    "--out",
+    "/tmp/founder-demo.mp4",
+  ]);
+  assert.equal(founderVideoArguments.audioFile, "/tmp/founder-voice.m4a");
+  assert.equal(founderVideoArguments.outputFile, "/tmp/founder-demo.mp4");
+  assert.throws(
+    () => parseFounderVideoArguments([]),
+    /--audio-file is required/u,
+  );
+  assert.throws(
+    () =>
+      parseFounderVideoArguments([
+        "--audio-file",
+        "/tmp/founder-voice.m4a",
+        "--out",
+        "/tmp/founder-demo.webm",
+      ]),
+    /must use the \.mp4 extension/u,
+  );
+  assert.deepEqual(
+    validateFounderMedia(
+      {
+        format: { duration: "173.080" },
+        streams: [
+          { codec_type: "video", codec_name: "vp8", width: 1400, height: 900 },
+        ],
+      },
+      {
+        format: { duration: "171.250" },
+        streams: [{ codec_type: "audio", codec_name: "aac" }],
+      },
+    ),
+    { videoDuration: 173.08, audioDuration: 171.25 },
+  );
+  assert.throws(
+    () =>
+      validateFounderMedia(
+        {
+          format: { duration: "173.080" },
+          streams: [
+            { codec_type: "video", width: 1400, height: 900 },
+            { codec_type: "audio" },
+          ],
+        },
+        {
+          format: { duration: "171.250" },
+          streams: [{ codec_type: "audio" }],
+        },
+      ),
+    /screen master must remain silent/u,
+  );
   const [script, captions] = await Promise.all([
     readFile(new URL("../docs/DEMO_SCRIPT.md", import.meta.url), "utf8"),
     readFile(

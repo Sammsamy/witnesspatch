@@ -20,6 +20,7 @@
     "test:core": "node --test engine/tests/*.test.mjs",
     "test:dev-smoke": "node --test tests/dev-server-smoke.test.mjs",
     "test:submission": "node --test tests/submission-package.test.mjs",
+    "video:founder": "node build/assemble-founder-video.mjs",
     "review:preflight": "node build/review-preflight.mjs",
     "review:builder": "node build/run-builder-review.mjs",
     "review:bundle": "node build/run-review-bundle.mjs",

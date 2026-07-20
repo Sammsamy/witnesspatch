@@ -26,6 +26,7 @@ Do not say the brother is a teammate until he has joined the Devpost draft and c
 - Load the page and wait at least five seconds before recording so hydration is complete.
 - Record around `1400` CSS pixels wide at 1440p or higher, with clear English founder narration.
 - Use a window or selected-region recorder with the founder's microphone, or mux a separately recorded founder track onto a clean silent browser master. Playwright's page video has no microphone audio and is rehearsal evidence only.
+- For the separate-track route, play the reviewed silent master from `0:00` while recording one uninterrupted voice-only track. Start speaking with the first frame, keep the table's cue boundaries, and stop between `2:48` and `2:54.5`. Then run `npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"`. The command loudness-normalizes the track, pads only the end if needed, produces the reviewed 2:53 H.264/AAC MP4, and writes byte-hash evidence. If the media tools are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute paths.
 - Start from a fresh baseline. Do not precompile, splice in success, or begin on a generated artifact.
 - Hide bookmarks, notifications, credentials, local paths, unrelated tabs, and private Codex traces.
 - Use the **How it works** and **WitnessPatch** navigation buttons for controlled movement instead of free scrolling.
@@ -34,6 +35,7 @@ Do not say the brother is a teammate until he has joined the Devpost draft and c
 - Keep the exported baseline explicitly **BASELINE RED** after repair verification; only the separate retained repair passes.
 - Keep the uploaded cut below three minutes after YouTube processing, and add accurate captions.
 - Upload `submission/video/witnesspatch-demo.en.srt`; the submission gate verifies every cue, millisecond boundary, readability limit, and word against this exact narration.
+- Audition the complete assembled file with headphones before upload. The assembler verifies timing, streams, codecs, geometry, and hashes; only the founder can verify speaker identity, exact words, pronunciation, intelligibility, and screen/audio alignment.
 - Use no unlicensed music, third-party logos, reviewer identity, or patient information.
 
 ## Claims that are prohibited
