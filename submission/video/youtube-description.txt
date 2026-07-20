@@ -1,0 +1,15 @@
+WitnessPatch turns one fully synthetic missed-deadline failure into a portable red-test bundle, then verifies a separate repair offline.
+
+Built during OpenAI Build Week with Codex and a requested GPT-5.6 Sol / Ultra workflow. Deterministic code owns every public pass/fail verdict; the receipt records requested configuration, not independently attested served-model identity.
+
+The passing retained repair shown in the demo is a separate reference artifact; the GPT-5.6 proposal remains quarantined and is not installed.
+
+This video uses synthetic narration generated locally with Piper 1.5.0 and the en_US-ljspeech-high voice from the MIT-declared Piper voices repository, trained on the public-domain LJ Speech Dataset. No voice cloning was performed.
+
+No patient data. No clinical use. No physician review. No clinical validation claim.
+
+Live demo: https://witnesspatch.ankigpt.workers.dev
+Source: https://github.com/Sammsamy/witnesspatch
+Piper: https://github.com/OHF-Voice/piper1-gpl/tree/v1.5.0
+Voice provenance: https://huggingface.co/rhasspy/piper-voices/blob/5b44ec7bab7c5822cfec48fbd5aa99db71a823d6/en/en_US/ljspeech/high/MODEL_CARD
+LJ Speech Dataset: https://keithito.com/LJ-Speech-Dataset/

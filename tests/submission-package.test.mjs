@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { writeFileSync } from "node:fs";
 import {
   mkdir,
   mkdtemp,
@@ -32,6 +33,11 @@ import {
   validateRepositoryUrl,
   validateYouTubeUrl,
 } from "../build/freeze-final-release.mjs";
+import {
+  preflightFinalRelease,
+  resolvePreflightPath,
+  validateFinalPreflightManifest,
+} from "../build/preflight-final-release.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("..", import.meta.url));
 const mediaDirectory = new URL("../submission/media/", import.meta.url);
@@ -331,6 +337,16 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
       "A current release-evidence document has a stale static fingerprint",
     );
   }
+  const readme = documents[0];
+  assert.match(
+    readme,
+    /For the shortest executable judge path[\s\S]*?```bash\nnpm ci\nnpm run judge:proof\n```/u,
+  );
+  assert.ok(
+    readme.indexOf("## Run it without an API key") <
+      readme.indexOf("npm run release:preflight"),
+    "Judge quick start must remain ahead of release mechanics",
+  );
 
   const [
     notices,
@@ -412,7 +428,7 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
   );
   assert.match(
     packageData.scripts["verify:release"],
-    /&& npm run deploy:dry-run$/u,
+    /npm run release:lint &&[\s\S]*&& npm run deploy:dry-run$/u,
   );
   assert.match(workflow, /npm run verify:release/u);
   assert.match(workflow, /npm run judge:proof/u);
@@ -457,6 +473,48 @@ test("the threat model preserves the exact integrity and non-claim boundary", as
       `Threat model is missing required boundary: ${required}`,
     );
   }
+});
+
+test("the tracked final preflight manifest binds current release text without requiring the ignored MP4", async () => {
+  const manifestBytes = await readFile(
+    new URL("../submission/release/final-preflight.json", import.meta.url),
+    "utf8",
+  );
+  const manifest = validateFinalPreflightManifest(JSON.parse(manifestBytes));
+  const candidate = manifest.video_candidate;
+  const [captionsBytes, descriptionBytes, gitignore] = await Promise.all([
+    readFile(new URL(`../${candidate.captions_path}`, import.meta.url)),
+    readFile(new URL(`../${candidate.youtube_description_path}`, import.meta.url)),
+    readFile(new URL("../.gitignore", import.meta.url), "utf8"),
+  ]);
+
+  assert.equal(manifest.repository_url, "https://github.com/Sammsamy/witnesspatch");
+  assert.equal(
+    manifest.deployment_url,
+    "https://witnesspatch.ankigpt.workers.dev",
+  );
+  assert.equal(candidate.sha256.length, 64);
+  assert.equal(candidate.byte_length, 12_769_407);
+  assert.equal(candidate.duration_seconds, 148);
+  assert.deepEqual(candidate.video, { codec: "h264", width: 1400, height: 900 });
+  assert.deepEqual(candidate.audio, {
+    codec: "aac",
+    sample_rate_hz: 48_000,
+    channels: 2,
+  });
+  assert.equal(sha256(captionsBytes), candidate.captions_sha256);
+  assert.equal(sha256(descriptionBytes), candidate.youtube_description_sha256);
+  assert.match(captionsBytes.toString("utf8"), /This demo uses AI narration/u);
+  assert.match(
+    descriptionBytes.toString("utf8"),
+    /This video uses synthetic narration[\s\S]*No physician review[\s\S]*No clinical validation claim/u,
+  );
+  assert.match(gitignore, /^\*\.mp4$/mu);
+  assert.match(candidate.local_path, /^output\/.*\.mp4$/u);
+  assert.equal(
+    resolvePreflightPath(repositoryRoot, candidate.local_path, "Video candidate"),
+    join(repositoryRoot, candidate.local_path),
+  );
 });
 
 test("the final release template binds local artifacts but cannot masquerade as frozen", async () => {
@@ -520,6 +578,14 @@ test("the final release template binds local artifacts but cannot masquerade as 
   assert.equal(
     packageJson.scripts["release:freeze"],
     "node build/freeze-final-release.mjs",
+  );
+  assert.equal(
+    packageJson.scripts["release:preflight"],
+    "node build/preflight-final-release.mjs",
+  );
+  assert.equal(
+    packageJson.scripts["release:lint"],
+    "eslint --no-ignore build/freeze-final-release.mjs build/preflight-final-release.mjs tests/submission-package.test.mjs --max-warnings=0",
   );
   const freezeValueArguments = [
     "--repository-url",
@@ -629,22 +695,48 @@ test("the final release template binds local artifacts but cannot masquerade as 
   assert.deepEqual(
     parseFfprobeReport({
       format: { duration: "179.999" },
-      streams: [{ codec_type: "video" }, { codec_type: "audio" }],
+      streams: [
+        {
+          codec_type: "video",
+          codec_name: "h264",
+          width: 1400,
+          height: 900,
+        },
+        {
+          codec_type: "audio",
+          codec_name: "aac",
+          sample_rate: "48000",
+          channels: 2,
+        },
+      ],
     }),
-    { durationSeconds: 179.999, videoStreams: 1, audioStreams: 1 },
+    {
+      durationSeconds: 179.999,
+      videoStreams: 1,
+      audioStreams: 1,
+      video: { codec: "h264", width: 1400, height: 900 },
+      audio: { codec: "aac", sampleRateHz: 48000, channels: 2 },
+    },
   );
   const avmediainfoReport = `Asset: founder-demo.mp4
 Duration: 148.000 seconds (148000/1000)
 Track count: 2
 Track 1: Video 'vide'
+\tFormat: H.264 'avc1'
+\tDimensions: 1400 x 900
 \tSystem support for decoding this track: Yes
 Track 2: Sound 'soun'
+\tFormat: MPEG-4 AAC 'aac '
+\tSample rate: 48000.0
+\tChannels per frame: 2
 \tSystem support for decoding this track: Yes
 Movie analyzed with 0 error.`;
   assert.deepEqual(parseAvmediainfoReport(avmediainfoReport), {
     durationSeconds: 148,
     videoStreams: 1,
     audioStreams: 1,
+    video: { codec: "h264", width: 1400, height: 900 },
+    audio: { codec: "aac", sampleRateHz: 48000, channels: 2 },
   });
   assert.throws(
     () =>
@@ -683,9 +775,64 @@ Movie analyzed with 0 error.`;
     () =>
       parseFfprobeReport({
         format: { duration: "180" },
-        streams: [{ codec_type: "video" }, { codec_type: "audio" }],
+        streams: [
+          {
+            codec_type: "video",
+            codec_name: "h264",
+            width: 1400,
+            height: 900,
+          },
+          {
+            codec_type: "audio",
+            codec_name: "aac",
+            sample_rate: "48000",
+            channels: 2,
+          },
+        ],
       }),
     /below 180 seconds/u,
+  );
+  assert.throws(
+    () =>
+      parseFfprobeReport({
+        format: { duration: "148" },
+        streams: [
+          {
+            codec_type: "video",
+            codec_name: "vp9",
+            width: 1400,
+            height: 900,
+          },
+          {
+            codec_type: "audio",
+            codec_name: "aac",
+            sample_rate: "48000",
+            channels: 2,
+          },
+        ],
+      }),
+    /exactly one H\.264 1400 x 900/u,
+  );
+  assert.throws(
+    () =>
+      parseFfprobeReport({
+        format: { duration: "148" },
+        streams: [
+          {
+            codec_type: "video",
+            codec_name: "h264",
+            width: 1400,
+            height: 900,
+          },
+          {
+            codec_type: "audio",
+            codec_name: "aac",
+            sample_rate: "44100",
+            channels: 2,
+          },
+        ],
+      }),
+    /exactly one 48 kHz stereo AAC/u,
   );
 
   const temporaryRoot = await mkdtemp(join(tmpdir(), "witnesspatch-freeze-test-"));
@@ -711,9 +858,23 @@ Movie analyzed with 0 error.`;
     const media = Object.fromEntries(
       expectedImages.map((name) => [name, Buffer.from(`reviewed:${name}`)]),
     );
+    const candidateVideoBytes = Buffer.from("video-bytes");
+    const candidateVideoPath = join(
+      temporaryRoot,
+      "output",
+      "video-ai-piper-ljspeech-v1",
+      "witnesspatch-demo-ai-piper-ljspeech-v1.mp4",
+    );
+    const captionsBytes = Buffer.from(
+      "1\n00:00:00,000 --> 00:00:03,000\nThis demo uses AI narration.\n",
+    );
+    const descriptionBytes = Buffer.from(
+      "This video uses synthetic narration. No voice cloning was performed. No physician review. No clinical validation claim.\n",
+    );
     await Promise.all([
       mkdir(join(temporaryRoot, "submission", "release"), { recursive: true }),
       mkdir(join(temporaryRoot, "submission", "media"), { recursive: true }),
+      mkdir(join(temporaryRoot, "submission", "video"), { recursive: true }),
       mkdir(join(temporaryRoot, "public", "runs", "v2"), { recursive: true }),
       mkdir(join(temporaryRoot, "dist", "client", ".vite"), { recursive: true }),
       mkdir(join(temporaryRoot, "dist", "client", "assets"), { recursive: true }),
@@ -721,6 +882,9 @@ Movie analyzed with 0 error.`;
         recursive: true,
       }),
       mkdir(join(temporaryRoot, "output", "release"), { recursive: true }),
+      mkdir(join(temporaryRoot, "output", "video-ai-piper-ljspeech-v1"), {
+        recursive: true,
+      }),
     ]);
     await Promise.all([
       writeFile(join(temporaryRoot, "LICENSE"), "MIT License\n"),
@@ -748,7 +912,19 @@ Movie analyzed with 0 error.`;
         join(temporaryRoot, "output", "release", "dist-client.sha256"),
         staticManifestText,
       ),
-      writeFile(join(temporaryRoot, "founder-demo.mp4"), "video-bytes"),
+      writeFile(join(temporaryRoot, "founder-demo.mp4"), candidateVideoBytes),
+      writeFile(
+        candidateVideoPath,
+        candidateVideoBytes,
+      ),
+      writeFile(
+        join(temporaryRoot, "submission", "video", "witnesspatch-demo.en.srt"),
+        captionsBytes,
+      ),
+      writeFile(
+        join(temporaryRoot, "submission", "video", "youtube-description.txt"),
+        descriptionBytes,
+      ),
       ...Object.entries(staticFiles).map(([path, bytes]) =>
         writeFile(join(temporaryRoot, "dist", "client", path), bytes),
       ),
@@ -781,6 +957,39 @@ Movie analyzed with 0 error.`;
         "final-release-template.json",
       ),
       `${JSON.stringify(syntheticTemplate)}\n`,
+    );
+    const syntheticPreflight = {
+      schema_version: "1.0.0",
+      kind: "witnesspatch_final_release_preflight",
+      repository_url: "https://github.com/Sammsamy/witnesspatch",
+      deployment_url: "https://witnesspatch.example.workers.dev",
+      video_candidate: {
+        id: "ai-piper-ljspeech-v1",
+        narration_mode: "ai_generated_voice",
+        local_path:
+          "output/video-ai-piper-ljspeech-v1/witnesspatch-demo-ai-piper-ljspeech-v1.mp4",
+        sha256: sha256(candidateVideoBytes),
+        byte_length: candidateVideoBytes.length,
+        duration_seconds: 173.08,
+        video: { codec: "h264", width: 1400, height: 900 },
+        audio: { codec: "aac", sample_rate_hz: 48000, channels: 2 },
+        captions_path: "submission/video/witnesspatch-demo.en.srt",
+        captions_sha256: sha256(captionsBytes),
+        youtube_description_path: "submission/video/youtube-description.txt",
+        youtube_description_sha256: sha256(descriptionBytes),
+        entrant_complete_review: "pending",
+        public_youtube_upload: "pending",
+      },
+      boundary: "preflight",
+    };
+    validateFinalPreflightManifest(syntheticPreflight);
+    assert.throws(
+      () => resolvePreflightPath(temporaryRoot, "../escape.mp4", "Test path"),
+      /must stay inside/u,
+    );
+    await writeFile(
+      join(temporaryRoot, "submission", "release", "final-preflight.json"),
+      `${JSON.stringify(syntheticPreflight)}\n`,
     );
     const commit = "c".repeat(40);
     const successfulWorkflowRun = {
@@ -826,6 +1035,7 @@ Movie analyzed with 0 error.`;
         ),
       /duplicate paths/u,
     );
+    let statusChecks = 0;
     const commandRunner = (command, args) => {
       if (command === "npm") return "release verified";
       if (
@@ -834,7 +1044,20 @@ Movie analyzed with 0 error.`;
       ) {
         return JSON.stringify({
           format: { duration: "173.08" },
-          streams: [{ codec_type: "video" }, { codec_type: "audio" }],
+          streams: [
+            {
+              codec_type: "video",
+              codec_name: "h264",
+              width: 1400,
+              height: 900,
+            },
+            {
+              codec_type: "audio",
+              codec_name: "aac",
+              sample_rate: "48000",
+              channels: 2,
+            },
+          ],
         });
       }
       if (command === "git" && args[0] === "ls-remote") {
@@ -844,7 +1067,10 @@ Movie analyzed with 0 error.`;
         return temporaryRoot;
       }
       if (command === "git" && args.join(" ") === "rev-parse HEAD") return commit;
-      if (command === "git" && args[0] === "status") return "";
+      if (command === "git" && args[0] === "status") {
+        statusChecks += 1;
+        return "";
+      }
       throw new Error(`Unexpected test command: ${command} ${args.join(" ")}`);
     };
     const fetchImpl = async (url) => {
@@ -890,6 +1116,56 @@ Movie analyzed with 0 error.`;
       }
       throw new Error(`Unexpected test fetch: ${href}`);
     };
+    let headReads = 0;
+    const checkoutRaceRunner = (command, args, options) => {
+      if (command === "git" && args.join(" ") === "rev-parse HEAD") {
+        headReads += 1;
+        if (headReads === 2) return "d".repeat(40);
+      }
+      return commandRunner(command, args, options);
+    };
+    await assert.rejects(
+      preflightFinalRelease({
+        rootDir: temporaryRoot,
+        fetchImpl,
+        commandRunner: checkoutRaceRunner,
+      }),
+      /Git commit changed while final release verification was running/u,
+    );
+    statusChecks = 0;
+
+    let replacedDuringFoundation = false;
+    const replacementRaceRunner = (command, args, options) => {
+      if (command === "npm" && !replacedDuringFoundation) {
+        replacedDuringFoundation = true;
+        writeFileSync(candidateVideoPath, "replacement-video-bytes");
+      }
+      return commandRunner(command, args, options);
+    };
+    await assert.rejects(
+      preflightFinalRelease({
+        rootDir: temporaryRoot,
+        fetchImpl,
+        commandRunner: replacementRaceRunner,
+      }),
+      /video bytes do not match the tracked preflight candidate/u,
+    );
+    await writeFile(candidateVideoPath, candidateVideoBytes);
+    statusChecks = 0;
+
+    const preflight = await preflightFinalRelease({
+      rootDir: temporaryRoot,
+      fetchImpl,
+      commandRunner,
+      now: () => new Date("2026-07-20T11:59:00.000Z"),
+    });
+    assert.equal(preflight.status, "pass");
+    assert.equal(preflight.commit, commit);
+    assert.equal(preflight.local_video.sha256, sha256(candidateVideoBytes));
+    assert.equal(preflight.deployment_public_files_byte_verified, 6);
+    assert.equal(preflight.remaining_human_gates.length, 4);
+    assert.match(preflight.boundary, /does not claim entrant audition/u);
+    assert.equal(statusChecks, 5);
     const frozen = await freezeFinalRelease({
       options: {
         ...parsed,
@@ -926,8 +1202,10 @@ Movie analyzed with 0 error.`;
       ai_generated_voice_confirmed_by_entrant: false,
       ai_voice_publicly_disclosed_confirmed_by_entrant: false,
       complete_human_review_confirmed_by_entrant: true,
+      tracked_ai_release_package: null,
     });
     assert.equal(frozen.record.feedback_session_id, "feedback_123456");
+    assert.equal(statusChecks, 9);
     assert.equal(
       sha256(await readFile(frozen.outputPath)),
       frozen.digest,
@@ -978,6 +1256,12 @@ Movie analyzed with 0 error.`;
       ai_generated_voice_confirmed_by_entrant: true,
       ai_voice_publicly_disclosed_confirmed_by_entrant: true,
       complete_human_review_confirmed_by_entrant: true,
+      tracked_ai_release_package: {
+        candidate_id: "ai-piper-ljspeech-v1",
+        candidate_sha256: sha256(candidateVideoBytes),
+        captions_sha256: sha256(captionsBytes),
+        youtube_description_sha256: sha256(descriptionBytes),
+      },
     });
     assert.match(aiFrozen.record.boundary, /not machine-verified facts/u);
   } finally {

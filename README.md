@@ -29,9 +29,10 @@ The [threat model](docs/THREAT_MODEL.md) maps concrete tampering and resource-ex
 
 Requires Node.js 22.15 or newer; `.nvmrc` pins the minimum version exercised by the repository.
 
-For the shortest executable judge path, one zero-argument command compiles the V2 failure into a nine-file regression, proves it red on the baseline and green on the retained repair, then confirms the always-escalate mutation fails its exact-fact control:
+For the shortest executable judge path, first install the locked dependencies, then run one zero-argument command. It compiles the V2 failure into a nine-file regression, proves it red on the baseline and green on the retained repair, then confirms the always-escalate mutation fails its exact-fact control:
 
 ```bash
+npm ci
 npm run judge:proof
 ```
 
@@ -49,7 +50,6 @@ BOUNDARY   synthetic software proof only · no clinical validation or runtime mo
 The expected mutation failure is a passing guardrail check. This command uses only retained synthetic inputs and local deterministic code; it makes no model or network call and is not clinical validation.
 
 ```bash
-npm ci
 npm run artifacts:v2:verify
 npm run verify:release
 npm run dev
@@ -69,7 +69,7 @@ The current source-hash-bound UI candidate passed a fresh production-Chrome repl
 
 Exact candidate `87dee97` passed `npm ci` followed by `npm run verify:release` from fresh clones on macOS 26.5.2 arm64 with Node 24.14.0/npm 11.9.0 and a local Debian 12 arm64 container with Node 22.23.1/npm 10.9.8. macOS passed all `158/158` aggregate test executions: `136/136` core, `6/6` rendered-product, `1/1` real development-server HTTP smoke, `9/9` submission-package, and `6/6` deployment-rendered checks. Debian passed `157/158`, with only the expected case-insensitive-filesystem check skipped on its case-sensitive filesystem. Both passed the zero-argument judge proof, detached-bundle verification coverage, threat-model boundary check, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run. Their physical 55-file `dist/client` snapshots matched byte-for-byte; the SHA-256 of each canonical 55-line manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`. CI also promotes the six-line proof to the GitHub job summary and retains it as a release artifact. `npm run verify:release` fails if the built client differs from that reviewed fingerprint. The submission gate also binds the recaptured media assets to thirteen rendered/computed source fingerprints. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). Every final tip must receive public CI and the final replay; Windows remains unverified.
 
-The current static-release checkpoint `7dd4df9275d5df75f6da4bc4c3722fdc92a2138e` passes the full local release verifier: macOS `158/158` aggregate executions, license inventory, build, lint, typecheck, and a 59-asset Cloudflare dry run. Its exact public `Verify` push run [`29781423832`](https://github.com/Sammsamy/witnesspatch/actions/runs/29781423832) passed, GitHub detected MIT, and all 51 public files byte-matched the deployment. The 55-file client incorporates the security-updated dependency lock, corrected distributed notice, final public claim, narration, and release-gate cleanup and is locked to static fingerprint `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`; `.assetsignore`, `.vite/manifest.json`, `404.html`, and `_headers` are generated hosting-control files rather than public assets. The final freeze will recheck the then-current default-branch tip, public CI, deployed bytes, video, and `/feedback` record together.
+Prior independently verified static-release checkpoint `7dd4df9275d5df75f6da4bc4c3722fdc92a2138e` passed the full local release verifier: macOS `158/158` aggregate executions, license inventory, build, lint, typecheck, and a 59-asset Cloudflare dry run. Its exact public `Verify` push run [`29781423832`](https://github.com/Sammsamy/witnesspatch/actions/runs/29781423832) passed, GitHub detected MIT, and all 51 public files byte-matched the deployment. The unchanged 55-file client incorporates the security-updated dependency lock, corrected distributed notice, final public claim, narration, and release-gate cleanup and is locked to static fingerprint `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`; `.assetsignore`, `.vite/manifest.json`, `404.html`, and `_headers` are generated hosting-control files rather than public assets. The final freeze will recheck the then-current default-branch tip, public CI, deployed bytes, video, and `/feedback` record together.
 
 The release bundle can also be built and checked without publishing:
 
@@ -87,7 +87,13 @@ npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"
 
 The assembler cannot identify the speaker or verify the spoken words. Audition the entire output against [the timed script](docs/DEMO_SCRIPT.md). For founder narration, upload the founder-specific `.en.srt` path printed by the assembler; it deterministically replaces only the opening AI-disclosure cue. For the Piper AI-narration route, upload `submission/video/witnesspatch-demo.en.srt`.
 
-After the public repository, deployment, narrated YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip and has a successful completed public `Verify` push run from `.github/workflows/verify.yml`; byte-checks the deployed root plus every fingerprint-listed judge-facing file while explicitly excluding only four hosting-control files that are not public assets; decodes and hashes the local video below 180 seconds with audio and video streams; checks YouTube oEmbed reachability; and requires explicit human confirmations for public visibility, exactly one narration mode, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit. The founder-voice route is:
+While the public YouTube URL and `/feedback` Session ID are still pending, the no-argument preflight below completes every machine-verifiable gate that does not depend on them. It requires a clean public default-branch tip, successful exact-commit `Verify` push run, MIT detection, full local release replay, 51-file byte-matched deployment, the exact tracked Piper candidate bytes, one H.264 1400 x 900 stream, one 48 kHz stereo AAC stream, tracked caption bytes, and the source-controlled YouTube description with AI-voice and clinical-boundary disclosure. It reports the entrant audition, upload, `/feedback`, and final freeze as remaining human gates; it never converts them into a pass by assumption.
+
+```bash
+npm run release:preflight
+```
+
+After the public repository, deployment, narrated YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip and has a successful completed public `Verify` push run from `.github/workflows/verify.yml`; byte-checks the deployed root plus every fingerprint-listed judge-facing file while explicitly excluding only four hosting-control files that are not public assets; double-hashes the stable local video while decoding exactly one H.264 1400 x 900 stream plus one 48 kHz stereo AAC stream below 180 seconds; for the AI route, requires the exact tracked candidate, captions, and prepared-description hashes; checks YouTube oEmbed reachability; rechecks that the commit and worktree did not change during verification; and requires explicit human confirmations for public visibility, exactly one narration mode, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit. The founder-voice route is:
 
 ```bash
 npm run release:freeze -- \

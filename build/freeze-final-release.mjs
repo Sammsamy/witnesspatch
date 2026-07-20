@@ -50,6 +50,7 @@ function runCommand(command, args, options = {}) {
     encoding: "utf8",
     env: options.env ?? process.env,
     maxBuffer: 16 * 1024 * 1024,
+    timeout: options.timeoutMs ?? 10 * 60 * 1000,
     windowsHide: true,
   });
   requireValue(
@@ -226,18 +227,34 @@ export function validateFeedbackSessionId(value, technicalThreadId) {
 export function parseFfprobeReport(report) {
   requireValue(report && typeof report === "object", "ffprobe returned no report.");
   const duration = Number(report.format?.duration);
-  const streamTypes = Array.isArray(report.streams)
-    ? report.streams.map((stream) => stream.codec_type)
-    : [];
-  const videoStreams = streamTypes.filter((type) => type === "video").length;
-  const audioStreams = streamTypes.filter((type) => type === "audio").length;
+  const streams = Array.isArray(report.streams) ? report.streams : [];
+  const videoStreams = streams.filter((stream) => stream.codec_type === "video");
+  const audioStreams = streams.filter((stream) => stream.codec_type === "audio");
   requireValue(
     Number.isFinite(duration) && duration > 0 && duration < 180,
     `Final video must decode to a positive duration below 180 seconds; received ${report.format?.duration ?? "unknown"}.`,
   );
-  requireValue(videoStreams >= 1, "Final video must contain a video stream.");
-  requireValue(audioStreams >= 1, "Final video must contain an audio stream.");
-  return Object.freeze({ durationSeconds: duration, videoStreams, audioStreams });
+  requireValue(
+    videoStreams.length === 1 &&
+      videoStreams[0].codec_name === "h264" &&
+      videoStreams[0].width === 1400 &&
+      videoStreams[0].height === 900,
+    "Final video must contain exactly one H.264 1400 x 900 video stream.",
+  );
+  requireValue(
+    audioStreams.length === 1 &&
+      audioStreams[0].codec_name === "aac" &&
+      Number(audioStreams[0].sample_rate) === 48_000 &&
+      audioStreams[0].channels === 2,
+    "Final video must contain exactly one 48 kHz stereo AAC audio stream.",
+  );
+  return Object.freeze({
+    durationSeconds: duration,
+    videoStreams: 1,
+    audioStreams: 1,
+    video: Object.freeze({ codec: "h264", width: 1400, height: 900 }),
+    audio: Object.freeze({ codec: "aac", sampleRateHz: 48_000, channels: 2 }),
+  });
 }
 
 export function parseAvmediainfoReport(output) {
@@ -266,11 +283,34 @@ export function parseAvmediainfoReport(output) {
     supportedStreams >= videoStreams + audioStreams,
     "avmediainfo did not confirm decoder support for every final-video track.",
   );
+  const videoFormat = output.match(/^\s*Format:\s+H\.264\s+'avc1'\s*$/mu);
+  const dimensions = output.match(
+    /^\s*Dimensions:\s+([0-9]+)\s+x\s+([0-9]+)\s*$/mu,
+  );
+  const audioFormat = output.match(
+    /^\s*Format:\s+MPEG-4 AAC\s+'aac\s*'\s*$/mu,
+  );
+  const sampleRate = output.match(
+    /^\s*Sample rate:\s+([0-9]+(?:\.[0-9]+)?)\s*$/mu,
+  );
+  const channels = output.match(
+    /^\s*Channels per frame:\s+([0-9]+)\s*$/mu,
+  );
   return parseFfprobeReport({
     format: { duration: durationMatch?.[1] },
     streams: [
-      ...Array.from({ length: videoStreams }, () => ({ codec_type: "video" })),
-      ...Array.from({ length: audioStreams }, () => ({ codec_type: "audio" })),
+      ...Array.from({ length: videoStreams }, () => ({
+        codec_type: "video",
+        codec_name: videoFormat ? "h264" : undefined,
+        width: Number(dimensions?.[1]),
+        height: Number(dimensions?.[2]),
+      })),
+      ...Array.from({ length: audioStreams }, () => ({
+        codec_type: "audio",
+        codec_name: audioFormat ? "aac" : undefined,
+        sample_rate: sampleRate?.[1],
+        channels: Number(channels?.[1]),
+      })),
     ],
   });
 }
@@ -281,7 +321,7 @@ export function probeFinalVideo(videoFile, commandRunner = runCommand) {
     "-v",
     "error",
     "-show_entries",
-    "format=duration:stream=codec_type",
+    "format=duration:stream=codec_type,codec_name,width,height,sample_rate,channels",
     "-of",
     "json",
     videoFile,
@@ -291,6 +331,7 @@ export function probeFinalVideo(videoFile, commandRunner = runCommand) {
       JSON.parse(
         commandRunner(ffprobe, ffprobeArgs, {
           failureMessage: "ffprobe could not decode the final video.",
+          timeoutMs: 30_000,
         }),
       ),
     );
@@ -300,6 +341,7 @@ export function probeFinalVideo(videoFile, commandRunner = runCommand) {
       JSON.parse(
         commandRunner("ffprobe", ffprobeArgs, {
           failureMessage: "ffprobe could not decode the final video.",
+          timeoutMs: 30_000,
         }),
       ),
     );
@@ -309,6 +351,7 @@ export function probeFinalVideo(videoFile, commandRunner = runCommand) {
       commandRunner("/usr/bin/avmediainfo", [videoFile], {
         failureMessage:
           "Neither ffprobe nor macOS avmediainfo could decode the final video.",
+        timeoutMs: 30_000,
       }),
     );
   }
@@ -383,7 +426,7 @@ export function selectSuccessfulVerifyRun(payload, { commit, defaultBranch }) {
   });
 }
 
-async function verifyLocalAnchors(template, rootDir) {
+export async function verifyLocalAnchors(template, rootDir) {
   requireValue(
     template.schema_version === "1.0.0" &&
       template.kind === "witnesspatch_final_release_fingerprint_template" &&
@@ -468,7 +511,7 @@ export function parseStaticClientManifest(value) {
   return Object.freeze(rows);
 }
 
-async function verifyPublicRepository({
+export async function verifyPublicRepository({
   repository,
   commit,
   localLicense,
@@ -499,6 +542,7 @@ async function verifyPublicRepository({
     cwd: rootDir,
     env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
     failureMessage: "The public GitHub repository could not be read with git ls-remote.",
+    timeoutMs: 30_000,
   });
   requireValue(
     remoteRefs
@@ -531,7 +575,7 @@ async function verifyPublicRepository({
   });
 }
 
-async function verifyDeployment({
+export async function verifyDeployment({
   deploymentUrl,
   expectedManifest,
   expectedStaticManifest,
@@ -619,13 +663,113 @@ async function verifyDeployment({
   });
 }
 
-async function verifyVideo({ video, videoFile, fetchImpl, commandRunner }) {
+export async function verifyLocalVideoFile({ videoFile, commandRunner = runCommand }) {
   const stats = await lstat(videoFile);
   requireValue(
     stats.isFile() && !stats.isSymbolicLink(),
     "Final video must be a real regular file, not a link.",
   );
+  const initialBytes = await readFile(videoFile);
+  const initialDigest = sha256(initialBytes);
   const probe = probeFinalVideo(videoFile, commandRunner);
+  const finalStats = await lstat(videoFile);
+  requireValue(
+    finalStats.isFile() && !finalStats.isSymbolicLink(),
+    "Final video changed type while it was being verified.",
+  );
+  const finalBytes = await readFile(videoFile);
+  const finalDigest = sha256(finalBytes);
+  requireValue(
+    initialDigest === finalDigest && initialBytes.length === finalBytes.length,
+    "Final video bytes changed while they were being verified.",
+  );
+  return Object.freeze({
+    sha256: finalDigest,
+    byte_length: finalBytes.length,
+    duration_seconds: probe.durationSeconds,
+    video_streams: probe.videoStreams,
+    audio_streams: probe.audioStreams,
+    video: probe.video,
+    audio: probe.audio,
+  });
+}
+
+export async function verifyTrackedAiNarrationPackage({
+  rootDir = projectRoot,
+  videoVerification,
+}) {
+  const manifest = JSON.parse(
+    await readFile(
+      join(rootDir, "submission", "release", "final-preflight.json"),
+      "utf8",
+    ),
+  );
+  const candidate = manifest.video_candidate;
+  requireValue(
+    manifest.schema_version === "1.0.0" &&
+      manifest.kind === "witnesspatch_final_release_preflight" &&
+      candidate?.id === "ai-piper-ljspeech-v1" &&
+      candidate.narration_mode === "ai_generated_voice",
+    "Tracked AI narration preflight package is invalid.",
+  );
+  requireValue(
+    candidate.entrant_complete_review === "pending" &&
+      candidate.public_youtube_upload === "pending",
+    "The tracked machine preflight may not claim human review or public upload.",
+  );
+  requireValue(
+    videoVerification.sha256 === candidate.sha256 &&
+      videoVerification.byte_length === candidate.byte_length &&
+      Math.abs(videoVerification.duration_seconds - candidate.duration_seconds) <
+        0.001,
+    "AI-narrated final video does not match the tracked local release candidate.",
+  );
+  requireValue(
+    videoVerification.video.codec === candidate.video?.codec &&
+      videoVerification.video.width === candidate.video.width &&
+      videoVerification.video.height === candidate.video.height &&
+      videoVerification.audio.codec === candidate.audio?.codec &&
+      videoVerification.audio.sampleRateHz === candidate.audio.sample_rate_hz &&
+      videoVerification.audio.channels === candidate.audio.channels,
+    "AI-narrated final video profile does not match the tracked local release candidate.",
+  );
+  requireValue(
+    candidate.captions_path === "submission/video/witnesspatch-demo.en.srt" &&
+      candidate.youtube_description_path ===
+        "submission/video/youtube-description.txt" &&
+      SHA256_PATTERN.test(candidate.captions_sha256) &&
+      SHA256_PATTERN.test(candidate.youtube_description_sha256),
+    "Tracked AI narration release-text paths or hashes are invalid.",
+  );
+  const [captionsBytes, descriptionBytes] = await Promise.all([
+    readFile(join(rootDir, candidate.captions_path)),
+    readFile(join(rootDir, candidate.youtube_description_path)),
+  ]);
+  requireValue(
+    sha256(captionsBytes) === candidate.captions_sha256 &&
+      sha256(descriptionBytes) === candidate.youtube_description_sha256,
+    "Tracked AI captions or YouTube description changed before final freeze.",
+  );
+  const captions = captionsBytes.toString("utf8");
+  const description = descriptionBytes.toString("utf8");
+  requireValue(
+    captions.includes("This demo uses AI narration") &&
+      description.includes("This video uses synthetic narration") &&
+      description.includes("No voice cloning was performed") &&
+      description.includes("No physician review") &&
+      description.includes("No clinical validation claim"),
+    "Tracked AI narration or clinical-boundary disclosure is missing.",
+  );
+  return Object.freeze({
+    candidate_id: candidate.id,
+    candidate_sha256: candidate.sha256,
+    captions_sha256: candidate.captions_sha256,
+    youtube_description_sha256: candidate.youtube_description_sha256,
+  });
+}
+
+async function verifyVideo({ video, videoFile, fetchImpl, commandRunner }) {
+  const localVideo = await verifyLocalVideoFile({ videoFile, commandRunner });
   const oEmbed = new URL("https://www.youtube.com/oembed");
   oEmbed.searchParams.set("url", video.normalized);
   oEmbed.searchParams.set("format", "json");
@@ -640,10 +784,7 @@ async function verifyVideo({ video, videoFile, fetchImpl, commandRunner }) {
     "YouTube returned no public video title.",
   );
   return Object.freeze({
-    sha256: sha256(await readFile(videoFile)),
-    duration_seconds: probe.durationSeconds,
-    video_streams: probe.videoStreams,
-    audio_streams: probe.audioStreams,
+    ...localVideo,
     youtube_oembed_reachable: true,
     youtube_title: metadata.title,
   });
@@ -661,53 +802,56 @@ async function assertOutputAbsent(path) {
   );
 }
 
-export async function freezeFinalRelease({
-  options,
-  rootDir = projectRoot,
-  fetchImpl = fetch,
+export function verifyCleanRepositoryState({
   commandRunner = runCommand,
-  now = () => new Date(),
-  technicalThreadId = process.env.WITNESSPATCH_TECHNICAL_THREAD_ID,
+  rootDir = projectRoot,
+  expectedCommit,
 }) {
-  requireValue(
-    options.feedbackConfirmed === true,
-    "The entrant must confirm that Codex /feedback returned this Session ID.",
-  );
-  requireValue(
-    options.videoPublicConfirmed === true,
-    "The entrant must confirm that the YouTube video is publicly visible.",
-  );
-  const narrationMode = validateNarrationConfirmations(options);
-  const repository = validateRepositoryUrl(options.repositoryUrl);
-  const deploymentUrl = validateDeploymentUrl(options.deploymentUrl);
-  const video = validateYouTubeUrl(options.videoUrl);
-  const feedbackSessionId = validateFeedbackSessionId(
-    options.feedbackSessionId,
-    technicalThreadId,
-  );
-  const videoFile = resolve(options.videoFile);
-  await assertOutputAbsent(join(rootDir, "output", "release", "final-release.json"));
-  await assertOutputAbsent(
-    join(rootDir, "output", "release", "final-release.sha256"),
-  );
-
   const repositoryRoot = commandRunner("git", ["rev-parse", "--show-toplevel"], {
     cwd: rootDir,
-    failureMessage: "Final release freeze must run inside a Git repository.",
+    failureMessage: "Final release verification must run inside a Git repository.",
+    timeoutMs: 15_000,
   });
   requireValue(
     resolve(repositoryRoot) === resolve(rootDir),
-    "Run the final release freeze from the repository root.",
+    "Run final release verification from the repository root.",
   );
-  const commit = commandRunner("git", ["rev-parse", "HEAD"], { cwd: rootDir });
+  const commit = commandRunner("git", ["rev-parse", "HEAD"], {
+    cwd: rootDir,
+    timeoutMs: 15_000,
+  });
   requireValue(COMMIT_PATTERN.test(commit), "Current Git commit is invalid.");
+  requireValue(
+    !expectedCommit || commit === expectedCommit,
+    "The checked-out Git commit changed while final release verification was running.",
+  );
   const status = commandRunner(
     "git",
     ["status", "--porcelain=v1", "--untracked-files=all"],
-    { cwd: rootDir },
+    { cwd: rootDir, timeoutMs: 15_000 },
   );
-  requireValue(status === "", "Repository must be clean before final release freeze.");
+  requireValue(
+    status === "",
+    "Repository must remain clean throughout final release verification.",
+  );
+  return Object.freeze({ repositoryRoot: resolve(repositoryRoot), commit });
+}
 
+export async function verifyReleaseFoundation({
+  repositoryUrl,
+  deploymentUrl,
+  rootDir = projectRoot,
+  fetchImpl = fetch,
+  commandRunner = runCommand,
+  expectedCommit,
+}) {
+  const repository = validateRepositoryUrl(repositoryUrl);
+  const normalizedDeploymentUrl = validateDeploymentUrl(deploymentUrl);
+  const initialState = verifyCleanRepositoryState({
+    commandRunner,
+    rootDir,
+    expectedCommit,
+  });
   const packageJson = JSON.parse(
     await readFile(join(rootDir, "package.json"), "utf8"),
   );
@@ -727,12 +871,7 @@ export async function freezeFinalRelease({
 
   const template = JSON.parse(
     await readFile(
-      join(
-        rootDir,
-        "submission",
-        "release",
-        "final-release-template.json",
-      ),
+      join(rootDir, "submission", "release", "final-release-template.json"),
       "utf8",
     ),
   );
@@ -741,31 +880,77 @@ export async function freezeFinalRelease({
     cwd: rootDir,
     failureMessage: "The complete local release verifier failed.",
   });
-  const statusAfterVerification = commandRunner(
-    "git",
-    ["status", "--porcelain=v1", "--untracked-files=all"],
-    { cwd: rootDir },
-  );
-  requireValue(
-    statusAfterVerification === "",
-    "Release verification changed tracked or unignored repository files.",
-  );
+  verifyCleanRepositoryState({
+    commandRunner,
+    rootDir,
+    expectedCommit: initialState.commit,
+  });
 
   const repositoryVerification = await verifyPublicRepository({
     repository,
-    commit,
+    commit: initialState.commit,
     localLicense: packageJson.license,
     fetchImpl,
     commandRunner,
     rootDir,
   });
   const deploymentVerification = await verifyDeployment({
-    deploymentUrl,
+    deploymentUrl: normalizedDeploymentUrl,
     expectedManifest: template.v2_manifest_sha256,
     expectedStaticManifest: localAnchors.staticClientManifestSha256,
     expectedStaticFileCount: localAnchors.staticClientFileCount,
     fetchImpl,
     rootDir,
+  });
+  verifyCleanRepositoryState({
+    commandRunner,
+    rootDir,
+    expectedCommit: initialState.commit,
+  });
+  return Object.freeze({
+    commit: initialState.commit,
+    repository,
+    deploymentUrl: normalizedDeploymentUrl,
+    template,
+    localAnchors,
+    repositoryVerification,
+    deploymentVerification,
+  });
+}
+
+export async function freezeFinalRelease({
+  options,
+  rootDir = projectRoot,
+  fetchImpl = fetch,
+  commandRunner = runCommand,
+  now = () => new Date(),
+  technicalThreadId = process.env.WITNESSPATCH_TECHNICAL_THREAD_ID,
+}) {
+  requireValue(
+    options.feedbackConfirmed === true,
+    "The entrant must confirm that Codex /feedback returned this Session ID.",
+  );
+  requireValue(
+    options.videoPublicConfirmed === true,
+    "The entrant must confirm that the YouTube video is publicly visible.",
+  );
+  const narrationMode = validateNarrationConfirmations(options);
+  const video = validateYouTubeUrl(options.videoUrl);
+  const feedbackSessionId = validateFeedbackSessionId(
+    options.feedbackSessionId,
+    technicalThreadId,
+  );
+  const videoFile = resolve(options.videoFile);
+  await assertOutputAbsent(join(rootDir, "output", "release", "final-release.json"));
+  await assertOutputAbsent(
+    join(rootDir, "output", "release", "final-release.sha256"),
+  );
+  const foundation = await verifyReleaseFoundation({
+    repositoryUrl: options.repositoryUrl,
+    deploymentUrl: options.deploymentUrl,
+    rootDir,
+    fetchImpl,
+    commandRunner,
   });
   const videoVerification = await verifyVideo({
     video,
@@ -773,21 +958,33 @@ export async function freezeFinalRelease({
     fetchImpl,
     commandRunner,
   });
+  const trackedAiNarrationPackage =
+    narrationMode === "ai_generated_voice"
+      ? await verifyTrackedAiNarrationPackage({
+          rootDir,
+          videoVerification,
+        })
+      : null;
+  verifyCleanRepositoryState({
+    commandRunner,
+    rootDir,
+    expectedCommit: foundation.commit,
+  });
 
   const record = Object.freeze({
-    ...template,
+    ...foundation.template,
     kind: "witnesspatch_final_release_fingerprint",
     status: "frozen",
-    submitted_commit: commit,
-    repository_url: repository.normalized,
-    deployment_url: deploymentUrl,
+    submitted_commit: foundation.commit,
+    repository_url: foundation.repository.normalized,
+    deployment_url: foundation.deploymentUrl,
     video_url: video.normalized,
     video_sha256: videoVerification.sha256,
     feedback_session_id: feedbackSessionId,
     verified_at: now().toISOString(),
     verification: {
-      repository: repositoryVerification,
-      deployment: deploymentVerification,
+      repository: foundation.repositoryVerification,
+      deployment: foundation.deploymentVerification,
       video: {
         ...videoVerification,
         public_visibility_confirmed_by_entrant: options.videoPublicConfirmed,
@@ -801,6 +998,7 @@ export async function freezeFinalRelease({
             options.aiNarrationDisclosedConfirmed === true,
           complete_human_review_confirmed_by_entrant:
             options.narrationHumanReviewedConfirmed === true,
+          tracked_ai_release_package: trackedAiNarrationPackage,
         },
       },
       feedback: {
@@ -811,7 +1009,7 @@ export async function freezeFinalRelease({
       repository_clean: true,
     },
     boundary:
-      "This receipt binds one clean commit, its successful public Verify workflow run, public repository, byte-verified judge-facing static deployment, local video bytes, reachable YouTube record, and entrant-confirmed /feedback, visibility, and narration-mode facts. For AI narration, disclosure and complete human review are entrant confirmations, not machine-verified facts. It does not prove that YouTube serves the same bytes as the local video, clinical validity, adoption, or judge outcome.",
+      "This receipt binds one clean commit, its successful public Verify workflow run, public repository, byte-verified judge-facing static deployment, stable local video bytes and delivery profile, reachable YouTube record, and entrant-confirmed /feedback, visibility, and narration-mode facts. The AI route additionally binds the tracked local candidate, captions, and prepared description. AI disclosure and complete human review remain entrant confirmations, not machine-verified facts. It does not prove that YouTube serves the same bytes as the local video, clinical validity, adoption, or judge outcome.",
   });
   const bytes = `${JSON.stringify(record, null, 2)}\n`;
   const digest = sha256(bytes);

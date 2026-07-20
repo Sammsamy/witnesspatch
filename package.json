@@ -39,11 +39,13 @@
     "lint": "eslint . --max-warnings=0 --ignore-pattern dist --ignore-pattern .next --ignore-pattern .vinext --ignore-pattern .wrangler --ignore-pattern output --ignore-pattern .playwright-cli",
     "licenses:check": "node build/license-audit.mjs",
     "release:fingerprint": "node build/verify-static-fingerprint.mjs",
+    "release:lint": "eslint --no-ignore build/freeze-final-release.mjs build/preflight-final-release.mjs tests/submission-package.test.mjs --max-warnings=0",
+    "release:preflight": "node build/preflight-final-release.mjs",
     "release:freeze": "node build/freeze-final-release.mjs",
     "release:static:check": "npm run licenses:check && node --test tests/rendered-html.test.mjs",
     "typecheck": "tsc --noEmit",
     "verify": "npm run artifacts:verify && npm run artifacts:v2:verify && npm test && npm run lint && npm run typecheck",
-    "verify:release": "npm run verify && npm run test:dev-smoke && npm run test:submission && npm run deploy:dry-run",
+    "verify:release": "npm run verify && npm run release:lint && npm run test:dev-smoke && npm run test:submission && npm run deploy:dry-run",
     "witnesspatch": "node bin/witnesspatch.mjs"
   },
   "dependencies": {
