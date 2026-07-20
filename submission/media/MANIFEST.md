@@ -1,10 +1,10 @@
 # Devpost media manifest
 
-Recaptured on July 20, 2026 from the authorized no-physician-review production candidate identified by the exact source hashes below. The images bind those source bytes directly; the receipt frame was captured at asserted `scrollX = 0`. Public checkpoint `94297a475b09aacf14478a11aff2ebbcf4266bdc` has successful exact-commit CI and byte-matched deployment evidence recorded in `docs/CLEAN_CHECKOUT_RECEIPT.md`; the exact final submitted commit still requires its own replay after the video and `/feedback` fields are frozen.
+Recaptured on July 20, 2026 from the authorized no-physician-review production candidate identified by the exact source hashes below. The images bind those source bytes directly; the receipt frame was captured at asserted `scrollX = 0`. Static-release checkpoint `7dd4df9275d5df75f6da4bc4c3722fdc92a2138e` has successful exact-commit CI and 51-file byte-matched deployment evidence recorded in `docs/CLEAN_CHECKOUT_RECEIPT.md`; the final freeze will recheck the then-current tip after the video and `/feedback` fields are frozen.
 
 ## Source state
 
-The hashes below match the source bytes used for the four final captures. Every source is release-gated against its exact SHA-256; a change requires recapture or explicit visual revalidation.
+The hashes below match the source bytes used for the five final captures. Every source is release-gated against its exact SHA-256; a change requires recapture or explicit visual revalidation.
 
 | Rendered or computed source | SHA-256 at capture |
 | --- | --- |
@@ -24,8 +24,8 @@ The hashes below match the source bytes used for the four final captures. Every 
 
 ## Capture method
 
-1. Built the candidate source state for production and verified that the public deployment's static bytes matched the reviewed client fingerprint. The two offset replacements were recaptured from that byte-matched public deployment; the other frames retain the same source-bound local build.
-2. Used fresh Playwright Chromium sessions at exactly `1200 x 800` CSS pixels without account state, cookies, credentials, or unrelated tabs, and asserted `scrollX = 0` for both replacement frames.
+1. Built the candidate source state for production and verified that the public deployment's static bytes matched the reviewed client fingerprint. Each frame was captured from that byte-matched deployment or the same exact source-bound production build.
+2. Used fresh Playwright Chromium sessions at exactly `1200 x 800` CSS pixels without account state, cookies, credentials, or unrelated tabs, and asserted `scrollX = 0` for offset-sensitive frames.
 3. Captured direct viewport PNGs. No image was cropped, padded, scaled, retouched, or regenerated after capture.
 4. For the local-input frame, used **Load included sample** to fetch the exact same-origin public V2 case and baseline files, waited until both loaded filenames appeared, affirmed the visible synthetic-data declaration, and compiled the result locally.
 5. For the reference frames, ran the manifest-bound compiler and then the locked verifier before selecting the named artifact view.
@@ -39,6 +39,7 @@ The hashes below match the source bytes used for the four final captures. Every 
 | `02-local-input-compiled-red.png` | Load one included synthetic failure; get a nine-file red regression locally. | The included exact public case and failing run were loaded in the isolated local workspace before the synthetic-data declaration and compile: fresh `50/100`, `INV-02` and `INV-03`, failure known at `T+02`, `9 → 3` facts, nine files, `2` hashes computed, `0` externally verified, and ZIP export available. | 1200 x 800 | 93542 | `ea776cd9ea2cfb4585768171f547f57b65349f4deb3bae31c73e6461bcebb1cf` |
 | `03-reference-compiled-red.png` | A manifest-bound reference failure becomes a portable RED test. | After **Compile failure**, with the judge-readable nine-file bundle map visible: this browser session verified `2/2` exact manifest inputs and generated nine files for `INV-02` at `T+02`; the baseline remains RED and the portable ZIP deliberately carries no external-manifest or publisher attestation. | 1200 x 800 | 135868 | `65d4a36bb46bc9f1b198eea829655b172f65a52d2e8c3166a0d035cba1c27e78` |
 | `04-reference-verified-receipt.png` | Locked verification—not the model—owns the pass. | After **Verify retained repair**, with **Audit receipt** selected and horizontal position asserted at zero: the full product brand and sidebar retain **Baseline red · repair passes**, while the receipt shows retained reference `100/100`, `23/23` hashes, `2/2` regrades, `4/4` reference holdouts, fresh candidate quarantined and not installed, no patient data, no API key, licensed-physician fixture/wording review not performed, and clinical validation not claimed. | 1200 x 800 | 196192 | `abffffc42a85ebafecb643c3e7f290cc844ad74ede2e106333116701f3dd7761` |
+| `05-reference-success-closure.png` | The original stays red; the scoped repair passes without escalating everything. | After **Compile failure** and **Verify retained repair**, with **Repair diff** selected: the original baseline remains RED at `50/100`, the retained repair passes at `100/100`, the exact-fact control stays at `100/100`, the always-escalate mutant is rejected at `25/100`, and `4/4` reference holdout checks pass. | 1200 x 800 | 143118 | `959b5442cbdb8b4543b3c0da921fda148311fde27976da2d11dd911780a5d4ad` |
 
 Each PNG is 8-bit RGB, non-interlaced, exact `3:2`, and below Devpost's 5 MB per-image limit.
 
@@ -55,7 +56,7 @@ Each PNG is 8-bit RGB, non-interlaced, exact `3:2`, and below Devpost's 5 MB per
 
 ## Verification
 
-- All four final files were visually inspected at original resolution after export. No black or redaction artifacts, unintended clipping, browser chrome, account details, credentials, local paths, or personally identifying information are present.
+- All five final files were visually inspected at original resolution after export. No black or redaction artifacts, unintended clipping, browser chrome, account details, credentials, local paths, or personally identifying information are present.
 - The fresh production-browser reference and local-input QA recorded zero console errors and zero console warnings. Same-page controls emitted no `/.rsc` or `404` requests. Aside from same-origin application chunks and the included sample's two expected JSON fetches, the local workflow made no API or external-network requests; compilation made no further data request.
 - The local ZIP passed archive integrity; all nine browser files were byte-identical to the shipped CLI output, the default regression exited red, and the supplied repaired candidate exited green.
 - The automated submission gate recomputes every image byte count/hash, PNG geometry, and source fingerprint above.

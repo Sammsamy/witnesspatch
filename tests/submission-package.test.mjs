@@ -40,6 +40,7 @@ const expectedImages = [
   "02-local-input-compiled-red.png",
   "03-reference-compiled-red.png",
   "04-reference-verified-receipt.png",
+  "05-reference-success-closure.png",
 ];
 const expectedVisualSources = [
   "app/components/witnesspatch-lab.tsx",

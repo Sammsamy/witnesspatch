@@ -9,7 +9,8 @@
     "01-thumbnail-failure.png": "89a7215a12e38bdad8b20f68bcaa5e1213854eb029f0753708821e5aee486633",
     "02-local-input-compiled-red.png": "ea776cd9ea2cfb4585768171f547f57b65349f4deb3bae31c73e6461bcebb1cf",
     "03-reference-compiled-red.png": "65d4a36bb46bc9f1b198eea829655b172f65a52d2e8c3166a0d035cba1c27e78",
-    "04-reference-verified-receipt.png": "abffffc42a85ebafecb643c3e7f290cc844ad74ede2e106333116701f3dd7761"
+    "04-reference-verified-receipt.png": "abffffc42a85ebafecb643c3e7f290cc844ad74ede2e106333116701f3dd7761",
+    "05-reference-success-closure.png": "959b5442cbdb8b4543b3c0da921fda148311fde27976da2d11dd911780a5d4ad"
   },
   "repository_url": null,
   "deployment_url": null,

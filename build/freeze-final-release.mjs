@@ -339,7 +339,7 @@ async function verifyLocalAnchors(template, rootDir) {
     "The static-client fingerprint no longer matches the release template.",
   );
   const mediaEntries = Object.entries(template.submission_media ?? {});
-  requireValue(mediaEntries.length === 4, "Release template must bind four media files.");
+  requireValue(mediaEntries.length === 5, "Release template must bind five media files.");
   for (const [name, expectedDigest] of mediaEntries) {
     requireValue(
       /^[A-Za-z0-9._-]+\.png$/u.test(name),

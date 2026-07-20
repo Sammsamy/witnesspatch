@@ -26,6 +26,8 @@ The intended user is Maya, a healthcare-agent evaluation engineer preparing an a
 
 That gap is easy to lose. A screenshot captures an answer, but not the exact visible facts, locked rule, deadline, or executable evidence needed to prevent the same failure from returning. A model-written critique can describe a problem, but it can also become the judge of its own output.
 
+[OpenAI HealthBench](https://openai.com/index/healthbench/) underscores realistic scenarios, expert expectations, and worst-case reliability. WitnessPatch handles the developer handoff after an authored contract fails—not clinical evaluation.
+
 I am a third-year medical student, which motivated the healthcare-agent setting. That background is not licensed clinical authority. I built WitnessPatch as developer tooling for one narrow job: turn an already-observed synthetic missed deadline into a portable regression before trusting any repair.
 
 ## Approach
@@ -39,6 +41,8 @@ WitnessPatch follows three steps:
 Maya can use the one-click reference or open **Compile Your Files**, load the included declared-synthetic case and failed run, and compile locally. The browser validates and regrades the inputs before producing the same portable bundle format. The resulting receipt deliberately says `2 hashes computed · 0 externally verified`: a local hash establishes byte identity, not who published the input or whether its clinical meaning is correct.
 
 ## How I built it
+
+A pre-start V1 prototype already existed. Build Week added the portable compiler, fail-closed browser verifier, narrower V2, and fresh model record; only those extensions are submitted.
 
 I used Codex throughout Build Week to implement and adversarially test the portable compiler, browser-safe grading kernel, detached-bundle verifier, product flow, and release checks. Codex helped expose path traversal, stale-evaluation, schema-drift, truncation, and browser-tampering cases; deterministic code decides whether every test passes.
 
@@ -111,7 +115,7 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
 - Local release verification: exact candidate `87dee97` passed `npm ci` and `npm run verify:release` from fresh clones on macOS 26.5.2 arm64/Node 24.14.0 and a local Debian 12 arm64 container/Node 22.23.1. macOS passed `158/158` aggregate test executions; Debian passed `157/158`, with only the expected case-insensitive-filesystem test skipped. Both passed `136` discovered core tests, `6/6` rendered checks, `1/1` real development-server HTTP smoke, `9/9` submission-package checks, `6/6` deployment-rendered checks, the zero-argument judge proof, detached-bundle verification coverage, the threat-model boundary check, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run; their physical 55-file `dist/client` snapshots matched byte-for-byte with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
-- Current authorized no-physician-review candidate: 55-file static fingerprint `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`; the final freeze rechecks exact-tip public CI and deployed bytes after the real video and `/feedback` fields exist.
+- Current authorized no-physician-review candidate: 55-file static fingerprint `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`; exact static-release checkpoint CI and 51 deployed public files passed, and the final freeze rechecks the then-current tip after the real video and `/feedback` fields exist.
 - Current source-bound real-Chrome QA: the reference path visibly completed `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, and the four-case baseline/repair/control/mutant closure. The local path loaded the included pair and produced a nine-file `50/100` red bundle with `2` hashes computed and `0` externally verified, exact CLI byte parity, red/green executable closure, and no requests after the two expected sample fetches. Both paths recorded zero console errors or warnings; same-page controls produced no `/.rsc` or `404` requests. Exact 390 x 844 reference and local replays had no horizontal overflow.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
