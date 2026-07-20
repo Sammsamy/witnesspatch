@@ -5,7 +5,7 @@ This file separates confirmed public requirements from authenticated fields and 
 ## Confirmed public fields and evidence
 
 - [x] Project title frozen at 57/60 characters: `WitnessPatch: Time-Fenced Contracts for Healthcare Agents`.
-- [x] Elevator pitch frozen at 185/200 characters in `docs/SUBMISSION_DRAFT.md`.
+- [x] Elevator pitch frozen at 178/200 characters in `docs/SUBMISSION_DRAFT.md`.
 - [x] Category: `Developer Tools`.
 - [x] English project description and 22/25 truthful “Built with” tags frozen in `docs/SUBMISSION_DRAFT.md`.
 - [x] Four candidate direct 1200 x 800 PNG media assets were recaptured from the current source-hash-bound production build and recorded by exact byte size, SHA-256, and thirteen rendered/computed source fingerprints in `submission/media/MANIFEST.md`; no upload has occurred and final external-field freeze remains pending.
@@ -83,7 +83,7 @@ The joined challenge's authenticated submission manager was rechecked read-only 
 
 - [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0 (`94/94` core, `4/4` rendered); rule-audit checkpoint `950fea6` also passed from a fresh clone on Node 24.14.0 (`94/94` core, `5/5` rendered).
 - [x] Exact source/media checkpoint `1086426` passes the full release verifier from fresh macOS and local Debian clones: macOS `151/151` aggregate tests; Debian `150/151` pass plus one expected filesystem skip; both `131` discovered core tests, `6/6` rendered checks, `1/1` real development-server HTTP smoke, `7/7` submission-package checks, `6/6` deployment-rendered checks, the distribution-license gate, a 59-asset deployment dry run, and byte-identical physical 55-file `dist/client` snapshots with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
-- [x] Exact candidate `ff5ce1f` passes the full release verifier from fresh macOS and local Debian clones after judge-proof and detached-bundle hardening: macOS `157/157`; Debian `156/157` plus one expected filesystem skip; zero failures, zero dependency vulnerabilities, and the unchanged canonical 55-file static fingerprint.
+- [x] Exact candidate `87dee97` passes the full release verifier from fresh macOS and local Debian clones after judge-proof, detached-bundle, CI-summary, and threat-model hardening: macOS `158/158`; Debian `157/158` plus one expected filesystem skip; zero failures, zero dependency vulnerabilities, and the unchanged canonical 55-file static fingerprint.
 - [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, Wrangler dry run reporting 56 assets).
 - [x] Release-code checkpoint `9f2cd8d` fixes the development-server first-request failure and passes the expanded verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, Wrangler dry run reporting 59 assets).
 - [x] Submission-package checkpoint `b4c8217` passes `npm ci` and the full expanded release verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, `4/4` submission checks, Wrangler dry run reporting 59 assets, zero install vulnerabilities).
