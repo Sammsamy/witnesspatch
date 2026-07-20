@@ -2,9 +2,11 @@
 
 Current submission status: **no physician fixture/wording review or clinical validation was performed.** The physician section is an unused optional future protocol. The builder section remains the only current external-review target.
 
-Record any future result in `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. Do not prefill agreement, invent a reviewer, coach toward approval, or describe a medical-student review as a licensed-physician review or clinical validation.
+For the fastest reproducible builder session, use the focused [`33-minute independent builder review packet`](BUILDER_REVIEW_PACKET.md), which includes qualification, timeboxes, independence rules, a private record template, evidence tiers, and a bounded publication gate. `docs/VALIDATION_EVIDENCE_TEMPLATE.md` remains the combined archival template for either review type. Do not prefill agreement, invent a reviewer, coach toward approval, or describe a medical-student review as a licensed-physician review or clinical validation.
 
 ## A. Health-AI builder workflow review
+
+Operational protocol: [`docs/BUILDER_REVIEW_PACKET.md`](BUILDER_REVIEW_PACKET.md). Participant-facing frozen task: [`docs/BUILDER_REVIEW_START.md`](BUILDER_REVIEW_START.md).
 
 **Reviewer role:**  
 **Organization or product type:**  

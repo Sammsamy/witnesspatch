@@ -240,6 +240,80 @@ export function parseFfprobeReport(report) {
   return Object.freeze({ durationSeconds: duration, videoStreams, audioStreams });
 }
 
+export function parseAvmediainfoReport(output) {
+  requireValue(
+    typeof output === "string" && output.trim(),
+    "avmediainfo returned no report.",
+  );
+  requireValue(
+    /^Movie analyzed with 0 error\.$/mu.test(output),
+    "avmediainfo did not report a clean media analysis.",
+  );
+  requireValue(
+    !/^\s*System support for decoding this track:\s+No\s*$/mu.test(output),
+    "The operating system does not support decoding every final-video track.",
+  );
+  const durationMatch = output.match(
+    /^Duration:\s+([0-9]+(?:\.[0-9]+)?) seconds\b/mu,
+  );
+  const videoStreams = output.match(/^Track \d+: Video\b/gmu)?.length ?? 0;
+  const audioStreams =
+    output.match(/^Track \d+: (?:Sound|Audio)\b/gmu)?.length ?? 0;
+  const supportedStreams =
+    output.match(/^\s*System support for decoding this track:\s+Yes\s*$/gmu)
+      ?.length ?? 0;
+  requireValue(
+    supportedStreams >= videoStreams + audioStreams,
+    "avmediainfo did not confirm decoder support for every final-video track.",
+  );
+  return parseFfprobeReport({
+    format: { duration: durationMatch?.[1] },
+    streams: [
+      ...Array.from({ length: videoStreams }, () => ({ codec_type: "video" })),
+      ...Array.from({ length: audioStreams }, () => ({ codec_type: "audio" })),
+    ],
+  });
+}
+
+export function probeFinalVideo(videoFile, commandRunner = runCommand) {
+  const ffprobe = process.env.WITNESSPATCH_FFPROBE_BIN?.trim();
+  const ffprobeArgs = [
+    "-v",
+    "error",
+    "-show_entries",
+    "format=duration:stream=codec_type",
+    "-of",
+    "json",
+    videoFile,
+  ];
+  if (ffprobe) {
+    return parseFfprobeReport(
+      JSON.parse(
+        commandRunner(ffprobe, ffprobeArgs, {
+          failureMessage: "ffprobe could not decode the final video.",
+        }),
+      ),
+    );
+  }
+  try {
+    return parseFfprobeReport(
+      JSON.parse(
+        commandRunner("ffprobe", ffprobeArgs, {
+          failureMessage: "ffprobe could not decode the final video.",
+        }),
+      ),
+    );
+  } catch (error) {
+    if (process.platform !== "darwin") throw error;
+    return parseAvmediainfoReport(
+      commandRunner("/usr/bin/avmediainfo", [videoFile], {
+        failureMessage:
+          "Neither ffprobe nor macOS avmediainfo could decode the final video.",
+      }),
+    );
+  }
+}
+
 async function fetchRequired(fetchImpl, url, description, options = {}) {
   const response = await fetchImpl(url, {
     ...options,
@@ -551,20 +625,7 @@ async function verifyVideo({ video, videoFile, fetchImpl, commandRunner }) {
     stats.isFile() && !stats.isSymbolicLink(),
     "Final video must be a real regular file, not a link.",
   );
-  const probeOutput = commandRunner(
-    process.env.WITNESSPATCH_FFPROBE_BIN?.trim() || "ffprobe",
-    [
-      "-v",
-      "error",
-      "-show_entries",
-      "format=duration:stream=codec_type",
-      "-of",
-      "json",
-      videoFile,
-    ],
-    { failureMessage: "ffprobe could not decode the final video." },
-  );
-  const probe = parseFfprobeReport(JSON.parse(probeOutput));
+  const probe = probeFinalVideo(videoFile, commandRunner);
   const oEmbed = new URL("https://www.youtube.com/oembed");
   oEmbed.searchParams.set("url", video.normalized);
   oEmbed.searchParams.set("format", "json");

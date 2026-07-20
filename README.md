@@ -6,7 +6,9 @@ WitnessPatch turns a missed safety deadline into a portable red test. It freezes
 
 [Live no-rebuild demo](https://witnesspatch.ankigpt.workers.dev) · [Public MIT repository](https://github.com/Sammsamy/witnesspatch) · [Current default-branch CI](https://github.com/Sammsamy/witnesspatch/actions/workflows/verify.yml?query=branch%3Acodex%2Fbuild-week)
 
-The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. No physician review or clinical validation was performed; clinical validation is not claimed. External health-AI builder review has also not yet been performed.
+![WitnessPatch preserves the red baseline while the scoped repair passes its exact control and rejects an always-escalate mutation](submission/media/05-reference-success-closure.png)
+
+The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. No physician review or clinical validation was performed; clinical validation is not claimed.
 
 ## The judge proof
 
@@ -31,6 +33,17 @@ For the shortest executable judge path, one zero-argument command compiles the V
 
 ```bash
 npm run judge:proof
+```
+
+Expected six-line proof:
+
+```text
+WITNESSPATCH JUDGE PROOF PASS
+1 COMPILE  9-file red regression · INV-02 · T+02
+2 RED      baseline failed the compiled regression as required · exit 1
+3 GREEN    retained repair passed that same regression · exit 0
+4 MUTATION FAIL (expected) · always-escalate rejected · 25/100
+BOUNDARY   synthetic software proof only · no clinical validation or runtime model call
 ```
 
 The expected mutation failure is a passing guardrail check. This command uses only retained synthetic inputs and local deterministic code; it makes no model or network call and is not clinical validation.
@@ -66,7 +79,7 @@ npm run deploy:dry-run
 
 The entrant-local silent master was recaptured from the public deployment on July 20 with visible action callouts, then shortened only across idle holds. It is `148.000` seconds at `1400 x 900`, contains one H.264 video stream and no audio, and ends on the explicit `not_performed` / `not claimed` / `Not permitted` receipt. Its reviewed SHA-256 is `7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8`; the founder-track assembler rejects any other bytes. The Apple System Voice rehearsal is quarantined and must not be published because the [macOS license](https://www.apple.com/legal/sla/docs/macOSTahoe.pdf) does not permit public sharing of System Voice recordings. The replacement release candidate uses [Piper 1.5.0](https://github.com/OHF-Voice/piper1-gpl/tree/v1.5.0) with the pinned [`en_US-ljspeech-high` voice](https://huggingface.co/rhasspy/piper-voices/blob/5b44ec7bab7c5822cfec48fbd5aa99db71a823d6/en/en_US/ljspeech/high/MODEL_CARD). The voice repository [declares MIT](https://huggingface.co/rhasspy/piper-voices/blob/main/README.md), and the voice card records training from scratch on the [public-domain LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/). Piper and its weights are local production tools, not shipped WitnessPatch dependencies. The `148.000`-second candidate has 3,700 frames, preserves the reviewed screen-video stream byte-for-byte, and has SHA-256 `6845baadea1476bf50b57b9b03ff1fc8f669d7a5328e3fcd16d251bb89542c7e`. It remains pending complete entrant audition and public upload. The video opening and prepared YouTube description both disclose the synthetic narration; the final freeze still requires explicit entrant confirmation of complete human review.
 
-To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:28 screen cut, run the fail-closed assembler below. It refuses the wrong screen bytes, codec, geometry, silence, or duration; founder audio shorter than 2:22 or longer than 2:27.5; existing outputs; and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths for this assembly command. For `release:freeze`, prefer putting the `ffprobe` directory on `PATH` and leave both overrides unset so the same environment can run the full release verifier.
+To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:28 screen cut, run the fail-closed assembler below. It refuses the wrong screen bytes, codec, geometry, silence, or duration; founder audio shorter than 2:22 or longer than 2:27.5; existing outputs; and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths for this assembly command. The separate `release:freeze` verifier uses `ffprobe` when available and fails over to `/usr/bin/avmediainfo` on macOS; other platforms still require `ffprobe` or `WITNESSPATCH_FFPROBE_BIN`.
 
 ```bash
 npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"
@@ -210,7 +223,7 @@ The declared rules link to current public guidance from:
 - [ACOG — Preeclampsia and High Blood Pressure During Pregnancy](https://www.acog.org/womens-health/faqs/preeclampsia-and-high-blood-pressure-during-pregnancy)
 - [ACOG — 3 Conditions to Watch for After Childbirth](https://www.acog.org/womens-health/experts-and-stories/the-latest/3-conditions-to-watch-for-after-childbirth)
 
-The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. The [clinical claim audit](docs/CLINICAL_CLAIM_AUDIT.md) maps every remaining medical statement to primary public guidance or an explicit non-claim boundary. No physician fixture/wording review was performed. The [external review packet](docs/EXTERNAL_REVIEW_PACKET.md) defines what evidence a future review would need; it is not completed submission evidence.
+The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. The [clinical claim audit](docs/CLINICAL_CLAIM_AUDIT.md) maps every remaining medical statement to primary public guidance or an explicit non-claim boundary. No physician fixture/wording review was performed. The [external review packet](docs/EXTERNAL_REVIEW_PACKET.md) defines what evidence a future review would need, and the [33-minute builder packet](docs/BUILDER_REVIEW_PACKET.md) makes that software review reproducible; neither is completed submission evidence.
 
 ## Repository map
 

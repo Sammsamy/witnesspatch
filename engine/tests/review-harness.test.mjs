@@ -233,3 +233,23 @@ test("review ZIP parser rejects archives outside the exact nine-file format", ()
   ]);
   assert.throws(() => parseStoredReviewZip(archive), /exactly nine entries/u);
 });
+
+test("builder review packet preserves the 33-minute independent evidence boundary", async () => {
+  const packet = await readFile(
+    join(rootDir, "docs", "BUILDER_REVIEW_PACKET.md"),
+    "utf8"
+  );
+
+  assert.match(packet, /\*\*33-minute, frozen, external software review\*\*/u);
+  assert.match(packet, /`0:08–0:28` \| frozen independent clean run/u);
+  assert.match(packet, /Start a visible 20-minute timer immediately before `git clone`/u);
+  assert.match(packet, /browser\/CLI byte parity: `9\/9`/u);
+  assert.match(packet, /supplied baseline regression: `RED exit 1`/u);
+  assert.match(packet, /same regression with supplied retained repair: `PASS exit 0`/u);
+  assert.match(packet, /E1 — interview only/u);
+  assert.match(packet, /E2 — observed frozen attempt/u);
+  assert.match(packet, /E3 — participant-confirmed record/u);
+  assert.match(packet, /not physician review, clinical validation, adoption, efficacy/u);
+  assert.match(packet, /No medical credential is required because this protocol asks no clinical question/u);
+  assert.match(packet, /must \*\*not\*\* be labeled independent/u);
+});

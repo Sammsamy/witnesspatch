@@ -43,6 +43,8 @@ The hashes below match the source bytes used for the five final captures. Every 
 
 Each PNG is 8-bit RGB, non-interlaced, exact `3:2`, and below Devpost's 5 MB per-image limit.
 
+**Recommended Devpost gallery order:** `01 → 05 → 03 → 04 → 02`. This leads with the missed-deadline problem, immediately proves scoped red/green closure, then shows compiler and receipt detail; the denser local-input workspace remains available last for technical judges.
+
 ## Truthful scope
 
 - Every case shown is fully synthetic; these images contain no patient, account, or production data.

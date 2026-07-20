@@ -2,6 +2,8 @@
 
 Copy this file once per frozen session. Keep the filled raw copy outside the repository until it is deidentified and participant-confirmed. Do not put names, emails, license numbers, employer secrets, patient information, credentials, or proprietary case details in a committed copy.
 
+For a builder session, prefer the focused [`33-minute independent builder review packet`](BUILDER_REVIEW_PACKET.md). In both templates, `E1` means interview only, `E2` adds a frozen observed attempt with fingerprinted records, and `E3` adds participant confirmation of the exact deidentified summary and its publication scope.
+
 ## Common record
 
 **Session ID:**

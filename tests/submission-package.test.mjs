@@ -21,6 +21,7 @@ import {
 } from "../build/assemble-founder-video.mjs";
 import {
   freezeFinalRelease,
+  parseAvmediainfoReport,
   parseFfprobeReport,
   parseFreezeArguments,
   parseStaticClientManifest,
@@ -631,6 +632,29 @@ test("the final release template binds local artifacts but cannot masquerade as 
       streams: [{ codec_type: "video" }, { codec_type: "audio" }],
     }),
     { durationSeconds: 179.999, videoStreams: 1, audioStreams: 1 },
+  );
+  const avmediainfoReport = `Asset: founder-demo.mp4
+Duration: 148.000 seconds (148000/1000)
+Track count: 2
+Track 1: Video 'vide'
+\tSystem support for decoding this track: Yes
+Track 2: Sound 'soun'
+\tSystem support for decoding this track: Yes
+Movie analyzed with 0 error.`;
+  assert.deepEqual(parseAvmediainfoReport(avmediainfoReport), {
+    durationSeconds: 148,
+    videoStreams: 1,
+    audioStreams: 1,
+  });
+  assert.throws(
+    () =>
+      parseAvmediainfoReport(
+        avmediainfoReport.replace(
+          "System support for decoding this track: Yes",
+          "System support for decoding this track: No",
+        ),
+      ),
+    /does not support decoding/u,
   );
   assert.throws(
     () => parseFreezeArguments([]),

@@ -1,5 +1,7 @@
 # Builder clean-run start page
 
+This is the participant-facing task page. The facilitator must run the consent, qualification, pre-exposure interview, independence rules, evidence capture, and closeout in [`docs/BUILDER_REVIEW_PACKET.md`](BUILDER_REVIEW_PACKET.md); do not use this page alone as a completed review protocol.
+
 Use this page only after a pre-exposure workflow interview that avoids revealing the interface or exact mechanism. This is one frozen synthetic software task, not a clinical review or a benchmark against the participant's current workflow.
 
 ## Frozen out-of-band handoff

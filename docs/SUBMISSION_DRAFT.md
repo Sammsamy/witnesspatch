@@ -24,7 +24,7 @@ AI agents can give a reasonable answer and still act too late.
 
 The intended user is Maya, a healthcare-agent evaluation engineer preparing an agent for release. In one fully synthetic postpartum test, the agent produces a plausible response but misses an authored action deadline at T+02. A more severe fact arrives at T+06, but that later information must not retroactively earn the agent credit—or change what the evaluator says the agent knew when the earlier deadline passed.
 
-That gap is easy to lose. A screenshot captures an answer, but not the exact visible facts, locked rule, deadline, or executable evidence needed to prevent the same failure from returning. A model-written critique can describe a problem, but it can also become the judge of its own output.
+That gap is easy to lose: screenshots and model-written critiques do not preserve the exact visible facts, locked rule, deadline, and executable evidence—and can let the model judge its own output.
 
 [OpenAI HealthBench](https://openai.com/index/healthbench/) underscores realistic scenarios, expert expectations, and worst-case reliability. WitnessPatch handles the developer handoff after an authored contract fails—not clinical evaluation.
 
@@ -38,17 +38,21 @@ WitnessPatch follows three steps:
 2. **Compile the miss.** It selects the earliest failed critical contract and exports a conventional nine-file Node test package containing the failing prefix, static contract witness, original inputs, receipt, manifest, and red regression.
 3. **Verify a separate repair.** It keeps the original regression visibly red while testing an inspectable, human-gated retained repair against the unchanged grader, the urgent case, an exact-fact negative control, and an intentionally bad always-escalate mutation.
 
-Maya can use the one-click reference or open **Compile Your Files**, load the included declared-synthetic case and failed run, and compile locally. The browser validates and regrades the inputs before producing the same portable bundle format. The resulting receipt deliberately says `2 hashes computed · 0 externally verified`: a local hash establishes byte identity, not who published the input or whether its clinical meaning is correct.
+## Why this is different
+
+Replay, evaluation, and repair tools already exist. WitnessPatch targets the handoff between them: it turns a missed action deadline into a conventional red `node:test` using only facts available by that deadline, keeps the failure red, and checks a separate repair against the unchanged contract plus an overreach control.
+
+Maya can run the reference or compile the included synthetic pair locally. The browser validates and regrades the inputs before exporting the same bundle; its receipt says `2 hashes computed · 0 externally verified` because hashes prove byte identity, not source or clinical meaning. The result is a CI-ready artifact Maya can attach to repair review and rerun without an account, API key, model call, or original-target access.
 
 ## How I built it
 
 A pre-start V1 prototype already existed. Build Week added the portable compiler, fail-closed browser verifier, narrower V2, and fresh model record; only those extensions are submitted.
 
-I used Codex throughout Build Week to implement and adversarially test the portable compiler, browser-safe grading kernel, detached-bundle verifier, product flow, and release checks. Codex helped expose path traversal, stale-evaluation, schema-drift, truncation, and browser-tampering cases; deterministic code decides whether every test passes.
+During Build Week, Codex helped implement and adversarially test the compiler, browser grader, detached verifier, and release path, exposing path traversal, stale evaluation, schema drift, truncation, and browser tampering. Deterministic code owns every verdict.
 
 GPT-5.6 contributed through a separate post-start Codex workflow that requested GPT-5.6 Sol with Ultra reasoning. It received the baseline and two authored contracts and returned schema-constrained declarative repair data. Fixed code compiled that data into a distinct candidate and evaluated it against withheld software holdouts. The candidate remains quarantined and was never installed. Its receipt records the requested configuration; it does not independently prove which model was served.
 
-This division is deliberate. GPT-5.6 helps propose bounded logic, while the locked grader, hashes, compiler, and expected holdouts remain outside the model's control. The public demo and command-line judge path run offline after loading the retained assets. They need no API key, paid API credit, request-time model call, database, account, or target rerun.
+GPT-5.6 proposes bounded logic; locked code owns grading, hashes, compilation, and holdouts. The public demo and CLI run offline without an API key, paid credit, request-time model call, database, account, or target rerun.
 
 ## Proof, not a green badge
 
@@ -58,7 +62,7 @@ The browser then checks 23/23 retained artifact files, recomputes 2/2 reference 
 
 ## Challenges
 
-The hardest problem was temporal leakage. An evaluator that can see T+06 can accidentally rewrite the verdict at T+02. The second challenge was making browser and CLI outputs reproducible while failing closed on changed, missing, extra, linked, or malformed files. The third was resisting a persuasive but overbroad repair.
+The hardest problem was temporal leakage: an evaluator seeing T+06 can accidentally rewrite the T+02 verdict. Next came browser/CLI reproducibility while failing closed on changed, missing, extra, linked, or malformed files—and resisting a persuasive but overbroad repair.
 
 ## What I learned
 
@@ -169,9 +173,13 @@ Open `http://localhost:3000`. The local release path and hydrated browser flow a
 
 ## Prepared public video description
 
+**YouTube title:** `WitnessPatch: Turn a Missed Agent Deadline into a Red Test | OpenAI Build Week`
+
 > WitnessPatch turns one fully synthetic missed-deadline failure into a portable red-test bundle, then verifies a separate repair offline.
 >
 > Built during OpenAI Build Week with Codex and a requested GPT-5.6 Sol / Ultra workflow. Deterministic code owns every public pass/fail verdict; the receipt records requested configuration, not independently attested served-model identity.
+>
+> The passing retained repair shown in the demo is a separate reference artifact; the GPT-5.6 proposal remains quarantined and is not installed.
 >
 > This video uses synthetic narration generated locally with Piper 1.5.0 and the `en_US-ljspeech-high` voice from the MIT-declared Piper voices repository, trained on the public-domain LJ Speech Dataset. No voice cloning was performed.
 >
