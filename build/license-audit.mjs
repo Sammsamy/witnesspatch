@@ -171,7 +171,7 @@ const fastUriNoticeMismatch =
 const noticeGaps = [
   `Locked package entries inventoried: ${packages.length}`,
   `Locked dependency inventory SHA-256: \`${inventorySha256}\``,
-  "The private judging repository tracks source, package manifests, and `package-lock.json`; it ignores `node_modules` and generated `dist` output.",
+  "The public source repository tracks source, package manifests, and `package-lock.json`; it ignores `node_modules` and generated `dist` output.",
   "`@hiogawa/utils` 1.7.0 is published by Hiroshi Ogawa and declares `MIT`",
   ...requiredStaticNoticeText,
 ].filter((needle) => !notices.includes(needle));

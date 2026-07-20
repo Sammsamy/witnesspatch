@@ -3,13 +3,13 @@
   "kind": "witnesspatch_final_release_fingerprint_template",
   "status": "not_frozen",
   "submitted_commit": null,
-  "v2_manifest_sha256": "46542e562fe15b7fcec50f5a42d45e145614791c2bac7432ce5289440b9597f2",
-  "static_client_manifest_sha256": "1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721",
+  "v2_manifest_sha256": "3e72fd8cf8edc0a00bbc513eb6bf498d24a550f8717d9df24d2837350f608541",
+  "static_client_manifest_sha256": "523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5",
   "submission_media": {
     "01-thumbnail-failure.png": "89a7215a12e38bdad8b20f68bcaa5e1213854eb029f0753708821e5aee486633",
     "02-local-input-compiled-red.png": "1fac0225fb5d06675d94ea66b50396742c03fe811dc79f8e4d034cd43f129a67",
-    "03-reference-compiled-red.png": "97b5eca486f064a79da01576e7c6bb1f35ba05e90b4414ee1386e5462e5e3ed1",
-    "04-reference-verified-receipt.png": "f885d7c3df472b3a7bbf27e8dd5a49b990bd92f5b7064c61ac224e9b41cf3fd9"
+    "03-reference-compiled-red.png": "65d4a36bb46bc9f1b198eea829655b172f65a52d2e8c3166a0d035cba1c27e78",
+    "04-reference-verified-receipt.png": "474efa03f0b745fcabab0f8f8e7477c981829ec8901ac8f64fdbda91795dfcb7"
   },
   "repository_url": null,
   "deployment_url": null,

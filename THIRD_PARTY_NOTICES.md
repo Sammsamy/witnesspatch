@@ -59,7 +59,7 @@ WitnessPatch does not download or redistribute Google Fonts. The interface uses 
 
 ## Build Week distribution scope
 
-The private judging repository tracks source, package manifests, and `package-lock.json`; it ignores `node_modules` and generated `dist` output. Sharing that repository therefore does not itself redistribute installed dependency payloads. `npm ci` obtains those packages from their publishers. The analysis changes if the team later vendors dependencies, publishes the CLI as a package, commits a generated bundle, or distributes a server image.
+The public source repository tracks source, package manifests, and `package-lock.json`; it ignores `node_modules` and generated `dist` output. Publishing that repository therefore does not itself redistribute installed dependency payloads. `npm ci` obtains those packages from their publishers. The analysis changes if the entrant later vendors dependencies, publishes the CLI as a package, commits a generated bundle, or distributes a server image.
 
 The hosted static route distributes the generated `dist/client` files. An audit-only source-map build of the same client configuration identified the package sources below; source maps are not release assets. A package marked `dev` in the lockfile can still contribute browser code, so production/dev metadata was not used as the scope boundary.
 
@@ -157,4 +157,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The complete list of contributors can be found at:
 - https://github.com/garycourt/uri-js/graphs/contributors
 
-This notice does not replace or modify any upstream license. WitnessPatch itself remains unlicensed and all rights reserved for the current private judging-repository path. A public release requires a deliberate project-license decision and a distribution-scoped notice audit first.
+This notice does not replace or modify any upstream license. WitnessPatch source authored or controlled by the entrant is released under the MIT License in `LICENSE`; third-party components remain governed by their own terms. The distribution-scoped notice audit must be repeated if the project later vendors dependency payloads, publishes a package, or distributes a server image.

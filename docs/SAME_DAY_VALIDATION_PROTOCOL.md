@@ -1,5 +1,7 @@
 # Same-day external validation protocol
 
+Current submission status: **no physician fixture/wording review or clinical validation was performed.** The physician portion below is retained only as an optional future protocol and is not submission evidence.
+
 This protocol turns two small external reviews into bounded, reproducible evidence: one healthcare-AI builder clean run plus workflow interview, and one licensed-physician review of the two synthetic V2 fixtures. It is designed for same-day execution. Neither session may use patient data, a real patient question, a participant's proprietary case, or an unauthorized target.
 
 The target is credible `n=1` evidence, not a survey result, clinical validation, product endorsement, or a time-saved claim. Copy-ready recruiting language is in `docs/VALIDATION_OUTREACH_DRAFTS.md`; outreach and scheduling remain human actions outside the repository.

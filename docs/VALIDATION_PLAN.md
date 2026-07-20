@@ -1,8 +1,8 @@
 # Validation plan
 
-WitnessPatch has a strong local V2 software demonstration. Its largest remaining credibility gaps are external workflow evidence and licensed clinical review. More internal tests cannot close either gap.
+WitnessPatch has a strong local V2 software demonstration. Its largest remaining credibility gap is external workflow evidence. The entrant has chosen the rules-compliant no-physician route for this submission: unsupported clinical claims are removed or narrowed, and the public status explicitly says no physician review or clinical validation was performed.
 
-The operational protocol is `docs/SAME_DAY_VALIDATION_PROTOCOL.md`; its fillable record is `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. The same-day minimum is one qualified healthcare-AI builder clean run plus workflow interview and one licensed-physician fixture/wording review. Each remains `n=1` and must be reported with its exact scope, environment, assistance, objections, and limitations.
+The operational protocol is `docs/SAME_DAY_VALIDATION_PROTOCOL.md`; its fillable record is `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. The current same-day submission target is one qualified healthcare-AI builder clean run plus workflow interview. A future licensed-physician fixture/wording review is optional and must not be implied in the current submission. Any review remains `n=1` and must be reported with its exact scope, environment, assistance, objections, and limitations.
 
 ## Primary user hypothesis
 
@@ -96,12 +96,12 @@ For a single builder, report a result label (`independent completion`, `assisted
 
 Do not report patient outcomes, lives saved, clinical accuracy, or regulatory readiness from synthetic fixtures. Do not promote the pre-start V1 `113.770`-second observation as V2 evidence or a speed claim.
 
-## Physician review gate
+## No-physician-review boundary
 
-Until a licensed physician has reviewed the two V2 fixtures, sources, and exact rules:
+For the current authorized no-physician route:
 
-- retain canonical `fixture_wording_review: pending` and `clinical_validation: not_claimed` in the V2 clinical scope and visible receipt; per-artifact inputs, outputs, receipts, and captured model-provenance records keep the legacy `clinician_validation: pending` field for schema and provenance compatibility, not as a review-completion or clinical-validation state;
-- retain `licensed-physician fixture/wording review pending; clinical validation not claimed` in visible copy;
+- retain canonical `fixture_wording_review: not_performed` and `clinical_validation: not_claimed` in the V2 clinical scope and visible receipt; per-artifact inputs, outputs, receipts, and captured model-provenance records keep the legacy `clinician_validation: pending` field solely for schema and provenance compatibility, not as a review-completion or clinical-validation state;
+- retain `no physician fixture/wording review or clinical validation was performed; clinical validation not claimed` in visible copy;
 - do not change provenance to `validated`;
 - do not use reviewer-style badges or implied endorsement;
 - do not generalize beyond the exact authored facts;
@@ -113,7 +113,7 @@ After a real review, preserve reviewer scope, date, requested changes, conflicts
 
 - One recorded health-AI builder interview and concrete workflow finding.
 - One clean builder replay against a frozen commit, including environment, elapsed time, assistance, failures, teach-back, and strongest objection.
-- One scoped licensed-physician review, or a fully visible pending status.
+- A fully visible `fixture_wording_review: not_performed` and `clinical_validation: not_claimed` boundary; do not count physician review as completed submission evidence.
 - Public clean-browser verification of the exact submission build.
 - Final founder-voiced video showing the real receipt and limitations.
 - Dated post-start checkpoint `21405c8` and retained V1/V2 before-after ledger; preserve both without rewriting history.

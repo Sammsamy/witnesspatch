@@ -44,8 +44,8 @@ The joined challenge's authenticated submission manager was rechecked read-only 
 
 ## Repository and release choice
 
-- [ ] Authorize the final source route. The standing completion target is a public repository with an entrant-approved open-source license; the current `UNLICENSED` checkout cannot be published until ownership and license authorization are explicit. A private repository shared with both judging addresses remains the rules-compliant fallback but does not satisfy this task's stricter public-repository goal.
-- [ ] If the public route is authorized, add the approved license, update `package.json`, rerun the distribution audit, and confirm GitHub detects the matching SPDX identifier. If the private fallback is chosen, retain `UNLICENSED` and share it with both judging addresses.
+- [x] Final source route authorized: publish `Sammsamy/witnesspatch` publicly under the MIT License and submit Fuzlullah Syed individually.
+- [ ] Publish the authorized MIT state, rerun the distribution audit, and confirm GitHub detects the matching SPDX identifier from a logged-out request.
 - [x] Inventory the 624 locked packages and the 15 packages/credited sources actually present in the static client; preserve the scoped MIT and BSD-3-Clause notices byte-for-byte in the deployed bundle.
 - [x] Complete the current public-static-demo/private-source-repository distribution audit; repeat it before shipping a packaged CLI, server image, vendored dependencies, or public source under a new project license.
 - [x] Replace unrecorded favicon/icon path data with project-authored geometric primitives and record the bundled visual-asset boundary in `docs/ASSET_PROVENANCE.md`.
@@ -78,7 +78,7 @@ The joined challenge's authenticated submission manager was rechecked read-only 
 - [x] Product is developer tooling, not patient-facing medical advice or automated medical decision-making.
 - [x] Repair installation remains human review-gated.
 - [x] Complete `docs/CLINICAL_CLAIM_AUDIT.md`: every remaining medical statement is either narrowly linked to current CDC, AIM, or ACOG guidance or explicitly excluded; no clinical efficacy, diagnosis, treatment, patient-outcome, regulatory, or generalization claim remains in judge-facing copy.
-- [ ] Obtain a qualified, fully completed scoped licensed-physician fixture/wording review or keep `fixture_wording_review: pending` and the visible pending wording everywhere; `clinical_validation` remains `not_claimed` regardless of the review outcome.
+- [x] Use the authorized no-physician route: narrow unsupported clinical claims, keep the case fully synthetic and source-linked, and display `fixture_wording_review: not_performed` plus `clinical_validation: not_claimed` everywhere. Do not imply physician review, clinical validation, endorsement, diagnosis, treatment, or patient-use permission.
 - [ ] Obtain an external healthcare-AI builder clean run and record objections, assistance, and environment.
 
 ## Final release audit

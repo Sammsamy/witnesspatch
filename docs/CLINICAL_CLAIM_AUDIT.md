@@ -1,6 +1,6 @@
 # Clinical claim and scope audit
 
-Status: **source-linked content audit complete July 20, 2026; licensed-physician fixture/wording review remains pending; clinical validation is not claimed.**
+Status: **source-linked content audit complete July 20, 2026; no physician fixture/wording review or clinical validation was performed; clinical validation is not claimed.**
 
 This is an audit of public wording, not a medical review, clinical validation, endorsement, or authorization for patient use. WitnessPatch evaluates authored software contracts over fully synthetic fixtures. It does not diagnose, recommend treatment, process patient data, or decide what should happen in a real clinical workflow.
 
@@ -37,8 +37,8 @@ The public product, submission copy, screenshots, and video must not claim any o
 - that the grader infers blood-pressure categories or generalizes beyond the two fixture-supplied endpoints;
 - that a passing synthetic software score proves safety in another case, agent, team, or deployment.
 
-No unsupported clinical efficacy, diagnosis, treatment, patient-outcome, regulatory, or generalization claim remains in the audited judge-facing copy. The remaining medical statements are narrowly source-linked fixture premises and urgent-route wording for one synthetic scenario. A licensed physician has not reviewed that wording; the UI and submission therefore continue to display `fixture_wording_review: pending` and `clinical_validation: not_claimed`.
+No unsupported clinical efficacy, diagnosis, treatment, patient-outcome, regulatory, or generalization claim remains in the audited judge-facing copy. The remaining medical statements are narrowly source-linked fixture premises and urgent-route wording for one synthetic scenario. A licensed physician has not reviewed that wording; the UI and submission therefore display `fixture_wording_review: not_performed` and `clinical_validation: not_claimed`.
 
 ## Release rule
 
-Any change to the V2 medical facts, target-policy messages, source list, submission story, screenshots, captions, or narration reopens this audit. A future licensed-physician review may narrow or correct the fixture wording, but it must never be described as clinical validation or product endorsement.
+Any change to the V2 medical facts, target-policy messages, source list, submission story, screenshots, captions, or narration reopens this audit. A future licensed-physician review may narrow or correct the fixture wording, but the current submission makes no such review claim and any future review must never be described as clinical validation or product endorsement.

@@ -2,6 +2,13 @@
 
 This is a retained local reproducibility record, not independent third-party validation. It verifies the exact local macOS and Debian environments named below; it is not proof of remote CI, a broad Linux compatibility matrix, or Windows support.
 
+## Current authorized no-physician-review candidate
+
+- State: recaptured source/media worktree before the public release commit
+- Static snapshot: 55 physical `dist/client` files with canonical manifest SHA-256 `523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5`
+- Local result: `npm run verify:release` exits `0`; all `158/158` aggregate executions pass (`136` core, `6` rendered-product, `1` development-server smoke, `9` submission-package, and `6` deployment-rendered), followed by the license audit and a 59-asset Cloudflare dry run
+- Boundary: the fingerprint is locally release-gated; the exact commit, public GitHub Actions result, deployment URL, and deployed-byte comparison must be appended only after those checks pass
+
 ## Current exact release candidate
 
 - Commit: `87dee97607354081f17eca78fcf5c93ca722ddb1`

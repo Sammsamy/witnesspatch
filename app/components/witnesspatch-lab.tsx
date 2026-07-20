@@ -1181,7 +1181,7 @@ export function WitnessPatchLab() {
             <p>
               <strong>Developer safety tooling—not clinical decision support.</strong>
               Fully synthetic reference case. Source-linked; licensed-physician
-              fixture/wording review pending; clinical validation not claimed.
+              fixture/wording review not performed; clinical validation not claimed.
             </p>
             <p>
               Independent Build Week entrant project · Codex and GPT-5.6 Sol

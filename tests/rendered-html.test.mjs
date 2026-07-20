@@ -35,7 +35,7 @@ test("exposes the evidence, executable test, and safety boundary", async () => {
   assert.match(html, /Static recorded decisions · no target or model rerun/);
   assert.match(html, /Match actions to visible words/);
   assert.match(html, /Developer safety tooling—not clinical decision support/);
-  assert.match(html, /licensed-physician fixture\/wording review pending/i);
+  assert.match(html, /licensed-physician fixture\/wording review not performed/i);
   assert.match(html, /clinical validation not claimed/i);
   assert.match(html, /PWS-V2-001/);
   assert.match(html, /Assists fixture &amp; repair authoring/);

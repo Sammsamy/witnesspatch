@@ -20,16 +20,16 @@ test("canonical clinical scope separates fixture review from clinical validation
     readJson("public/runs/v2/manifest.json")
   ]);
 
-  assert.equal(scope.status, "source_linked_fixture_wording_review_pending");
-  assert.equal(scope.verification_boundary.fixture_wording_review, "pending");
+  assert.equal(scope.status, "source_linked_fixture_wording_review_not_performed");
+  assert.equal(scope.verification_boundary.fixture_wording_review, "not_performed");
   assert.equal(scope.verification_boundary.clinical_validation, "not_claimed");
   assert.equal(
     scope.verification_boundary.legacy_artifact_field,
-    "clinician_validation=pending is retained as a legacy per-artifact field for schema and provenance compatibility; it is not the canonical fixture-review or clinical-validation state"
+    "clinician_validation=pending is retained solely as a legacy per-artifact field for schema and provenance compatibility; no physician review was performed, and this field is not the canonical fixture-review or clinical-validation state"
   );
   assert.equal("physician_validation" in scope.verification_boundary, false);
 
-  assert.equal(manifest.clinical_scope.fixture_wording_review, "pending");
+  assert.equal(manifest.clinical_scope.fixture_wording_review, "not_performed");
   assert.equal(manifest.clinical_scope.clinical_validation, "not_claimed");
   assert.equal("physician_validation" in manifest.clinical_scope, false);
 });

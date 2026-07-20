@@ -4,7 +4,7 @@
 
 WitnessPatch turns a missed safety deadline into a portable red test. It freezes what an agent knew at each timestamp, checks whether the required action happened on time, and compiles that exact observed failure into a hash-bound `node:test` bundle that runs offline before any repair can be trusted. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic software owns every displayed verdict.
 
-The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. Licensed-physician fixture/wording review is pending, clinical validation is not claimed, and external health-AI builder validation is still pending.
+The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. No physician review or clinical validation was performed; clinical validation is not claimed. External health-AI builder review has also not yet been performed.
 
 ## The judge proof
 
@@ -54,6 +54,8 @@ The current source-hash-bound UI candidate passed a fresh production-Chrome repl
 
 Exact candidate `87dee97` passed `npm ci` followed by `npm run verify:release` from fresh clones on macOS 26.5.2 arm64 with Node 24.14.0/npm 11.9.0 and a local Debian 12 arm64 container with Node 22.23.1/npm 10.9.8. macOS passed all `158/158` aggregate test executions: `136/136` core, `6/6` rendered-product, `1/1` real development-server HTTP smoke, `9/9` submission-package, and `6/6` deployment-rendered checks. Debian passed `157/158`, with only the expected case-insensitive-filesystem check skipped on its case-sensitive filesystem. Both passed the zero-argument judge proof, detached-bundle verification coverage, threat-model boundary check, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run. Their physical 55-file `dist/client` snapshots matched byte-for-byte; the SHA-256 of each canonical 55-line manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`. CI also promotes the six-line proof to the GitHub job summary and retains it as a release artifact. `npm run verify:release` fails if the built client differs from that reviewed fingerprint. The submission gate also binds four recaptured media assets to thirteen rendered/computed source fingerprints. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). The exact submitted commit must still receive remote CI and a final replay after the repository URL, deployment, video, and form copy are frozen; Windows remains unverified.
 
+The authorized no-physician-review candidate recaptured on July 20 passes the full local release verifier: `158/158` aggregate executions, license inventory, build, lint, typecheck, 55-file static fingerprint `523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5`, and a 59-asset Cloudflare dry run. The exact public commit, remote CI, and deployed-byte comparison are recorded only after publication.
+
 The release bundle can also be built and checked without publishing:
 
 ```bash
@@ -84,7 +86,7 @@ npm run release:freeze -- \
 
 The command refuses to overwrite a prior final receipt. Preserve an unsuccessful or superseded freeze before starting a separately labeled attempt.
 
-Publication and licensing remain explicit release actions. The standing completion target is a public source repository with an entrant-approved open-source license plus a public static demo; the current checkout remains `UNLICENSED` until that authorization is received. The rules-compliant fallback is a private repository shared with both judging addresses, but that fallback does not satisfy this task's stricter public-repository goal. Either route still requires free judge access and exact-commit CI verification before submission.
+The entrant authorized a public source release under the MIT License plus a public static demo. The checkout now carries that license in `LICENSE`, `package.json`, and `package-lock.json`. Publication still requires logged-out source access, detected license metadata, and successful exact-commit CI before submission.
 
 ### Verified platform boundary
 
@@ -93,7 +95,7 @@ Publication and licensing remain explicit release actions. The standing completi
 | Source install and release verification | Fresh-clone commit `87dee97` passes the complete verifier on macOS 26.5.2 arm64/Node 24.14.0 and local Debian 12 arm64/Node 22.23.1; both yield the same canonical physical 55-file `dist/client` byte manifest and pass the 59-asset Wrangler dry run | Verified only for that exact candidate and those exact local environments; remote CI and an exact submitted-commit replay remain |
 | Browser replay | A fresh production-Chrome session passed the current source-hash-bound reference compile/verify and included-sample local compile/export, with exact CLI parity, red/green regression execution, no requests after the two expected sample fetches, no `/.rsc`/`404` navigation, and zero console warnings or errors; exact 390 x 844 reference and local replays had no horizontal overflow | Chrome on macOS is verified for these paths and mobile viewport; no broad browser matrix is claimed |
 | Static hosting package | Wrangler dry run passes with 59 assets | Packaging is verified; no public deployment exists yet |
-| Linux | Fresh-clone commit `87dee97` passes locally in a Debian 12 arm64 container with Node 22.23.1; `157/158` aggregate tests pass and the one case-insensitive-filesystem test is expectedly skipped | This is one local Linux environment, not a browser matrix; remote GitHub Actions has not run in the judge-shared repository |
+| Linux | Fresh-clone commit `87dee97` passes locally in a Debian 12 arm64 container with Node 22.23.1; `157/158` aggregate tests pass and the one case-insensitive-filesystem test is expectedly skipped | This is one local Linux environment, not a browser matrix; remote GitHub Actions has not yet run for the current public-release commit |
 | Windows | No clean checkout or browser run | Unverified |
 
 ## Portable evaluator and compiler
@@ -193,7 +195,7 @@ The declared rules link to current public guidance from:
 - [ACOG — Preeclampsia and High Blood Pressure During Pregnancy](https://www.acog.org/womens-health/faqs/preeclampsia-and-high-blood-pressure-during-pregnancy)
 - [ACOG — 3 Conditions to Watch for After Childbirth](https://www.acog.org/womens-health/experts-and-stories/the-latest/3-conditions-to-watch-for-after-childbirth)
 
-The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. The [clinical claim audit](docs/CLINICAL_CLAIM_AUDIT.md) maps every remaining medical statement to primary public guidance or an explicit non-claim boundary. Licensed-physician fixture/wording review remains pending. See the [validation plan](docs/VALIDATION_PLAN.md) and [external review packet](docs/EXTERNAL_REVIEW_PACKET.md).
+The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. The [clinical claim audit](docs/CLINICAL_CLAIM_AUDIT.md) maps every remaining medical statement to primary public guidance or an explicit non-claim boundary. No physician fixture/wording review was performed. See the [validation plan](docs/VALIDATION_PLAN.md) and [external review packet](docs/EXTERNAL_REVIEW_PACKET.md).
 
 ## Repository map
 
@@ -229,4 +231,4 @@ See the [OpenAI Build Week submission checklist](docs/SUBMISSION_FORM_CHECKLIST.
 
 ## License
 
-The current Build Week release plan is a public static demo plus a private source repository shared with the two required judging accounts. WitnessPatch source remains all rights reserved; third-party components retain the licenses and notices recorded in `THIRD_PARTY_NOTICES.md`. If the team later chooses a public source repository, it must first select a deliberate project license and repeat the distribution-scoped audit.
+The Build Week release plan is a public static demo plus a public MIT-licensed source repository. Third-party components retain the licenses and notices recorded in `THIRD_PARTY_NOTICES.md`. The MIT license applies to WitnessPatch source authored or controlled by the entrant; it does not replace upstream third-party terms.

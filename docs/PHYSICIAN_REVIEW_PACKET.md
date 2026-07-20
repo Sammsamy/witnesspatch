@@ -1,5 +1,7 @@
 # WitnessPatch V2 licensed-physician fixture and wording review
 
+Current submission status: **not performed.** This unused packet is retained only for a possible future scoped review; the current submission does not claim physician review or clinical validation.
+
 Use the generated handoffs with the licensed-physician session in `docs/SAME_DAY_VALIDATION_PROTOCOL.md`. The generator is an optional facilitator tool, separate from the Node judge path. It emits three byte-linked records from the same clean frozen checkout:
 
 - `output/pdf/witnesspatch-physician-first-look.pdf`: Page 1 only; send or show this first.

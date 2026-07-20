@@ -291,7 +291,7 @@ export async function verifyArtifactsV2() {
   const clinicalScope = await readJson(join(runDir, "clinical-scope.json"));
   assert.equal(
     clinicalScope.status,
-    "source_linked_fixture_wording_review_pending"
+    "source_linked_fixture_wording_review_not_performed"
   );
   assert.deepEqual(clinicalScope.blood_pressure_scope.authored_endpoints, [
     "118/74",
@@ -315,7 +315,7 @@ export async function verifyArtifactsV2() {
   );
   assert.equal(
     clinicalScope.verification_boundary.fixture_wording_review,
-    "pending"
+    "not_performed"
   );
   assert.equal(
     clinicalScope.verification_boundary.clinical_validation,
@@ -323,7 +323,7 @@ export async function verifyArtifactsV2() {
   );
   assert.equal(
     clinicalScope.verification_boundary.legacy_artifact_field,
-    "clinician_validation=pending is retained as a legacy per-artifact field for schema and provenance compatibility; it is not the canonical fixture-review or clinical-validation state"
+    "clinician_validation=pending is retained solely as a legacy per-artifact field for schema and provenance compatibility; no physician review was performed, and this field is not the canonical fixture-review or clinical-validation state"
   );
 
   const archivedV1 = await readJson(
@@ -393,7 +393,7 @@ export async function verifyArtifactsV2() {
     manifest.build_week_extension.fresh_v2_sol_candidate_installed,
     false
   );
-  assert.equal(manifest.clinical_scope.fixture_wording_review, "pending");
+  assert.equal(manifest.clinical_scope.fixture_wording_review, "not_performed");
   assert.equal(manifest.clinical_scope.clinical_validation, "not_claimed");
   assert.equal(manifest.clinical_scope.grader_infers_numeric_threshold, false);
   assert.equal(manifest.clinical_scope.exact_negative_control_only, true);

@@ -2,9 +2,9 @@
 
 ## Current status
 
-The product flow is locally verified. A `173.080`-second AI-narrated fallback has been rendered from the exact current narration table, SRT, and silent master with verified H.264 video, AAC audio, and sentence-level cue alignment; the official FAQ permits AI narration. It remains a local candidate, has not been uploaded, and must be auditioned before use. Founder narration remains preferable. The final public YouTube video required by the [Official Rules](https://openai.devpost.com/rules) does not yet exist; keep any uploaded cut below three minutes.
+The product flow is locally verified. The existing local AI-narrated fallback and silent master predate the explicit no-physician-review disclosure and are not final submission media. They must be regenerated from this current narration table, SRT, and app state. Founder narration remains preferable. The final public YouTube video required by the [Official Rules](https://openai.devpost.com/rules) does not yet exist; keep any uploaded cut below three minutes.
 
-Do not say the brother is a teammate until he has joined the Devpost draft and contributed. The founder may truthfully say, “I’m a third-year medical student”; that explains motivation, not clinical authority.
+The entrant is submitting individually; do not introduce a teammate or shared-build claim. The founder may truthfully say, “I’m a third-year medical student”; that explains motivation, not clinical authority.
 
 ## Cut-ready script
 
@@ -19,7 +19,7 @@ Do not say the brother is a teammate until he has joined the Devpost draft and c
 | `1:38–1:55` | “Back on the reference, the verifier checks 23 saved files, recalculates both scores, and runs four challenges. Same case and rules: 50 becomes 100 with no critical failures.” | Select **Verify retained repair** and wait for **Freshly verified in this browser**. First hold on the explicit original-failure-red / retained-repair-pass hero with `100` and `0`; then center the repaired response so **Contract satisfied** is separately visible. |
 | `1:55–2:17` | “The retained reference repair and Sol’s proposal stay separate. The reference repair passes four checks. Sol’s proposal remains quarantined; the browser reads constrained data, and only the local verifier runs its code.” | Select **How it works** to show **Repair diff** and `4/4`, then select **Audit receipt**. Point to **quarantined · not installed** and **Node only · browser interprets JSON IR**. |
 | `2:17–2:37` | “The receipt records all 23 file checks, two fresh regrades, and four checks on Sol’s proposal. It records the requested model setup, not proof of which model was served.” | Show `23/23`, fresh `2/2`, fresh `4/4`, and the requested model configuration. |
-| `2:37–2:53` | “The intended user is a healthcare-agent evaluation engineer moving a captured failure into code review. No patient data, API key, or live model call. Physician review is pending; this proves one synthetic path, not clinical safety.” | End on the receipt with **None · fully synthetic**, **API key Not required**, **Licensed-physician fixture/wording review pending**, **Clinical validation not claimed**, and **Clinical use Not permitted** visible. |
+| `2:37–2:53` | “The user is a healthcare-agent evaluation engineer. No patient data, API key, or live model call. No physician review was performed; clinical validation is not claimed.” | End on the receipt with **None · fully synthetic**, **API key Not required**, **Licensed-physician fixture/wording review not performed**, **Clinical validation not claimed**, and **Clinical use Not permitted** visible. |
 
 ## Recording preflight
 
