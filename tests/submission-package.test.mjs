@@ -140,6 +140,10 @@ test("authenticated overview copy stays inside the recorded field limits", async
     pitch,
     "Turn one synthetic missed deadline into a portable red test: freeze what the agent knew, check whether action happened on time, then verify any repair offline before trusting it.",
   );
+  assert.match(draft, /## Inspiration\n/);
+  assert.match(draft, /## Approach\n/);
+  assert.match(draft, /## Challenges\n/);
+  assert.match(draft, /## What I learned\n/);
   assert.doesNotMatch(draft, /`OpenAI API`,/);
 
   const tagsSection = draft.match(

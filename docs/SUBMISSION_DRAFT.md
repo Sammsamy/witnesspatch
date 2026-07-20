@@ -44,6 +44,14 @@ The retained V2 patch must fix the urgent fixture without changing the locked gr
 5. Apply a retained, inspectable V2 target-policy patch and execute four expected paths: urgent before, urgent after, exact-fact negative control, and always-escalate mutation.
 6. In the browser, verify `23/23` exact hashes, recompute the reference repair's `2/2` regrades and `4/4` holdouts, and separately interpret the fresh candidate's declarative JSON IR across `2/2` cases and `4/4` mutation holdouts before displaying the repaired score. Retained JavaScript is not executed in the browser.
 
+## Challenges
+
+The hardest problem was temporal, not visual: a grader that can see later facts can accidentally give an agent credit for information it did not have before the deadline. WitnessPatch therefore compiles only the earliest failed critical prefix and keeps recorded decisions fixed while reducing its witness. A second challenge was making the browser and CLI agree on the exact nine exported bytes without allowing path tricks, stale evaluations, or a polished UI to unlock a false green result. A third was keeping the healthcare example useful without turning a synthetic software oracle into an unsupported clinical claim.
+
+## What I learned
+
+Hashes can prove that bytes stayed the same, but not who published them or whether the underlying clinical rule is correct. A passing repair is also insufficient by itself: without an exact nearby control and a deliberately bad mutation, an always-escalate policy can look “fixed.” The most useful role for GPT-5.6 here was proposing bounded declarative policy logic while deterministic code retained authority over validation, compilation, replay, and every public verdict. Finally, judge usability is part of technical quality—the repository now reduces the full proof to one command and a six-line result while preserving the deeper artifacts for inspection.
+
 ## Built with
 
 Use these `22/25` tags:
