@@ -1,6 +1,6 @@
 # Build Week submission form checklist
 
-This file separates confirmed public requirements from authenticated fields and human facts that Codex cannot invent or submit. No Devpost project content has been saved or submitted. The separately authorized Codex-credit request was submitted July 13 and received a Google Forms success receipt; approval and delivery remain unconfirmed. An official Devpost manager clarified that the request email must match the Devpost registration, as ours did, while the receiving ChatGPT/Codex account may use a different email.
+This file separates confirmed public requirements from authenticated fields and human facts that Codex cannot invent. The authorized Devpost draft fields described below have been saved; the final agreement remains unchecked and the project has not been submitted. The separately authorized Codex-credit request was submitted July 13 and received a Google Forms success receipt; approval and delivery remain unconfirmed. An official Devpost manager clarified that the request email must match the Devpost registration, as ours did, while the receiving ChatGPT/Codex account may use a different email.
 
 ## Confirmed public fields and evidence
 
@@ -9,7 +9,7 @@ This file separates confirmed public requirements from authenticated fields and 
 - [x] Category: `Developer Tools`.
 - [x] English project description and 22/25 truthful “Built with” tags frozen in `docs/SUBMISSION_DRAFT.md`.
 - [x] Four candidate direct 1200 x 800 PNG media assets were recaptured from the current source-hash-bound production build and recorded by exact byte size, SHA-256, and thirteen rendered/computed source fingerprints in `submission/media/MANIFEST.md`; no upload has occurred and final external-field freeze remains pending.
-- [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6. The current no-physician-review screen master is verified at `173.080` seconds with exact geometry and no audio; founder voice, full audition, and public upload remain required.
+- [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6. The replacement no-physician-review screen master is hash-bound and fully decoded at `148.000` seconds with exact H.264 geometry and no audio; founder voice, full audition, and public upload remain required.
 - [x] Add a fail-closed `npm run video:founder` handoff that combines one cue-aligned founder track with the reviewed silent master, normalizes audio, checks the exact timing/geometry/codecs, refuses overwrite, and records hashes without claiming it can verify the speaker or spoken words.
 - [x] Repository URL: `https://github.com/Sammsamy/witnesspatch` is public and GitHub detects MIT.
 - [x] README includes local setup, sample inputs, supported and unverified platform boundaries, Codex collaboration, GPT-5.6 contribution, and retained human decisions.
@@ -19,7 +19,7 @@ This file separates confirmed public requirements from authenticated fields and 
 
 ## Authenticated form audit
 
-The joined challenge's authenticated submission manager was rechecked read-only on July 20. Draft `1079808` remains `Untitled`, shows `1/5` steps complete, lists only its creator, and has blank overview, story, tags, links, media/video, category, repository, judge-testing, developer-tool, and `/feedback` fields. No project content was saved or submitted during the audit.
+The joined challenge's authenticated submission manager was rechecked and edited with authorization on July 20. Draft `1079808` lists only Fuzlullah Syed and remains `2/5`: the exact title, pitch, 790-word story, 22 Devpost-normalized tags, live/repository links, `Individual`, `United States`, `Developer Tools`, repository field, judge test path, and developer-tool instructions are saved. Thumbnail/gallery upload is blocked only by the Chrome extension's disabled local-file access; the public video and `/feedback` ID do not yet exist. The final agreement remains unchecked and nothing has been finally submitted.
 
 - [x] Open the joined challenge's submission manager while logged in and confirm an OpenAI Build Week draft exists.
 - [x] Record the authenticated fields before drafting into the form:
@@ -28,18 +28,19 @@ The joined challenge's authenticated submission manager was rechecked read-only 
   - Judge/organizer details: optional file upload up to `35 MB`; required submitter type, country of residence, category, repository URL, and `/feedback` Session ID; optional judge test URL/instructions; and developer-tool installation/platform/testing instructions.
   - Finalization: one checkbox affirming that every team member agrees to the Official Rules and Devpost Terms of Service, followed by the consequential **Submit project** action.
 - [x] Record media constraints: thumbnail and gallery accept JPG, PNG, or GIF up to `5 MB` each with `3:2` recommended; gallery allows up to `15` images.
-- [x] Confirm teammate flow: invite by email or private link before final submission; every teammate must join and accept. The live draft currently has only its creator, so the brother is not yet on the team.
-- [ ] Save project content only after the team reviews the exact public and judge-only fields; the current blank draft does not count as approval.
+- [x] Confirm teammate flow and the entrant's final choice: the live draft has only Fuzlullah Syed and is saved as an individual submission; the brother is not a teammate.
+- [x] Save the approved title, pitch, exact story, normalized tags, public links, submitter type, country, category, repository, judge testing path, and developer-tool instructions.
+- [ ] Enable Chrome extension local-file access, then upload the reviewed thumbnail and four 1200 x 800 gallery PNGs without altering their bytes.
 - [ ] Do not submit until the final requirement-by-requirement audit passes.
 
 ## Human eligibility and representation
 
 - [x] The current project creator is registered for OpenAI Build Week and has an authenticated draft.
-- [x] The current creator reports United States residence; the United States is on the official supported-country list. Age-of-majority and conflict checks remain separate.
-- [ ] Choose the truthful final entrant type: submit solo unless the brother has actually contributed, registered, joined the draft, accepted the invitation, and agreed to the rules before July 21 at 5:00 PM PT.
-- [ ] Confirm the creator is at least the age of majority, resides in an eligible jurisdiction, and has no excluded OpenAI/Devpost/judge/employer/affiliate conflict.
-- [ ] If entering as a team, separately confirm the brother's age, eligible residence, conflicts, accepted membership, contributions, designated representative, and the representative's authority; otherwise mark every team-only item not applicable and make no team claim.
-- [ ] Ownership of all original code, copy, media, and submitted assets is confirmed.
+- [x] The creator confirmed United States residence; the United States is on the official supported-country list and is saved in the draft.
+- [x] Save the truthful final entrant type as `Individual`; Fuzlullah Syed is the sole entrant.
+- [x] The creator confirmed he is at least the age of majority, resides in the United States, and has no excluded OpenAI/Devpost conflict.
+- [x] Team-only eligibility and authority checks are not applicable because the submission is individual and makes no brother/team claim.
+- [x] The creator confirmed ownership of, or authorization to use, all submitted code and assets.
 - [ ] Confirm the project was not developed or derived with prohibited OpenAI/Devpost financial or preferential support; resolve the Section 4 ordinary-paid-plan ambiguity with the organizer.
 
 ## Repository and release choice

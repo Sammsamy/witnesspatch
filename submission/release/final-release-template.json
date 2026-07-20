@@ -7,9 +7,9 @@
   "static_client_manifest_sha256": "523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5",
   "submission_media": {
     "01-thumbnail-failure.png": "89a7215a12e38bdad8b20f68bcaa5e1213854eb029f0753708821e5aee486633",
-    "02-local-input-compiled-red.png": "1fac0225fb5d06675d94ea66b50396742c03fe811dc79f8e4d034cd43f129a67",
+    "02-local-input-compiled-red.png": "ea776cd9ea2cfb4585768171f547f57b65349f4deb3bae31c73e6461bcebb1cf",
     "03-reference-compiled-red.png": "65d4a36bb46bc9f1b198eea829655b172f65a52d2e8c3166a0d035cba1c27e78",
-    "04-reference-verified-receipt.png": "474efa03f0b745fcabab0f8f8e7477c981829ec8901ac8f64fdbda91795dfcb7"
+    "04-reference-verified-receipt.png": "abffffc42a85ebafecb643c3e7f290cc844ad74ede2e106333116701f3dd7761"
   },
   "repository_url": null,
   "deployment_url": null,

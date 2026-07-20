@@ -64,9 +64,9 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
-The entrant-local silent master was regenerated from the public deployment on July 20 after the no-physician-review disclosure was added. It is `173.080` seconds at `1400 x 900`, contains no audio, and ends on the explicit `not_performed` / `not claimed` / `Not permitted` receipt. The founder voice, public YouTube upload, and human audition remain incomplete.
+The entrant-local silent master was recaptured from the public deployment on July 20 with visible action callouts, then shortened only across idle holds. It is `148.000` seconds at `1400 x 900`, contains one H.264 video stream and no audio, and ends on the explicit `not_performed` / `not claimed` / `Not permitted` receipt. Its reviewed SHA-256 is `7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8`; the assembler rejects any other bytes. Founder voice, public YouTube upload, and human audition remain incomplete.
 
-To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:53 screen cut, run the fail-closed assembler below. It refuses the wrong screen geometry, a non-silent or wrong-duration master, founder audio outside the narrow timing window, existing outputs, and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths; the final release freeze honors the same `ffprobe` override.
+To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:28 screen cut, run the fail-closed assembler below. It refuses the wrong screen bytes, codec, geometry, silence, or duration; founder audio shorter than 2:22 or longer than 2:27.5; existing outputs; and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths for this assembly command. For `release:freeze`, prefer putting the `ffprobe` directory on `PATH` and leave both overrides unset so the same environment can run the full release verifier.
 
 ```bash
 npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"
@@ -161,8 +161,8 @@ The retained V2 reference repair and the fresh candidate remain separate evidenc
 
 | AI-accelerated work | Human decision retained |
 | --- | --- |
-| Codex implemented and attacked the post-start compiler, browser verifier, test suite, and release workflow | The team chose the problem, narrowed the claim, rejected causal and clinical overclaims, and owns every submitted line and product decision |
-| A fresh Codex CLI workflow requested GPT-5.6 Sol with Ultra reasoning to produce one schema-constrained declarative repair candidate | The team authored the contracts and fixed compiler, withheld the holdout definition, quarantined the candidate, and did not install it |
+| Codex implemented and attacked the post-start compiler, browser verifier, test suite, and release workflow | The entrant chose the problem, narrowed the claim, rejected causal and clinical overclaims, and owns every submitted line and product decision |
+| A fresh Codex CLI workflow requested GPT-5.6 Sol with Ultra reasoning to produce one schema-constrained declarative repair candidate | The entrant authored the contracts and fixed compiler, withheld the holdout definition, quarantined the candidate, and did not install it |
 | Codex helped enumerate adversarial verifier attacks and release checks | Deterministic code executes every displayed grade; AI commentary cannot change the verdict |
 | GPT-5.6 output is retained byte-for-byte with prompt/input links and hashes | The retained reference repair is separately inspectable and is never relabeled as the fresh model candidate |
 

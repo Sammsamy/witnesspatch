@@ -18,7 +18,7 @@ const defaultVideoFile = join(
   projectRoot,
   "output",
   "playwright",
-  "witnesspatch-founder-screen-master-final.webm",
+  "witnesspatch-founder-screen-master-final.mp4",
 );
 const defaultOutputFile = join(
   projectRoot,
@@ -27,6 +27,10 @@ const defaultOutputFile = join(
   "witnesspatch-demo-founder.mp4",
 );
 const valueArguments = new Set(["--audio-file", "--video-file", "--out"]);
+export const reviewedScreenMaster = Object.freeze({
+  durationSeconds: 148,
+  sha256: "7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8",
+});
 
 function requireValue(condition, message) {
   if (!condition) throw new Error(message);
@@ -100,22 +104,25 @@ export function validateFounderMedia(videoReport, audioReport) {
     ? audioReport.streams.filter((stream) => stream.codec_type === "audio")
     : [];
   requireValue(
-    Number.isFinite(videoDuration) && videoDuration >= 173 && videoDuration < 174,
-    "The screen master must be the reviewed 2:53 cut.",
+    Number.isFinite(videoDuration) &&
+      videoDuration >= reviewedScreenMaster.durationSeconds - 0.5 &&
+      videoDuration <= reviewedScreenMaster.durationSeconds + 0.5,
+    "The screen master must be the reviewed 2:28 cut.",
   );
   requireValue(
     videoStreams.length === 1 &&
+      videoStreams[0].codec_name === "h264" &&
       videoStreams[0].width === 1400 &&
       videoStreams[0].height === 900,
-    "The screen master must contain one 1400 x 900 video stream.",
+    "The screen master must contain one H.264 1400 x 900 video stream.",
   );
   requireValue(
     masterAudioStreams.length === 0,
     "The reviewed screen master must remain silent before founder audio is added.",
   );
   requireValue(
-    Number.isFinite(audioDuration) && audioDuration >= 168 && audioDuration <= 174.5,
-    "Founder audio must run from 2:48 through no later than 2:54.5 so it stays aligned to the reviewed cut.",
+    Number.isFinite(audioDuration) && audioDuration >= 142 && audioDuration <= 147.5,
+    "Founder audio must run from 2:22 through no later than 2:27.5 so no final words are truncated.",
   );
   requireValue(
     narrationStreams.length >= 1,
@@ -183,6 +190,11 @@ export async function assembleFounderVideo(options) {
   );
   runCommand(ffmpeg, ["-version"], "ffmpeg is required to assemble the founder video.");
   runCommand(ffprobe, ["-version"], "ffprobe is required to validate the founder video.");
+  const videoBytes = await readFile(options.videoFile);
+  requireValue(
+    sha256(videoBytes) === reviewedScreenMaster.sha256,
+    "The screen master bytes do not match the reviewed 2:28 cut.",
+  );
   const sourceVideo = probe(options.videoFile, ffprobe);
   const sourceAudio = probe(options.audioFile, ffprobe);
   const source = validateFounderMedia(sourceVideo, sourceAudio);
@@ -242,7 +254,7 @@ export async function assembleFounderVideo(options) {
       (stream) => stream.codec_type === "audio",
     );
     requireValue(
-      Number.isFinite(finalDuration) && finalDuration >= 173 && finalDuration < 180,
+      Number.isFinite(finalDuration) && finalDuration >= 147.5 && finalDuration < 149,
       "Assembled founder video is not the expected sub-three-minute duration.",
     );
     requireValue(
@@ -259,8 +271,7 @@ export async function assembleFounderVideo(options) {
         finalAudio[0].channels === 2,
       "Assembled founder video must contain one 48 kHz stereo AAC stream.",
     );
-    const [videoBytes, audioBytes, outputBytes, captionsBytes] = await Promise.all([
-      readFile(options.videoFile),
+    const [audioBytes, outputBytes, captionsBytes] = await Promise.all([
       readFile(options.audioFile),
       readFile(temporaryOutput),
       readFile(join(projectRoot, "submission", "video", "witnesspatch-demo.en.srt")),

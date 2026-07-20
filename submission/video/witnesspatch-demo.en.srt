@@ -1,147 +1,128 @@
 1
-00:00:00,000 --> 00:00:04,000
+00:00:00,000 --> 00:00:05,000
 I’m Fuzlullah Syed, a third-year
 medical student.
 
 2
-00:00:04,000 --> 00:00:08,000
-WitnessPatch turns a missed action
-deadline into a portable
+00:00:05,000 --> 00:00:10,000
+AI agents can sound reasonable
+and still act too late.
 
 3
-00:00:08,000 --> 00:00:13,000
-red test.
+00:00:10,000 --> 00:00:15,000
+WitnessPatch freezes what the agent knew
+at T-plus-two and compiles the missed
 
 4
-00:00:13,000 --> 00:00:18,000
-At T-plus-two, the agent knows the
-synthetic patient is eight days
+00:00:15,000 --> 00:00:20,000
+deadline into a portable red test.
 
 5
-00:00:18,000 --> 00:00:23,000
-postpartum, with an unrelieved headache
-and visual changes. It still waits
+00:00:20,000 --> 00:00:25,000
+This fully synthetic baseline scores
+fifty, with two critical breaches.
 
 6
-00:00:23,000 --> 00:00:29,000
-for blood pressure arriving four minutes
-later, breaking two locked rules.
+00:00:25,000 --> 00:00:29,000
+Codex built and stress-tested the compiler
+during Build Week; GPT-5.6 Sol
 
 7
 00:00:29,000 --> 00:00:34,000
-I chose the synthetic case and review
-boundary. During Build Week,
+proposed separate repair data.
 
 8
 00:00:34,000 --> 00:00:40,000
-Codex built and stress-tested the
-compiler. A separate run requesting
+Locked code—not the model—scores it and
+builds a nine-file Node test bundle.
 
 9
 00:00:40,000 --> 00:00:46,000
-GPT-5.6 Sol proposed repair data; locked
-code decides every score.
+The test stays red at INV-02,
+T-plus-two. The manifest, original inputs,
 
 10
-00:00:46,000 --> 00:00:50,000
-Compile Failure checks two saved inputs,
+00:00:46,000 --> 00:00:52,000
+earliest failing prefix, receipt, and
+executable test travel together as a
 
 11
-00:00:50,000 --> 00:00:55,000
-recalculates the baseline, and builds a
-nine-file Node test bundle.
+00:00:52,000 --> 00:00:58,000
+conventional Node package. A reviewer can
+inspect and run it offline,
 
 12
-00:00:55,000 --> 00:01:00,000
-It calls no model and does not rerun
-the agent.
+00:00:58,000 --> 00:01:04,000
+without an API key, model call,
+or target rerun.
 
 13
-00:01:00,000 --> 00:01:04,000
-It pinpoints INV-02 at T-plus-two and
+00:01:04,000 --> 00:01:10,000
+This is not a canned demo. Compile Your
+Files loads a schema-valid synthetic case
 
 14
-00:01:04,000 --> 00:01:09,000
-narrows nine facts to three with the
-response fixed.
+00:01:10,000 --> 00:01:16,000
+and failed run. The browser hashes and
+regrades them locally; here I load the
 
 15
-00:01:09,000 --> 00:01:14,000
-The exported test stays red; the repair
-is checked separately.
+00:01:16,000 --> 00:01:22,000
+included pair, confirm it is synthetic,
+and compile.
 
 16
-00:01:14,000 --> 00:01:20,000
-But this is not just a canned replay.
-Compile Your Files accepts a
+00:01:22,000 --> 00:01:27,000
+The result is the same nine-file red
+bundle, with two computed hashes
 
 17
-00:01:20,000 --> 00:01:26,000
-synthetic case and failed run, hashes and
-regrades them only in this browser,
+00:01:27,000 --> 00:01:32,000
+and zero claims of external verification.
 
 18
-00:01:26,000 --> 00:01:32,000
-labels them zero externally verified,
+00:01:32,000 --> 00:01:39,000
+Back on the reference, the verifier checks
+twenty-three saved files and recomputes
 
 19
-00:01:32,000 --> 00:01:38,000
-and exports the same nine-file format.
+00:01:39,000 --> 00:01:45,000
+both runs. The retained repair reaches
+one hundred with zero critical failures,
 
 20
-00:01:38,000 --> 00:01:43,000
-Back on the reference, the verifier
-checks 23 saved files, recalculates
+00:01:45,000 --> 00:01:51,000
+while the original regression remains red.
 
 21
-00:01:43,000 --> 00:01:49,000
-both scores, and runs four challenges.
-Same case and rules: 50 becomes 100
+00:01:51,000 --> 00:01:57,000
+The repair must pass four holdouts.
+An exact-fact control still passes;
 
 22
-00:01:49,000 --> 00:01:55,000
-with no critical failures.
+00:01:57,000 --> 00:02:03,000
+an always-escalate mutant fails.
+Sol’s proposal stays quarantined, and the
 
 23
-00:01:55,000 --> 00:02:02,000
-The retained reference repair and
-Sol’s proposal stay separate.
+00:02:03,000 --> 00:02:09,000
+browser only interprets constrained data.
 
 24
-00:02:02,000 --> 00:02:09,000
-The reference repair passes four checks.
-Sol’s proposal remains quarantined;
+00:02:09,000 --> 00:02:14,000
+The receipt records every hash, regrade,
+holdout, and requested model setup;
 
 25
-00:02:09,000 --> 00:02:17,000
-the browser reads constrained data, and
-only the local verifier runs its code.
+00:02:14,000 --> 00:02:19,000
+it does not claim which model was served.
+This is developer tooling for synthetic
 
 26
-00:02:17,000 --> 00:02:23,000
-The receipt records all 23 file checks,
-two fresh regrades, and four checks on
+00:02:19,000 --> 00:02:24,000
+tests: no patient data, no clinical use,
+no physician review, and no clinical
 
 27
-00:02:23,000 --> 00:02:30,000
-Sol’s proposal. It records the requested
-model setup,
-
-28
-00:02:30,000 --> 00:02:37,000
-not proof of which model was served.
-
-29
-00:02:37,000 --> 00:02:42,000
-The user is a healthcare-agent
-evaluation engineer.
-
-30
-00:02:42,000 --> 00:02:47,000
-No patient data, API key,
-or live model call.
-
-31
-00:02:47,000 --> 00:02:53,000
-No physician review was performed;
-clinical validation is not claimed.
+00:02:24,000 --> 00:02:28,000
+validation claim.

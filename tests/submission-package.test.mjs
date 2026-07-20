@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
   parseFounderVideoArguments,
+  reviewedScreenMaster,
   validateFounderMedia,
 } from "../build/assemble-founder-video.mjs";
 import {
@@ -169,9 +170,15 @@ test("authenticated overview copy stays inside the recorded field limits", async
   assert.match(draft, /## Challenges\n/);
   assert.match(draft, /## What I learned\n/);
   assert.doesNotMatch(draft, /`OpenAI API`,/);
+  const story = draft.match(
+    /<!-- DEVPOST_STORY_START -->\n([\s\S]*?)\n<!-- DEVPOST_STORY_END -->/,
+  );
+  assert.ok(story, "Missing the exact bounded Devpost story");
+  const storyWordCount = story[1].match(/\b[\w'-]+\b/g)?.length ?? 0;
+  assert.ok(storyWordCount >= 650 && storyWordCount <= 850);
 
   const tagsSection = draft.match(
-    /Use these `22\/25` tags:\n\n([^\n]+)\n/,
+    /Devpost normalized the saved selection to these `22\/25` tags:\n\n([^\n]+)\n/,
   );
   assert.ok(tagsSection, "Missing the exact Built with tag list");
   const tags = [...tagsSection[1].matchAll(/`([^`]+)`/g)].map(
@@ -180,6 +187,30 @@ test("authenticated overview copy stays inside the recorded field limits", async
   assert.equal(tags.length, 22);
   assert.equal(new Set(tags).size, 22);
   assert.ok(!tags.includes("OpenAI API"));
+  assert.deepEqual(tags, [
+    "GPT-5.6",
+    "Tailwind",
+    "Cloudflare",
+    "JSON",
+    "Web",
+    "Crypto",
+    "GitHub",
+    "AI",
+    "Agent",
+    "Regression",
+    "Synthetic",
+    "Healthcare",
+    "Node.js",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Vite",
+    "OpenAI",
+    "Developer",
+    "Open",
+    "CI/CD",
+  ]);
 });
 
 test("judge-facing clinical source lists match the exact V2 fixture evidence", async () => {
@@ -650,7 +681,10 @@ test("the final release template binds local artifacts but cannot masquerade as 
     );
     const commandRunner = (command, args) => {
       if (command === "npm") return "release verified";
-      if (command === "ffprobe") {
+      if (
+        command === "ffprobe" ||
+        command === process.env.WITNESSPATCH_FFPROBE_BIN?.trim()
+      ) {
         return JSON.stringify({
           format: { duration: "173.08" },
           streams: [{ codec_type: "video" }, { codec_type: "audio" }],
@@ -801,42 +835,77 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
   assert.deepEqual(
     validateFounderMedia(
       {
-        format: { duration: "173.080" },
+        format: { duration: "148.000" },
         streams: [
-          { codec_type: "video", codec_name: "vp8", width: 1400, height: 900 },
+          { codec_type: "video", codec_name: "h264", width: 1400, height: 900 },
         ],
       },
       {
-        format: { duration: "171.250" },
+        format: { duration: "146.250" },
         streams: [{ codec_type: "audio", codec_name: "aac" }],
       },
     ),
-    { videoDuration: 173.08, audioDuration: 171.25 },
+    { videoDuration: 148, audioDuration: 146.25 },
   );
   assert.throws(
     () =>
       validateFounderMedia(
         {
-          format: { duration: "173.080" },
+          format: { duration: "148.000" },
           streams: [
-            { codec_type: "video", width: 1400, height: 900 },
+            { codec_type: "video", codec_name: "h264", width: 1400, height: 900 },
             { codec_type: "audio" },
           ],
         },
         {
-          format: { duration: "171.250" },
+          format: { duration: "146.250" },
           streams: [{ codec_type: "audio" }],
         },
       ),
     /screen master must remain silent/u,
   );
-  const [script, captions] = await Promise.all([
+  assert.throws(
+    () =>
+      validateFounderMedia(
+        {
+          format: { duration: "148.000" },
+          streams: [
+            { codec_type: "video", codec_name: "vp8", width: 1400, height: 900 },
+          ],
+        },
+        {
+          format: { duration: "146.250" },
+          streams: [{ codec_type: "audio" }],
+        },
+      ),
+    /one H\.264 1400 x 900 video stream/u,
+  );
+  assert.throws(
+    () =>
+      validateFounderMedia(
+        {
+          format: { duration: "148.000" },
+          streams: [
+            { codec_type: "video", codec_name: "h264", width: 1400, height: 900 },
+          ],
+        },
+        {
+          format: { duration: "147.501" },
+          streams: [{ codec_type: "audio" }],
+        },
+      ),
+    /no later than 2:27\.5/u,
+  );
+  const [script, captions, readme] = await Promise.all([
     readFile(new URL("../docs/DEMO_SCRIPT.md", import.meta.url), "utf8"),
     readFile(
       new URL("../submission/video/witnesspatch-demo.en.srt", import.meta.url),
       "utf8",
     ),
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
   ]);
+  assert.match(script, new RegExp(reviewedScreenMaster.sha256));
+  assert.match(readme, new RegExp(reviewedScreenMaster.sha256));
   const rowPattern =
     /^\| `(\d+):(\d+)–(\d+):(\d+)` \| “([^”]+)” \|/gm;
   const rows = [...script.matchAll(rowPattern)].map((match) => ({
@@ -847,7 +916,7 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
 
   assert.equal(rows.length, 10);
   assert.equal(rows[0].start, 0);
-  assert.equal(rows.at(-1).end, 173);
+  assert.equal(rows.at(-1).end, 148);
   assert.ok(rows.at(-1).end < 180);
 
   for (const [index, row] of rows.entries()) {
@@ -915,7 +984,7 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
 
   assert.ok(captionRows.length >= 25 && captionRows.length <= 35);
   assert.equal(captionRows[0].startMs, 0);
-  assert.equal(captionRows.at(-1).endMs, 173_000);
+  assert.equal(captionRows.at(-1).endMs, 148_000);
 
   const captionsByScriptRow = rows.map(() => []);
   for (const [index, caption] of captionRows.entries()) {
