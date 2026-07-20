@@ -62,7 +62,7 @@ Do not add `OpenAI API`; the product does not use it.
 
 ## What is different
 
-Failure-to-regression workflows are established: Trajectly, ORP, Braintrust, Promptfoo, AgentRx, and several public Build Week repositories cover substantial parts of replay, repair, evidence bundles, provenance, or CI. WitnessPatch does not claim those primitives. Its narrower demonstrated wedge is a **portable red-test compiler for missed action deadlines**: most evals ask whether an answer was acceptable; WitnessPatch asks whether the required action happened before its declared deadline using only the authored facts available then.
+Failure-to-regression and agent-verification workflows are established: Trajectly, ORP, Braintrust, Promptfoo, AgentRx, and public Build Week repositories including Ouroboros, OutcomeLoop, PatchPilot, and Sieve cover substantial parts of replay, repair, external verification, evidence receipts, provenance, or CI. WitnessPatch does not claim those primitives. Its narrower demonstrated wedge is a **portable red-test compiler for missed action deadlines**: most evals ask whether an answer was acceptable; WitnessPatch asks whether the required action happened before its declared deadline using only the authored facts available then, and emits the red test before any separate repair is trusted.
 
 - **Time-fenced action deadlines:** the grader checks which authored facts were visible at every decision and whether the required action occurred before its declared deadline.
 - **Portable conventional-test handoff:** a known failure plus an authored action contract becomes a nine-file `node:test` package with a documented WitnessPatch CLI dependency rather than only a platform dataset row or dashboard result.
