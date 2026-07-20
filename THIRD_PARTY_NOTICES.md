@@ -31,7 +31,7 @@ WitnessPatch depends on the following directly installed open-source packages. V
 
 Locked package entries inventoried: 624
 
-Locked dependency inventory SHA-256: `91cb572226c6ac83f70d6aa4a85b36bddac0a5fef4c6dcf52992c55c9e0efe89`
+Locked dependency inventory SHA-256: `cb5192ad33c1eebfee4eef8f3d10de8478bbde5b05d939ad757443becc212a3f`
 
 | SPDX expression recorded in lockfile | Entries |
 | --- | ---: |
