@@ -82,7 +82,7 @@ No honest process can guarantee `40/40`, a prize, or employment. Today the impac
 - [x] Recapture four direct 1200 x 800 product screenshots from the current source-hash-bound candidate and bind their bytes to thirteen source fingerprints; the 2:53 founder script and captions are prepared but the public video is not recorded.
 - [ ] Obtain at least one health-AI builder workflow interview.
 - [ ] Obtain a scoped licensed-physician fixture/wording review, or preserve `fixture_wording_review: pending`; keep `clinical_validation: not_claimed` regardless of that review's outcome.
-- [ ] Obtain ownership/license authorization, create the standing-goal public repository, and verify the exact default-branch commit plus CI from a logged-out account. If the entrant instead chooses the rules-compliant private fallback, disclose that the stricter public-repository goal remains unmet and verify both judging addresses have access.
+- [ ] Obtain ownership/license authorization, create the standing-goal public repository, and verify the exact default-branch commit plus CI from a logged-out account. The final freeze will reject any commit without a successful completed public `Verify` push run. If the entrant instead chooses the rules-compliant private fallback, disclose that the stricter public-repository goal remains unmet and verify both judging addresses have access.
 - [ ] Deploy the replay and verify it from a clean browser with no privileged session.
 - [ ] Record and upload the founder-voiced public video under three minutes with audio explaining both Codex and GPT-5.6.
 - [ ] From this primary task, submit `/feedback` with the existing session shared and capture the returned Session ID; do not substitute the technical task/thread UUID.

@@ -210,6 +210,62 @@ async function fetchRequired(fetchImpl, url, description, options = {}) {
   return response;
 }
 
+export function selectSuccessfulVerifyRun(payload, { commit, defaultBranch }) {
+  requireValue(
+    payload && Array.isArray(payload.workflow_runs),
+    "GitHub returned an invalid Actions workflow-runs response.",
+  );
+  const matchingRuns = payload.workflow_runs
+    .filter(
+      (run) =>
+        run &&
+        run.name === "Verify" &&
+        run.path === ".github/workflows/verify.yml" &&
+        run.event === "push" &&
+        run.head_sha === commit &&
+        run.head_branch === defaultBranch &&
+        run.status === "completed" &&
+        run.conclusion === "success",
+    )
+    .sort(
+      (left, right) =>
+        Number(right.run_number ?? 0) - Number(left.run_number ?? 0) ||
+        Number(right.run_attempt ?? 0) - Number(left.run_attempt ?? 0) ||
+        Number(right.id ?? 0) - Number(left.id ?? 0),
+    );
+  requireValue(
+    matchingRuns.length > 0,
+    "GitHub Actions must show a successful completed Verify push run for the exact default-branch commit.",
+  );
+  const selected = matchingRuns[0];
+  requireValue(
+    Number.isSafeInteger(selected.id) && selected.id > 0,
+    "The matching GitHub Actions run has no valid run ID.",
+  );
+  requireValue(
+    typeof selected.html_url === "string",
+    "The matching GitHub Actions run has no public URL.",
+  );
+  const runUrl = new URL(selected.html_url);
+  requireValue(
+    runUrl.protocol === "https:" && runUrl.hostname === "github.com",
+    "The matching GitHub Actions run has no canonical public GitHub URL.",
+  );
+  return Object.freeze({
+    workflow: selected.name,
+    workflow_path: selected.path,
+    event: selected.event,
+    status: selected.status,
+    conclusion: selected.conclusion,
+    run_id: selected.id,
+    run_number: selected.run_number,
+    run_attempt: selected.run_attempt,
+    head_sha: selected.head_sha,
+    head_branch: selected.head_branch,
+    html_url: runUrl.toString(),
+  });
+}
+
 async function verifyLocalAnchors(template, rootDir) {
   requireValue(
     template.schema_version === "1.0.0" &&
@@ -293,11 +349,28 @@ async function verifyPublicRepository({
       .includes(`${commit}\trefs/heads/${metadata.default_branch}`),
     "The exact frozen commit is not the public GitHub repository's default-branch tip.",
   );
+  const actionsUrl = new URL(
+    `https://api.github.com/repos/${repository.owner}/${repository.repository}/actions/runs`,
+  );
+  actionsUrl.searchParams.set("head_sha", commit);
+  actionsUrl.searchParams.set("status", "completed");
+  actionsUrl.searchParams.set("per_page", "100");
+  const actionsResponse = await fetchRequired(
+    fetchImpl,
+    actionsUrl,
+    "GitHub Actions workflow runs",
+    { headers: { Accept: "application/vnd.github+json", "User-Agent": "WitnessPatch" } },
+  );
+  const remoteCi = selectSuccessfulVerifyRun(await actionsResponse.json(), {
+    commit,
+    defaultBranch: metadata.default_branch,
+  });
   return Object.freeze({
     public: true,
     license_spdx: detectedLicense,
     default_branch: metadata.default_branch,
     exact_commit_is_default_branch_tip: true,
+    remote_ci: remoteCi,
   });
 }
 
@@ -521,7 +594,7 @@ export async function freezeFinalRelease({
       repository_clean: true,
     },
     boundary:
-      "This receipt binds one clean commit, public repository, deployed V2 manifest, local video bytes, reachable YouTube record, and entrant-confirmed /feedback and founder-voice facts. It does not prove clinical validity, adoption, or judge outcome.",
+      "This receipt binds one clean commit, its successful public Verify workflow run, public repository, deployed V2 manifest, local video bytes, reachable YouTube record, and entrant-confirmed /feedback and founder-voice facts. It does not prove clinical validity, adoption, or judge outcome.",
   });
   const bytes = `${JSON.stringify(record, null, 2)}\n`;
   const digest = sha256(bytes);

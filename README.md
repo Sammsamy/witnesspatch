@@ -60,7 +60,7 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
-After the public repository, deployment, founder-voice YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip; byte-checks the deployed V2 manifest; decodes the local video below 180 seconds with audio and video streams; checks YouTube oEmbed reachability; and requires explicit human confirmations for public visibility, founder voice, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit:
+After the public repository, deployment, founder-voice YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip and has a successful completed public `Verify` push run from `.github/workflows/verify.yml`; byte-checks the deployed V2 manifest; decodes the local video below 180 seconds with audio and video streams; checks YouTube oEmbed reachability; and requires explicit human confirmations for public visibility, founder voice, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit:
 
 ```bash
 npm run release:freeze -- \

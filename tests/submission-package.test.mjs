@@ -17,6 +17,7 @@ import {
   freezeFinalRelease,
   parseFfprobeReport,
   parseFreezeArguments,
+  selectSuccessfulVerifyRun,
   validateDeploymentUrl,
   validateFeedbackSessionId,
   validateRepositoryUrl,
@@ -566,6 +567,38 @@ test("the final release template binds local artifacts but cannot masquerade as 
       `${JSON.stringify(syntheticTemplate)}\n`,
     );
     const commit = "c".repeat(40);
+    const successfulWorkflowRun = {
+      id: 123456789,
+      name: "Verify",
+      path: ".github/workflows/verify.yml",
+      event: "push",
+      status: "completed",
+      conclusion: "success",
+      head_sha: commit,
+      head_branch: "main",
+      run_number: 14,
+      run_attempt: 1,
+      html_url: "https://github.com/Sammsamy/witnesspatch/actions/runs/123456789",
+    };
+    assert.equal(
+      selectSuccessfulVerifyRun(
+        { workflow_runs: [successfulWorkflowRun] },
+        { commit, defaultBranch: "main" },
+      ).run_id,
+      123456789,
+    );
+    assert.throws(
+      () =>
+        selectSuccessfulVerifyRun(
+          {
+            workflow_runs: [
+              { ...successfulWorkflowRun, conclusion: "failure" },
+            ],
+          },
+          { commit, defaultBranch: "main" },
+        ),
+      /successful completed Verify push run/u,
+    );
     const commandRunner = (command, args) => {
       if (command === "npm") return "release verified";
       if (command === "ffprobe") {
@@ -586,6 +619,16 @@ test("the final release template binds local artifacts but cannot masquerade as 
     };
     const fetchImpl = async (url) => {
       const href = String(url);
+      if (href.includes("/actions/runs?")) {
+        const requested = new URL(href);
+        assert.equal(requested.searchParams.get("head_sha"), commit);
+        assert.equal(requested.searchParams.get("status"), "completed");
+        assert.equal(requested.searchParams.get("per_page"), "100");
+        return new Response(
+          JSON.stringify({ workflow_runs: [successfulWorkflowRun] }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        );
+      }
       if (href.startsWith("https://api.github.com/repos/")) {
         return new Response(
           JSON.stringify({
@@ -626,6 +669,14 @@ test("the final release template binds local artifacts but cannot masquerade as 
     assert.equal(
       frozen.record.verification.repository.exact_commit_is_default_branch_tip,
       true,
+    );
+    assert.equal(
+      frozen.record.verification.repository.remote_ci.conclusion,
+      "success",
+    );
+    assert.equal(
+      frozen.record.verification.repository.remote_ci.head_sha,
+      commit,
     );
     assert.equal(frozen.record.verification.video.duration_seconds, 173.08);
     assert.equal(frozen.record.feedback_session_id, "feedback_123456");
