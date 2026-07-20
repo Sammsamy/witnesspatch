@@ -6,7 +6,7 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 
 ## Required human fields
 
-- Email. The form label does not specify an account type; the FAQ says the credit balance appears in the `chatgpt.com` account used to request it, so confirm the address associated with the intended ChatGPT/Codex account rather than assuming the Devpost-account email is interchangeable.
+- Email. An official Devpost manager clarified on July 20 that the request-form email must match the entrant's Devpost hackathon-registration email, while the ChatGPT/Codex account receiving the credit may use a different email. The request used the matching Devpost email.
 - First name
 - Last name
 - Country of residence
@@ -28,6 +28,8 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 - [x] Entrant read and explicitly accepted the linked Services Agreement.
 - [x] Entrant explicitly approved submitting the completed Google form.
 - [x] The authenticated browser displayed the success receipt; no personal response data was committed.
-- [x] The entrant later confirmed that the intended ChatGPT/Codex account email differs from the Devpost-account email entered in the generic form field. Keep both addresses private and treat account mapping as unresolved.
-- [ ] Check the original response-copy email for an organizer-enabled **Edit response** link. If none exists, ask the official Build Week support channel to correct the existing request; do not submit a duplicate because the FAQ limits requests to one code per entrant and the resources page now says supply is exhausted.
-- [ ] Monitor both supplied inboxes and `chatgpt.com` **Settings → Usage** on the intended account. The FAQ says this is where an awarded balance appears, but does not document how organizers resolve an email mismatch.
+- [x] The entrant later confirmed that the intended ChatGPT/Codex account email differs from the Devpost-account email entered in the generic form field. Keep both addresses private. This is permitted under the organizer clarification; no correction or duplicate request is needed.
+- [x] Preserve the matching Devpost email on the existing request and do not submit a duplicate; the FAQ limits requests to one code per entrant and the resources page now says supply is exhausted.
+- [ ] Monitor the Devpost-email inbox for the redemption message and `chatgpt.com` **Settings → Usage** on the intended account. Before redeeming, confirm the browser is signed into the intended personal ChatGPT/Codex workspace.
+
+Organizer clarification: [Codex Credit Request Denied — Email Mismatch Between Devpost and OpenAI Account](https://openai.devpost.com/forum_topics/44373-codex-credit-request-denied-email-mismatch-between-devpost-and-openai-account).

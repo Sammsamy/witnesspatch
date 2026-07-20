@@ -2,7 +2,21 @@
 
 This is a retained local reproducibility record, not independent third-party validation. It verifies the exact local macOS and Debian environments named below; it is not proof of remote CI, a broad Linux compatibility matrix, or Windows support.
 
-## Current exact source/media checkpoint
+## Current exact release candidate
+
+- Commit: `ff5ce1f8a9fd3c0a0e824415e62e312380d93485`
+- Source: fresh local clones with no inherited `node_modules`, generated output, or ignored workspace files
+- Commands in each clone: `npm ci` followed by `npm run verify:release`
+- macOS host: macOS 26.5.2 arm64; Node `v24.14.0`; npm `11.9.0`
+- macOS result: exit code `0`; 495 packages installed, 496 audited, zero vulnerabilities; all `157/157` aggregate test executions passed: `136/136` core, `6/6` rendered-product, `1/1` real development-server HTTP smoke, `8/8` submission-package, and `6/6` deployment-rendered checks
+- Linux host: local Docker container running Debian GNU/Linux 12 (bookworm) arm64; Node `v22.23.1`; npm `10.9.8`
+- Linux result: exit code `0`; 502 packages installed, 503 audited, zero vulnerabilities; `156/157` aggregate test executions passed, with only the case-insensitive-output-alias test expectedly skipped on the case-sensitive filesystem
+- Shared verified outcomes: the six-line zero-argument judge proof, detached-bundle verifier and adversarial coverage, both artifact profiles, production build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a Wrangler static-deployment dry run with 59 assets
+- Two-environment static snapshot: each `dist/client` directory contained 55 physical files; every canonical path and file SHA-256 row matched, and the SHA-256 of each identical canonical manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
+
+Neither temporary clone was used to edit the repository. This is exact local cross-platform evidence for the named candidate, not the still-unfrozen submitted commit. Remote CI, public deployment, video, judge access, external review, and Devpost completion remain unproved.
+
+## Previous exact source/media checkpoint
 
 - Commit: `1086426e933cc5f5874cde62232b66f422d52157`
 - Source: fresh local clones with no inherited `node_modules`, generated output, or ignored workspace files
