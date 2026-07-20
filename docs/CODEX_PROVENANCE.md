@@ -34,7 +34,7 @@ The raw receipt is retained as `public/runs/v2/sol-v2-receipt.json`; the proposa
 
 The browser validates exact bytes and links, reconstructs the prompt/compiler relationship, and safely interprets the retained JSON IR across `2/2` cases and `4/4` mutation holdouts without executing the retained JavaScript. The Node verifier executes the quarantined candidate and checks the same exact signature. The fresh candidate is not the retained reference repair, is not installed, and is not clinical or generalization evidence.
 
-The official submission also requires the Codex Session ID returned after `/feedback` is submitted for the task where most core functionality was built. That identifier has not yet been captured in this record. In this primary task, open `/feedback`, choose to share the existing session, submit, and preserve the returned Session ID; do not substitute the technical task/thread UUID.
+The official submission also requires the Codex Session ID returned after `/feedback` is submitted for the task where most core functionality was built. That identifier has not yet been added to this record; the technical task/thread UUID is not a substitute.
 
 ## Current V2 deterministic receipt
 

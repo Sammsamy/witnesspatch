@@ -8,7 +8,7 @@ This is an audit of public wording, not a medical review, clinical validation, e
 
 - `README.md`
 - `docs/SUBMISSION_DRAFT.md`
-- `docs/DEMO_SCRIPT.md` and `submission/video/witnesspatch-demo.en.srt`
+- `docs/DEMO_SCRIPT.md`, `submission/video/witnesspatch-demo.en.srt`, and the deterministic founder-caption transform in `build/assemble-founder-video.mjs`
 - `app/components/witnesspatch-lab.tsx`
 - the V2 case, target-policy, receipt, manifest, and evaluated-run artifacts under `cases/v2/`, `targets/demo-agent/v2/`, and `public/runs/v2/`
 

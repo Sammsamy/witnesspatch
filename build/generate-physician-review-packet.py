@@ -731,7 +731,7 @@ def write_page_subset(source: Path, destination: Path, page_indexes: list[int], 
         writer.add_page(reader.pages[page_index])
     writer.add_metadata({
         "/Title": title,
-        "/Author": "WitnessPatch Build Week team",
+        "/Author": "Fuzlullah Syed",
         "/Subject": "Bounded review of two fully synthetic fixtures and nine wording/source claims",
     })
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -809,7 +809,7 @@ def build_pdf(*, allow_dirty_preview: bool):
         topMargin=0.55 * inch,
         bottomMargin=0.57 * inch,
         title="WitnessPatch V2 Licensed-Physician Fixture and Wording Review",
-        author="WitnessPatch Build Week team",
+        author="Fuzlullah Syed",
         subject="Bounded review of two fully synthetic fixtures and nine wording/source claims",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="review")

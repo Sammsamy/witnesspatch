@@ -34,7 +34,7 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Relevant work in last 12 months:** yes / no
 **Qualification month/year, role, and activity type:**
 **Qualification evidence:** participant attestation / public project or contribution / unavailable
-**External to team:** yes / no
+**External to submission:** yes / no
 
 ### Environment
 
@@ -126,7 +126,7 @@ Copy this file once per frozen session. Keep the filled raw copy outside the rep
 **Active licensure status:** reviewer attestation / public registry checked / not established
 **Jurisdiction:**
 **Relevant practice area:**
-**External to team:** yes / no
+**External to submission:** yes / no
 **Conflict disclosure:**
 
 ### Pre-wording review

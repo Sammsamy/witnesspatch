@@ -11,7 +11,7 @@ Use this skill for requests to run, extend, repair, or audit WitnessPatch.
 
 - Accept only fully synthetic cases. Stop if a fixture may contain patient data or protected health information.
 - This repository is developer safety tooling, not clinical decision support, diagnosis, treatment, patient care, or a substitute for local policy.
-- Keep physician validation `pending` until a real, documented licensed review is supplied.
+- Keep canonical `fixture_wording_review: not_performed` and `clinical_validation: not_claimed` unless a documented scoped review justifies changing only the first field. The legacy per-artifact `clinician_validation: pending` field remains unchanged for schema compatibility and is not a clinical-validation state.
 - The engine validates declared source-ID linkage only. Semantic clinical support requires qualified human review.
 - Never let a model assign the final pass/fail verdict; deterministic grading is authoritative.
 - Never call the V2 exact-fact negative control a benign patient or evidence that care can be deferred.

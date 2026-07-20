@@ -31,6 +31,16 @@ export const reviewedScreenMaster = Object.freeze({
   durationSeconds: 148,
   sha256: "7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8",
 });
+const aiCaptionsFile = join(
+  projectRoot,
+  "submission",
+  "video",
+  "witnesspatch-demo.en.srt",
+);
+const aiIdentityCaption =
+  "This demo uses AI narration for Fuzlullah\nSyed, a third-year medical student.";
+const founderIdentityCaption =
+  "I’m Fuzlullah Syed, a third-year\nmedical student.";
 
 function requireValue(condition, message) {
   if (!condition) throw new Error(message);
@@ -38,6 +48,20 @@ function requireValue(condition, message) {
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+export function founderCaptionsFromAi(captions) {
+  requireValue(typeof captions === "string", "AI captions must be text.");
+  const firstMatch = captions.indexOf(aiIdentityCaption);
+  requireValue(
+    firstMatch >= 0 && firstMatch === captions.lastIndexOf(aiIdentityCaption),
+    "Reviewed AI captions must contain exactly one expected AI-identity cue.",
+  );
+  requireValue(
+    !captions.includes(founderIdentityCaption),
+    "Reviewed AI captions already contain the founder-identity cue.",
+  );
+  return captions.replace(aiIdentityCaption, founderIdentityCaption);
 }
 
 function runCommand(command, args, failureMessage) {
@@ -172,20 +196,25 @@ export async function assembleFounderVideo(options) {
   const ffprobe = mediaTool("ffprobe");
   const receiptPath = `${options.outputFile}.receipt.json`;
   const digestPath = `${options.outputFile}.sha256`;
+  const captionsPath = options.outputFile.replace(/\.mp4$/iu, ".en.srt");
   const temporaryOutput = `${options.outputFile}.tmp-${process.pid}.mp4`;
   const temporaryReceipt = `${receiptPath}.tmp-${process.pid}`;
   const temporaryDigest = `${digestPath}.tmp-${process.pid}`;
+  const temporaryCaptions = `${captionsPath}.tmp-${process.pid}`;
   await Promise.all([
     requireRegularFile(options.videoFile, "Screen master"),
     requireRegularFile(options.audioFile, "Founder audio"),
     requireMissing(options.outputFile),
     requireMissing(receiptPath),
     requireMissing(digestPath),
+    requireMissing(captionsPath),
   ]);
   requireValue(
     options.videoFile !== options.audioFile &&
       options.videoFile !== options.outputFile &&
-      options.audioFile !== options.outputFile,
+      options.audioFile !== options.outputFile &&
+      options.videoFile !== captionsPath &&
+      options.audioFile !== captionsPath,
     "Founder-video input and output paths must be distinct.",
   );
   runCommand(ffmpeg, ["-version"], "ffmpeg is required to assemble the founder video.");
@@ -271,11 +300,12 @@ export async function assembleFounderVideo(options) {
         finalAudio[0].channels === 2,
       "Assembled founder video must contain one 48 kHz stereo AAC stream.",
     );
-    const [audioBytes, outputBytes, captionsBytes] = await Promise.all([
+    const [audioBytes, outputBytes, aiCaptions] = await Promise.all([
       readFile(options.audioFile),
       readFile(temporaryOutput),
-      readFile(join(projectRoot, "submission", "video", "witnesspatch-demo.en.srt")),
+      readFile(aiCaptionsFile, "utf8"),
     ]);
+    const captionsBytes = Buffer.from(founderCaptionsFromAi(aiCaptions), "utf8");
     const outputDigest = sha256(outputBytes);
     const receipt = {
       schema_version: "1.0.0",
@@ -283,6 +313,7 @@ export async function assembleFounderVideo(options) {
       screen_master_sha256: sha256(videoBytes),
       founder_audio_sha256: sha256(audioBytes),
       captions_sha256: sha256(captionsBytes),
+      captions_mode: "founder_voice",
       output_sha256: outputDigest,
       duration_seconds: finalDuration,
       video: { codec: "h264", width: 1400, height: 900 },
@@ -298,22 +329,32 @@ export async function assembleFounderVideo(options) {
       encoding: "utf8",
       mode: 0o600,
     });
+    await writeFile(temporaryCaptions, captionsBytes, { mode: 0o600 });
     await rename(temporaryOutput, options.outputFile);
     await rename(temporaryReceipt, receiptPath);
     await rename(temporaryDigest, digestPath);
+    await rename(temporaryCaptions, captionsPath);
     completed = true;
-    return Object.freeze({ outputFile: options.outputFile, receiptPath, digestPath, receipt });
+    return Object.freeze({
+      outputFile: options.outputFile,
+      receiptPath,
+      digestPath,
+      captionsPath,
+      receipt,
+    });
   } finally {
     const cleanupPaths = [
       rm(temporaryOutput, { force: true }),
       rm(temporaryReceipt, { force: true }),
       rm(temporaryDigest, { force: true }),
+      rm(temporaryCaptions, { force: true }),
     ];
     if (!completed) {
       cleanupPaths.push(
         rm(options.outputFile, { force: true }),
         rm(receiptPath, { force: true }),
         rm(digestPath, { force: true }),
+        rm(captionsPath, { force: true }),
       );
     }
     await Promise.all(cleanupPaths);
@@ -327,7 +368,7 @@ function formatSuccess(result) {
     `duration_seconds=${result.receipt.duration_seconds}`,
     `sha256=${result.receipt.output_sha256}`,
     `receipt=${result.receiptPath}`,
-    `captions=${join(projectRoot, "submission", "video", "witnesspatch-demo.en.srt")}`,
+    `captions=${result.captionsPath}`,
     "Human gate: audition the full file and confirm that the voice, words, timing, and on-screen actions match before upload.",
   ].join("\n");
 }

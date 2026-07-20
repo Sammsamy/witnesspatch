@@ -4,7 +4,7 @@
 
 WitnessPatch turns a missed safety deadline into a portable red test. It freezes what an agent knew at each timestamp, checks whether the required action happened on time, and compiles that exact observed failure into a hash-bound `node:test` bundle that runs offline before any repair can be trusted. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic software owns every displayed verdict.
 
-[Live no-rebuild demo](https://witnesspatch.ankigpt.workers.dev) · [Public MIT repository](https://github.com/Sammsamy/witnesspatch) · [First public release CI](https://github.com/Sammsamy/witnesspatch/actions/runs/29772464327)
+[Live no-rebuild demo](https://witnesspatch.ankigpt.workers.dev) · [Public MIT repository](https://github.com/Sammsamy/witnesspatch) · [Completed public-checkpoint CI](https://github.com/Sammsamy/witnesspatch/actions/runs/29777845724)
 
 The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. No physician review or clinical validation was performed; clinical validation is not claimed. External health-AI builder review has also not yet been performed.
 
@@ -56,7 +56,7 @@ The current source-hash-bound UI candidate passed a fresh production-Chrome repl
 
 Exact candidate `87dee97` passed `npm ci` followed by `npm run verify:release` from fresh clones on macOS 26.5.2 arm64 with Node 24.14.0/npm 11.9.0 and a local Debian 12 arm64 container with Node 22.23.1/npm 10.9.8. macOS passed all `158/158` aggregate test executions: `136/136` core, `6/6` rendered-product, `1/1` real development-server HTTP smoke, `9/9` submission-package, and `6/6` deployment-rendered checks. Debian passed `157/158`, with only the expected case-insensitive-filesystem check skipped on its case-sensitive filesystem. Both passed the zero-argument judge proof, detached-bundle verification coverage, threat-model boundary check, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run. Their physical 55-file `dist/client` snapshots matched byte-for-byte; the SHA-256 of each canonical 55-line manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`. CI also promotes the six-line proof to the GitHub job summary and retains it as a release artifact. `npm run verify:release` fails if the built client differs from that reviewed fingerprint. The submission gate also binds four recaptured media assets to thirteen rendered/computed source fingerprints. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). The exact submitted commit must still receive remote CI and a final replay after the repository URL, deployment, video, and form copy are frozen; Windows remains unverified.
 
-The authorized no-physician-review candidate recaptured on July 20 passes the full local release verifier: `158/158` aggregate executions, license inventory, build, lint, typecheck, 55-file static fingerprint `523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5`, and a 59-asset Cloudflare dry run. First public release commit `4d27f3962733124dc820a54bbb8b430b83680db8` passed its public `Verify` push run, GitHub detected MIT, and all 53 served files byte-matched the reviewed build; `.assetsignore` and `_headers` remain deployment-control files. A clean public browser replay completed compile and verification with zero console errors or warnings. The final submitted commit still requires its own freeze after video and `/feedback` exist.
+The authorized no-physician-review public checkpoint `94297a475b09aacf14478a11aff2ebbcf4266bdc` passes the full local release verifier: macOS `158/158` aggregate executions, Debian `157/158` with only the expected filesystem skip, license inventory, build, lint, typecheck, and a 59-asset Cloudflare dry run. Its exact public `Verify` push run `29777845724` passed, GitHub detected MIT, and its deployment byte audit passed. The current 55-file candidate incorporates the corrected distributed notice plus final public claim, narration, and release-gate cleanup and is locked to static fingerprint `7a3c932575d2357725132a811a38d1e1462616c23087ce30a7cdea80d1230fed`; `.assetsignore`, `.vite/manifest.json`, `404.html`, and `_headers` are generated hosting-control files rather than public assets. The final submitted commit still requires its own exact-tip CI, deployment byte check, and freeze after video and `/feedback` exist.
 
 The release bundle can also be built and checked without publishing:
 
@@ -64,7 +64,7 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
-The entrant-local silent master was recaptured from the public deployment on July 20 with visible action callouts, then shortened only across idle holds. It is `148.000` seconds at `1400 x 900`, contains one H.264 video stream and no audio, and ends on the explicit `not_performed` / `not claimed` / `Not permitted` receipt. Its reviewed SHA-256 is `7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8`; the assembler rejects any other bytes. Founder voice, public YouTube upload, and human audition remain incomplete.
+The entrant-local silent master was recaptured from the public deployment on July 20 with visible action callouts, then shortened only across idle holds. It is `148.000` seconds at `1400 x 900`, contains one H.264 video stream and no audio, and ends on the explicit `not_performed` / `not claimed` / `Not permitted` receipt. Its reviewed SHA-256 is `7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8`; the founder-track assembler rejects any other bytes. The Apple System Voice rehearsal is quarantined and must not be published because the [macOS license](https://www.apple.com/legal/sla/docs/macOSTahoe.pdf) does not permit public sharing of System Voice recordings. The replacement release candidate uses [Piper 1.5.0](https://github.com/OHF-Voice/piper1-gpl/tree/v1.5.0) with the pinned [`en_US-ljspeech-high` voice](https://huggingface.co/rhasspy/piper-voices/blob/5b44ec7bab7c5822cfec48fbd5aa99db71a823d6/en/en_US/ljspeech/high/MODEL_CARD). The voice repository [declares MIT](https://huggingface.co/rhasspy/piper-voices/blob/main/README.md), and the voice card records training from scratch on the [public-domain LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/). Piper and its weights are local production tools, not shipped WitnessPatch dependencies. The `148.000`-second candidate has 3,700 frames, preserves the reviewed screen-video stream byte-for-byte, and has SHA-256 `6845baadea1476bf50b57b9b03ff1fc8f669d7a5328e3fcd16d251bb89542c7e`. It remains pending complete entrant audition and public upload. The video opening and prepared YouTube description both disclose the synthetic narration; the final freeze still requires explicit entrant confirmation of complete human review.
 
 To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:28 screen cut, run the fail-closed assembler below. It refuses the wrong screen bytes, codec, geometry, silence, or duration; founder audio shorter than 2:22 or longer than 2:27.5; existing outputs; and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths for this assembly command. For `release:freeze`, prefer putting the `ffprobe` directory on `PATH` and leave both overrides unset so the same environment can run the full release verifier.
 
@@ -72,9 +72,9 @@ To turn a separately recorded, cue-aligned founder voice track into the reviewed
 npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"
 ```
 
-The assembler cannot identify the speaker or verify the spoken words. Audition the entire output against [the timed script](docs/DEMO_SCRIPT.md), and upload `submission/video/witnesspatch-demo.en.srt` separately.
+The assembler cannot identify the speaker or verify the spoken words. Audition the entire output against [the timed script](docs/DEMO_SCRIPT.md). For founder narration, upload the founder-specific `.en.srt` path printed by the assembler; it deterministically replaces only the opening AI-disclosure cue. For the Piper AI-narration route, upload `submission/video/witnesspatch-demo.en.srt`.
 
-After the public repository, deployment, founder-voice YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip and has a successful completed public `Verify` push run from `.github/workflows/verify.yml`; byte-checks the deployed root plus every fingerprint-listed judge-facing file while explicitly excluding only four hosting-control files that are not public assets; decodes the local video below 180 seconds with audio and video streams; checks YouTube oEmbed reachability; and requires explicit human confirmations for public visibility, founder voice, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit:
+After the public repository, deployment, narrated YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip and has a successful completed public `Verify` push run from `.github/workflows/verify.yml`; byte-checks the deployed root plus every fingerprint-listed judge-facing file while explicitly excluding only four hosting-control files that are not public assets; decodes and hashes the local video below 180 seconds with audio and video streams; checks YouTube oEmbed reachability; and requires explicit human confirmations for public visibility, exactly one narration mode, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit. The founder-voice route is:
 
 ```bash
 npm run release:freeze -- \
@@ -85,20 +85,31 @@ npm run release:freeze -- \
   --feedback-session-id "CODEX_FEEDBACK_SESSION_ID" \
   --feedback-confirmed \
   --video-public-confirmed \
-  --founder-voice-confirmed
+  --founder-voice-confirmed \
+  --narration-human-reviewed-confirmed
 ```
+
+For an AI-generated voice, omit `--founder-voice-confirmed` and use all three flags below. Before doing so, the delivered video itself must identify the AI narration, its public YouTube description must say that it uses an AI-generated voice, and the entrant must watch and listen to the complete uploaded cut for script accuracy, pronunciation, intelligibility, and synchronization. The same human-review flag is mandatory for founder narration:
+
+```bash
+  --ai-narration-confirmed \
+  --ai-narration-disclosed-confirmed \
+  --narration-human-reviewed-confirmed
+```
+
+The gate rejects missing or mixed narration modes and records the selected mode and confirmations in the receipt. It does not infer speaker identity, inspect the words in the audio, verify the public disclosure automatically, or prove that YouTube serves the same bytes as the local file.
 
 The command refuses to overwrite a prior final receipt. Preserve an unsuccessful or superseded freeze before starting a separately labeled attempt.
 
-The entrant authorized a public source release under the MIT License plus a public static demo. The checkout now carries that license in `LICENSE`, `package.json`, and `package-lock.json`. Publication still requires logged-out source access, detected license metadata, and successful exact-commit CI before submission.
+The entrant authorized a public source release under the MIT License plus a public static demo. The checkout carries that license in `LICENSE`, `package.json`, and `package-lock.json`; logged-out source access, detected MIT metadata, exact-commit CI, and byte-matched deployment were verified for the latest public checkpoint. `release:freeze` must re-prove each condition for the exact final submitted commit.
 
 ### Verified platform boundary
 
 | Surface | Current evidence | Claim boundary |
 | --- | --- | --- |
-| Source install and release verification | Fresh-clone commit `87dee97` passes the complete verifier on macOS 26.5.2 arm64/Node 24.14.0 and local Debian 12 arm64/Node 22.23.1; public commit `4d27f39` also passes the exact-commit `Verify` push run | The exact final submitted commit still requires its own release freeze; Windows remains unverified |
+| Source install and release verification | Public checkpoint `94297a4` passes the complete verifier on macOS (`158/158`) and local Debian 12 arm64 (`157/158`, one expected filesystem skip), plus exact-commit `Verify` push run `29777845724` | The exact final submitted commit still requires its own release freeze; Windows remains unverified |
 | Browser replay | A fresh production-Chrome session passed the current source-hash-bound reference compile/verify and included-sample local compile/export, with exact CLI parity, red/green regression execution, no requests after the two expected sample fetches, no `/.rsc`/`404` navigation, and zero console warnings or errors; exact 390 x 844 reference and local replays had no horizontal overflow | Chrome on macOS is verified for these paths and mobile viewport; no broad browser matrix is claimed |
-| Static hosting package | Public deployment is live; 53/53 served files byte-match the reviewed build and the two remaining fingerprint files are hosting controls | Clean public compile/verify passed with zero console warnings or errors; availability must be maintained through the judging window |
+| Static hosting package | Public deployment is live; 51/51 public assets byte-match the reviewed build and four generated fingerprint files are hosting controls rather than public assets | Clean public compile/verify passed with zero console warnings or errors; availability must be maintained through the judging window |
 | Linux | Fresh-clone commit `87dee97` passes locally in a Debian 12 arm64 container with Node 22.23.1; `157/158` aggregate tests pass and the one case-insensitive-filesystem test is expectedly skipped | This is one local Linux environment, not a browser matrix; Windows remains unverified |
 | Windows | No clean checkout or browser run | Unverified |
 
@@ -199,7 +210,7 @@ The declared rules link to current public guidance from:
 - [ACOG — Preeclampsia and High Blood Pressure During Pregnancy](https://www.acog.org/womens-health/faqs/preeclampsia-and-high-blood-pressure-during-pregnancy)
 - [ACOG — 3 Conditions to Watch for After Childbirth](https://www.acog.org/womens-health/experts-and-stories/the-latest/3-conditions-to-watch-for-after-childbirth)
 
-The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. The [clinical claim audit](docs/CLINICAL_CLAIM_AUDIT.md) maps every remaining medical statement to primary public guidance or an explicit non-claim boundary. No physician fixture/wording review was performed. See the [validation plan](docs/VALIDATION_PLAN.md) and [external review packet](docs/EXTERNAL_REVIEW_PACKET.md).
+The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. The [clinical claim audit](docs/CLINICAL_CLAIM_AUDIT.md) maps every remaining medical statement to primary public guidance or an explicit non-claim boundary. No physician fixture/wording review was performed. The [external review packet](docs/EXTERNAL_REVIEW_PACKET.md) defines what evidence a future review would need; it is not completed submission evidence.
 
 ## Repository map
 
@@ -231,7 +242,7 @@ The [OpenAI Build Week Official Rules](https://openai.devpost.com/rules) allow a
 - Codex credentials and private traces must never be committed or exposed by the app.
 - Every visible pass must be reproducible from retained inputs and executable checks.
 
-See the [OpenAI Build Week submission checklist](docs/SUBMISSION_FORM_CHECKLIST.md) for the remaining human, repository, video, and release gates.
+The remaining external release gates are a public narrated YouTube demo, the Codex-returned `/feedback` Session ID, exact-tip CI and deployment verification, and a final release freeze. Devpost submission remains a separate entrant-controlled action.
 
 ## License
 

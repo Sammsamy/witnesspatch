@@ -8,4 +8,4 @@ Turn one verified failure into the smallest reviewable repair.
 4. Rebuild the current release with `npm run artifacts:v2:build`.
 5. Verify both immutable lineage and V2 with `npm run artifacts:verify` and `npm run artifacts:v2:verify`.
 
-Do not use real patient data, network secrets, an API key, or a hidden model score. Do not change `clinician_validation` from `pending`. Keep the exact negative control narrow; never call it a benign patient state.
+Do not use real patient data, network secrets, an API key, or a hidden model score. Keep the legacy `clinician_validation` field `pending`, canonical `fixture_wording_review` `not_performed`, and `clinical_validation` `not_claimed`. Keep the exact negative control narrow; never call it a benign patient state.

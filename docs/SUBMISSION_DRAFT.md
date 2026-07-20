@@ -1,6 +1,6 @@
 # Submission draft
 
-This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). The entrant authorized an individual submission; the [public MIT repository](https://github.com/Sammsamy/witnesspatch), exact-commit CI, and [live static replay](https://witnesspatch.ankigpt.workers.dev) now exist. The authenticated Devpost draft has the exact story, 22 normalized tags, live/repository links, individual/United States/Developer Tools selections, repository field, judge test path, and developer-tool instructions saved. Thumbnail/gallery upload, public video, `/feedback`, external builder review, final release freeze, and final Devpost submission still require completion.
+This file preserves the exact public project copy aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). The entrant authorized an individual submission; the [public MIT repository](https://github.com/Sammsamy/witnesspatch), exact-commit CI, and [live static replay](https://witnesspatch.ankigpt.workers.dev) exist. External form state and private account workflow are intentionally not recorded here.
 
 ## Exact project overview fields
 
@@ -111,7 +111,7 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
 - Local release verification: exact candidate `87dee97` passed `npm ci` and `npm run verify:release` from fresh clones on macOS 26.5.2 arm64/Node 24.14.0 and a local Debian 12 arm64 container/Node 22.23.1. macOS passed `158/158` aggregate test executions; Debian passed `157/158`, with only the expected case-insensitive-filesystem test skipped. Both passed `136` discovered core tests, `6/6` rendered checks, `1/1` real development-server HTTP smoke, `9/9` submission-package checks, `6/6` deployment-rendered checks, the zero-argument judge proof, detached-bundle verification coverage, the threat-model boundary check, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run; their physical 55-file `dist/client` snapshots matched byte-for-byte with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
-- Current authorized no-physician-review candidate: 55-file static fingerprint `523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5`; the final freeze rechecks exact-tip public CI and deployed bytes after the real video and `/feedback` fields exist.
+- Current authorized no-physician-review candidate: 55-file static fingerprint `7a3c932575d2357725132a811a38d1e1462616c23087ce30a7cdea80d1230fed`; the final freeze rechecks exact-tip public CI and deployed bytes after the real video and `/feedback` fields exist.
 - Current source-bound real-Chrome QA: the reference path visibly completed `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, and the four-case baseline/repair/control/mutant closure. The local path loaded the included pair and produced a nine-file `50/100` red bundle with `2` hashes computed and `0` externally verified, exact CLI byte parity, red/green executable closure, and no requests after the two expected sample fetches. Both paths recorded zero console errors or warnings; same-page controls produced no `/.rsc` or `404` requests. Exact 390 x 844 reference and local replays had no horizontal overflow.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
@@ -122,9 +122,9 @@ This is strong implementation evidence for one synthetic software oracle, not ev
 
 WitnessPatch began as a pre-existing local V1 prototype. Its original evaluator, static UI, 16-file artifact bundle, 13 checks, and captured Sol candidate predate the official July 13 submission start and are not claimed as Build Week work. The portable compiler, fail-closed browser verifier, clinically narrower V2 namespace, and fresh post-start candidate proof are the meaningful extensions. Timestamped Codex records, the before/after ledger, separate V1/V2 manifests, and first dated checkpoint `21405c8` preserve that distinction locally. Because the root commit contains both disclosed lineage and extensions, it is a checkpoint rather than independent proof of every file's creation time.
 
-## Team
+## Entrant
 
-Fuzlullah Syed is the sole entrant. He is a third-year medical student; that training motivates the problem choice but is not licensed clinical authority. His brother is not a teammate on this submission.
+Fuzlullah Syed is the sole entrant. He is a third-year medical student; that training motivates the problem choice but is not licensed clinical authority.
 
 ## Safety and validation status
 
@@ -156,10 +156,29 @@ npm run dev
 
 Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Source install, build, and release verification also pass in the exact local Debian 12 arm64/Node 22.23.1 environment documented above; no Linux browser matrix is claimed. Public exact-commit GitHub Actions passes; Windows remains unverified.
 
-## Saved links and fields that must remain blank until real
+## Public links and release boundary
 
 - **Try it URL:** https://witnesspatch.ankigpt.workers.dev
 - **Repository URL:** https://github.com/Sammsamy/witnesspatch
-- **Video URL:** pending public YouTube upload shorter than three minutes. The replacement 2:28 silent master and synchronized captions are verified; founder voice, full audition, and upload remain.
-- **`/feedback` Session ID:** pending. In this primary task, open `/feedback`, share the existing session, submit, and use the returned Session ID—not the technical task/thread UUID.
-- **External validation language:** keep pending until participant-confirmed evidence exists.
+- **Video boundary:** the submitted public demo must remain shorter than three minutes, explain the product plus Codex and GPT-5.6 use, and include audio. The Apple System Voice rehearsal is not licensed for public sharing and cannot be submitted. The replacement candidate uses Piper 1.5.0 with the `en_US-ljspeech-high` voice from an MIT-declared repository; its pinned voice card records training from scratch on the public-domain LJ Speech Dataset. No voice cloning was performed. The delivered video identifies the AI narration in its opening cue, and the prepared YouTube description explicitly identifies the synthetic Piper voice. The entrant must still watch and listen to the complete uploaded cut before final freeze.
+- **Validation boundary:** no external builder review, physician fixture review, or clinical validation is claimed without a retained participant-confirmed record.
+
+## Prepared public video description
+
+> WitnessPatch turns one fully synthetic missed-deadline failure into a portable red-test bundle, then verifies a separate repair offline.
+>
+> Built during OpenAI Build Week with Codex and a requested GPT-5.6 Sol / Ultra workflow. Deterministic code owns every public pass/fail verdict; the receipt records requested configuration, not independently attested served-model identity.
+>
+> This video uses synthetic narration generated locally with Piper 1.5.0 and the `en_US-ljspeech-high` voice from the MIT-declared Piper voices repository, trained on the public-domain LJ Speech Dataset. No voice cloning was performed.
+>
+> No patient data. No clinical use. No physician review. No clinical validation claim.
+>
+> Live demo: https://witnesspatch.ankigpt.workers.dev
+>
+> Source: https://github.com/Sammsamy/witnesspatch
+>
+> Piper: https://github.com/OHF-Voice/piper1-gpl/tree/v1.5.0
+>
+> Voice provenance: https://huggingface.co/rhasspy/piper-voices/blob/5b44ec7bab7c5822cfec48fbd5aa99db71a823d6/en/en_US/ljspeech/high/MODEL_CARD
+>
+> LJ Speech Dataset: https://keithito.com/LJ-Speech-Dataset/

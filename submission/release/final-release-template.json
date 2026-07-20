@@ -4,7 +4,7 @@
   "status": "not_frozen",
   "submitted_commit": null,
   "v2_manifest_sha256": "3e72fd8cf8edc0a00bbc513eb6bf498d24a550f8717d9df24d2837350f608541",
-  "static_client_manifest_sha256": "523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5",
+  "static_client_manifest_sha256": "7a3c932575d2357725132a811a38d1e1462616c23087ce30a7cdea80d1230fed",
   "submission_media": {
     "01-thumbnail-failure.png": "89a7215a12e38bdad8b20f68bcaa5e1213854eb029f0753708821e5aee486633",
     "02-local-input-compiled-red.png": "ea776cd9ea2cfb4585768171f547f57b65349f4deb3bae31c73e6461bcebb1cf",

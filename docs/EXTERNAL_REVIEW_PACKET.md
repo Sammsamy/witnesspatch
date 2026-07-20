@@ -2,7 +2,7 @@
 
 Current submission status: **no physician fixture/wording review or clinical validation was performed.** The physician section is an unused optional future protocol. The builder section remains the only current external-review target.
 
-Use this packet with `docs/SAME_DAY_VALIDATION_PROTOCOL.md` and record the result in `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. Do not prefill agreement, invent a reviewer, coach toward approval, or describe a medical-student review as a licensed-physician review or clinical validation.
+Record any future result in `docs/VALIDATION_EVIDENCE_TEMPLATE.md`. Do not prefill agreement, invent a reviewer, coach toward approval, or describe a medical-student review as a licensed-physician review or clinical validation.
 
 ## A. Health-AI builder workflow review
 

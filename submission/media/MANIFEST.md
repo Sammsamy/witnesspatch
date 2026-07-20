@@ -1,6 +1,6 @@
 # Devpost media manifest
 
-Recaptured on July 20, 2026 from the authorized no-physician-review production candidate identified by the exact source hashes below. The images bind those source bytes directly; the receipt frame was captured at asserted `scrollX = 0`. The release commit and its exact CI/deployment evidence will be recorded after this source/media state is committed; the final submitted commit still requires its own replay after external release fields are frozen.
+Recaptured on July 20, 2026 from the authorized no-physician-review production candidate identified by the exact source hashes below. The images bind those source bytes directly; the receipt frame was captured at asserted `scrollX = 0`. Public checkpoint `94297a475b09aacf14478a11aff2ebbcf4266bdc` has successful exact-commit CI and byte-matched deployment evidence recorded in `docs/CLEAN_CHECKOUT_RECEIPT.md`; the exact final submitted commit still requires its own replay after the video and `/feedback` fields are frozen.
 
 ## Source state
 

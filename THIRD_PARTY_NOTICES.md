@@ -53,7 +53,7 @@ Locked dependency inventory SHA-256: `91cb572226c6ac83f70d6aa4a85b36bddac0a5fef4
 
 The non-MIT inventory includes optional, platform-specific, development, and transitive packages. Examples include libvips binaries recorded as `LGPL-3.0-or-later`, `@resvg/resvg-wasm`, `@vercel/og`, `axe-core`, and `lightningcss` recorded as `MPL-2.0`, and `caniuse-lite` recorded as `CC-BY-4.0`. Their presence in the locked graph does not by itself establish that their code is embedded in `dist/client`, and absence from a bundle would not erase upstream obligations when a component is redistributed.
 
-This inventory is a review gate, not a legal conclusion. Before a public repository, packaged CLI, server bundle, or `node_modules` distribution, the team must re-determine the actually distributed dependency scope, preserve every applicable upstream notice/source obligation, and deliberately choose a WitnessPatch project license. The current private judge-shared path does not authorize public reuse of WitnessPatch itself.
+This inventory is a review gate, not a legal conclusion. WitnessPatch source is publicly distributed under the repository's MIT License. The scope below covers that public source route and the hosted static client; before any packaged CLI, server bundle, vendored dependency, `node_modules` distribution, or materially different route, the entrant must re-determine the actually distributed dependency scope and preserve every applicable upstream notice and source obligation.
 
 WitnessPatch does not download or redistribute Google Fonts. The interface uses local system font stacks so clean builds are network-independent at the font layer.
 
@@ -84,7 +84,7 @@ The hosted static route distributes the generated `dist/client` files. An audit-
 
 The audited client source map did not identify TypeScript, Wrangler, Cloudflare's Vite plugin, ESLint, Sharp/libvips, Resvg, Lightning CSS, `caniuse-lite`, or the remaining locked packages as browser sources. They are build, test, CLI, optional, platform-specific, or server-side dependencies for this release configuration. That finding applies only to the static client route described above.
 
-The release contains no webfont files or downloaded font CSS. No external source or third-party attribution is recorded for the repository's small `favicon.svg` or inline icon paths, and no icon package is imported. The team must confirm those assets are project-authored before external release; a missing attribution record is not proof of ownership.
+The release contains no webfont files or downloaded font CSS. The repository's small `favicon.svg` and inline geometric icon paths are entrant-authored WitnessPatch assets documented in `docs/ASSET_PROVENANCE.md`; no external icon source or icon package is used.
 
 ## MIT notices for the static client
 

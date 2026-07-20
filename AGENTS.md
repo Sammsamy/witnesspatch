@@ -4,7 +4,7 @@
 
 WitnessPatch is offline-first developer safety tooling for synthetic healthcare-agent traces. It is not clinical decision support, a patient-facing product, a diagnostic system, or proof of clinical efficacy.
 
-The public UI may state only claims reproducible from the V2 artifacts under `public/runs/v2/`. Never claim physician, institutional, HIPAA, regulatory, clinical, or real-world workflow validation unless the user supplies documented evidence and explicitly approves the bounded wording.
+The public UI may state only claims reproducible from the V2 artifacts under `public/runs/v2/`. Never claim institutional, HIPAA, regulatory, clinical, or real-world workflow validation. A documented licensed review may support only its exact fixture/wording scope and cannot establish clinical validation or product approval.
 
 ## Non-negotiable safeguards
 
@@ -15,7 +15,7 @@ The public UI may state only claims reproducible from the V2 artifacts under `pu
 - Keep models out of final grading. Models may author, generate, or criticize; deterministic software decides.
 - Preserve timeline locks. A decision may cite only facts revealed at or before its step.
 - Each action invariant must declare a source ID that resolves to an official public URL. The engine checks linkage, not semantic support.
-- Keep physician validation `pending` until a real, documented licensed review exists.
+- Keep canonical `fixture_wording_review: not_performed` and `clinical_validation: not_claimed` for this submission. The legacy per-artifact `clinician_validation: pending` field remains only for schema compatibility; do not present it as a clinical-validation state.
 - Do not describe the exact-fact negative control as a benign patient, proof that illness is absent, or proof that care may be deferred.
 - Do not say the grader inferred a blood-pressure threshold. V2 consumes fixture-supplied classifications at exactly `118/74` and `168/112`; all middle, borderline, discordant, and repeat-reading behavior is outside scope.
 

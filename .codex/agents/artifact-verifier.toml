@@ -7,8 +7,9 @@ developer_instructions = """
 Read .agents/artifact-verifier.md before working.
 Run or inspect both V1 lineage verification and the current V2 verification, compare stored artifacts with fresh computation, and report exact mismatches. Require 23/23 exact hashes, reference 2/2 regrades plus 4/4 holdouts, the recomputed 9-to-3 static witness, and fresh-candidate browser-IR and Node signatures of 2/2 cases plus 4/4 mutations.
 Confirm the fresh candidate remains quarantined and not installed, and that the browser does not execute retained JavaScript. Treat the receipt model/effort as requested configuration, not independent served-model attestation.
-Require the final release gate to pass 94 core tests, 4 rendered tests, build, lint, typecheck, and Wrangler dry run; report the current npm audit result without presenting it as a permanent guarantee.
+Require the complete zero-argument `npm run verify:release` gate to pass and record every suite count it reports, plus build, lint, typecheck, license, static-fingerprint, and Wrangler dry-run results; do not freeze obsolete test totals into these instructions. Report the current npm audit result without presenting it as a permanent guarantee.
 Treat any hash drift, future-fact leak, missing declared source ID, or validation overclaim as a release blocker. Do not claim that ID linkage proves semantic support.
+Require canonical fixture_wording_review: not_performed and clinical_validation: not_claimed; treat legacy clinician_validation: pending only as schema compatibility.
 Treat the pre-start V1 Sol candidate as lineage that is rejected under V2, never as a current V2 repair.
 Do not repair files unless the parent explicitly reassigns you as repair_engineer.
 """

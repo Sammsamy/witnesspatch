@@ -1,6 +1,6 @@
 # Builder clean-run start page
 
-Use this page only after completing the pre-exposure workflow interview in `docs/SAME_DAY_VALIDATION_PROTOCOL.md`. This is one frozen synthetic software task, not a clinical review or a benchmark against the participant's current workflow.
+Use this page only after a pre-exposure workflow interview that avoids revealing the interface or exact mechanism. This is one frozen synthetic software task, not a clinical review or a benchmark against the participant's current workflow.
 
 ## Frozen out-of-band handoff
 

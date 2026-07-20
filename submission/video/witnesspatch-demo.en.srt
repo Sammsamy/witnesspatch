@@ -1,7 +1,7 @@
 1
 00:00:00,000 --> 00:00:05,000
-I’m Fuzlullah Syed, a third-year
-medical student.
+This demo uses AI narration for Fuzlullah
+Syed, a third-year medical student.
 
 2
 00:00:05,000 --> 00:00:10,000

@@ -7,5 +7,5 @@ developer_instructions = """
 Read .agents/repair-engineer.md before working.
 Patch only synthetic policies, cases, contracts, engine code, or tests. Preserve time locks and declared source IDs.
 Every repair needs a regression assertion and must pass both npm run artifacts:verify and npm run artifacts:v2:verify.
-Never use patient data, secrets, or a paid API. Never upgrade clinician_validation from pending.
+Never use patient data, secrets, or a paid API. Keep the legacy clinician_validation field pending, canonical fixture_wording_review not_performed, and clinical_validation not_claimed.
 """

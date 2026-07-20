@@ -14,6 +14,7 @@ import { isAbsolute, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
+  founderCaptionsFromAi,
   parseFounderVideoArguments,
   reviewedScreenMaster,
   validateFounderMedia,
@@ -26,6 +27,7 @@ import {
   selectSuccessfulVerifyRun,
   validateDeploymentUrl,
   validateFeedbackSessionId,
+  validateNarrationConfirmations,
   validateRepositoryUrl,
   validateYouTubeUrl,
 } from "../build/freeze-final-release.mjs";
@@ -145,7 +147,7 @@ test("Devpost media are exact 3:2 PNGs within the declared upload boundary", asy
   assert.match(manifest, /No physician fixture\/wording review or clinical validation was performed/i);
 });
 
-test("authenticated overview copy stays inside the recorded field limits", async () => {
+test("submission overview copy stays inside the recorded field limits", async () => {
   const draft = await readFile(
     new URL("../docs/SUBMISSION_DRAFT.md", import.meta.url),
     "utf8",
@@ -272,14 +274,10 @@ test("judge-facing clinical source lists match the exact V2 fixture evidence", a
 });
 
 test("judge-facing current V2 fingerprints match the exact release manifest", async () => {
-  const [manifestBytes, provenance, reviewPrompt] = await Promise.all([
+  const [manifestBytes, provenance] = await Promise.all([
     readFile(new URL("../public/runs/v2/manifest.json", import.meta.url)),
     readFile(
       new URL("../docs/BUILD_WEEK_PROVENANCE.md", import.meta.url),
-      "utf8",
-    ),
-    readFile(
-      new URL("../docs/GPT56_PRO_REVIEW_PROMPT.md", import.meta.url),
       "utf8",
     ),
   ]);
@@ -290,10 +288,6 @@ test("judge-facing current V2 fingerprints match the exact release manifest", as
     new RegExp(
       `The current V2 manifest hash is:[\\s\\S]*?${manifestSha256}  public/runs/v2/manifest\\.json`,
     ),
-  );
-  assert.match(
-    reviewPrompt,
-    new RegExp("Current manifest SHA-256: `" + manifestSha256 + "`"),
   );
 });
 
@@ -320,10 +314,6 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
       new URL("../docs/SUBMISSION_DRAFT.md", import.meta.url),
       "utf8",
     ),
-    readFile(
-      new URL("../docs/OFFICIAL_REQUIREMENTS_AUDIT.md", import.meta.url),
-      "utf8",
-    ),
   ]);
   const record = JSON.parse(recordBytes);
   const packageData = JSON.parse(packageBytes);
@@ -337,6 +327,64 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
     assert.ok(
       document.includes(record.manifest_sha256),
       "A current release-evidence document has a stale static fingerprint",
+    );
+  }
+
+  const [
+    notices,
+    assetProvenance,
+    repositoryInstructions,
+    verifierInstructions,
+    verifierAgent,
+    workflowSkill,
+  ] =
+    await Promise.all([
+      readFile(new URL("../THIRD_PARTY_NOTICES.md", import.meta.url), "utf8"),
+      readFile(
+        new URL("../docs/ASSET_PROVENANCE.md", import.meta.url),
+        "utf8",
+      ),
+      readFile(new URL("../AGENTS.md", import.meta.url), "utf8"),
+      readFile(
+        new URL("../.agents/artifact-verifier.md", import.meta.url),
+        "utf8",
+      ),
+      readFile(
+        new URL("../.codex/agents/artifact-verifier.toml", import.meta.url),
+        "utf8",
+      ),
+      readFile(
+        new URL("../.codex/skills/witnesspatch/SKILL.md", import.meta.url),
+        "utf8",
+      ),
+    ]);
+  assert.match(notices, /publicly distributed under the repository's MIT License/u);
+  assert.match(notices, /entrant-authored WitnessPatch assets/u);
+  assert.match(assetProvenance, /entrant-created geometric artwork/u);
+  for (const instructions of [
+    repositoryInstructions,
+    verifierInstructions,
+    verifierAgent,
+    workflowSkill,
+  ]) {
+    assert.doesNotMatch(instructions, /94 core tests|4 rendered tests/u);
+    assert.doesNotMatch(instructions, /physician validation pending/iu);
+    assert.match(instructions, /clinical_validation(?::|`) (?:`?not_claimed|not claimed)/u);
+  }
+  for (const internalPath of [
+    "../docs/JUDGE_SCORECARD.md",
+    "../docs/GPT56_PRO_REVIEW_PROMPT.md",
+    "../docs/CODEX_CREDIT_REQUEST.md",
+    "../docs/SUBMISSION_FORM_CHECKLIST.md",
+    "../docs/OFFICIAL_REQUIREMENTS_AUDIT.md",
+    "../docs/SAME_DAY_VALIDATION_PROTOCOL.md",
+    "../docs/VALIDATION_OUTREACH_DRAFTS.md",
+    "../docs/VALIDATION_PLAN.md",
+  ]) {
+    await assert.rejects(
+      readFile(new URL(internalPath, import.meta.url), "utf8"),
+      (error) => error?.code === "ENOENT",
+      `Internal-only file remains in the public release tree: ${internalPath}`,
     );
   }
 
@@ -471,7 +519,7 @@ test("the final release template binds local artifacts but cannot masquerade as 
     packageJson.scripts["release:freeze"],
     "node build/freeze-final-release.mjs",
   );
-  const parsed = parseFreezeArguments([
+  const freezeValueArguments = [
     "--repository-url",
     "https://github.com/Sammsamy/witnesspatch",
     "--deployment-url",
@@ -484,8 +532,82 @@ test("the final release template binds local artifacts but cannot masquerade as 
     "feedback_123456",
     "--feedback-confirmed",
     "--video-public-confirmed",
+  ];
+  const parsed = parseFreezeArguments([
+    ...freezeValueArguments,
     "--founder-voice-confirmed",
+    "--narration-human-reviewed-confirmed",
   ]);
+  assert.equal(parsed.narrationMode, "founder_voice");
+  const aiParsed = parseFreezeArguments([
+    ...freezeValueArguments,
+    "--ai-narration-confirmed",
+    "--ai-narration-disclosed-confirmed",
+    "--narration-human-reviewed-confirmed",
+  ]);
+  assert.equal(aiParsed.narrationMode, "ai_generated_voice");
+  assert.equal(
+    validateNarrationConfirmations(aiParsed),
+    "ai_generated_voice",
+  );
+  assert.throws(
+    () => parseFreezeArguments(freezeValueArguments),
+    /Confirm exactly one narration mode/u,
+  );
+  assert.throws(
+    () =>
+      parseFreezeArguments([
+        ...freezeValueArguments,
+        "--founder-voice-confirmed",
+        "--ai-narration-confirmed",
+        "--narration-human-reviewed-confirmed",
+      ]),
+    /Confirm exactly one narration mode/u,
+  );
+  assert.throws(
+    () =>
+      parseFreezeArguments([
+        ...freezeValueArguments,
+        "--founder-voice-confirmed",
+      ]),
+    /Every final narrated video requires confirmation/u,
+  );
+  assert.throws(
+    () =>
+      parseFreezeArguments([
+        ...freezeValueArguments,
+        "--ai-narration-confirmed",
+      ]),
+    /Every final narrated video requires confirmation/u,
+  );
+  assert.throws(
+    () =>
+      parseFreezeArguments([
+        ...freezeValueArguments,
+        "--ai-narration-confirmed",
+        "--narration-human-reviewed-confirmed",
+      ]),
+    /final video and public YouTube description explicitly disclose/u,
+  );
+  assert.throws(
+    () =>
+      parseFreezeArguments([
+        ...freezeValueArguments,
+        "--ai-narration-confirmed",
+        "--ai-narration-disclosed-confirmed",
+      ]),
+    /Every final narrated video requires confirmation/u,
+  );
+  assert.throws(
+    () =>
+      parseFreezeArguments([
+        ...freezeValueArguments,
+        "--founder-voice-confirmed",
+        "--ai-narration-disclosed-confirmed",
+        "--narration-human-reviewed-confirmed",
+      ]),
+    /may be used only with AI narration/u,
+  );
   assert.equal(
     validateRepositoryUrl(parsed.repositoryUrl).normalized,
     "https://github.com/Sammsamy/witnesspatch",
@@ -773,6 +895,13 @@ test("the final release template binds local artifacts but cannot masquerade as 
       Object.keys(staticFiles).length - 4,
     );
     assert.equal(frozen.record.verification.video.duration_seconds, 173.08);
+    assert.deepEqual(frozen.record.verification.video.narration, {
+      mode: "founder_voice",
+      founder_voice_confirmed_by_entrant: true,
+      ai_generated_voice_confirmed_by_entrant: false,
+      ai_voice_publicly_disclosed_confirmed_by_entrant: false,
+      complete_human_review_confirmed_by_entrant: true,
+    });
     assert.equal(frozen.record.feedback_session_id, "feedback_123456");
     assert.equal(
       sha256(await readFile(frozen.outputPath)),
@@ -790,7 +919,10 @@ test("the final release template binds local artifacts but cannot masquerade as 
       }),
       /final release receipt already exists/u,
     );
-    await rm(join(temporaryRoot, "output"), { recursive: true, force: true });
+    await Promise.all([
+      rm(frozen.outputPath, { force: true }),
+      rm(frozen.digestPath, { force: true }),
+    ]);
     await assert.rejects(
       freezeFinalRelease({
         options: {
@@ -802,8 +934,27 @@ test("the final release template binds local artifacts but cannot masquerade as 
         fetchImpl,
         commandRunner,
       }),
-      /must confirm that the final video contains founder voice/u,
+      /Confirm exactly one narration mode/u,
     );
+    const aiFrozen = await freezeFinalRelease({
+      options: {
+        ...aiParsed,
+        videoFile: join(temporaryRoot, "founder-demo.mp4"),
+      },
+      rootDir: temporaryRoot,
+      fetchImpl,
+      commandRunner,
+      now: () => new Date("2026-07-20T12:01:00.000Z"),
+      technicalThreadId: "different_thread_123",
+    });
+    assert.deepEqual(aiFrozen.record.verification.video.narration, {
+      mode: "ai_generated_voice",
+      founder_voice_confirmed_by_entrant: false,
+      ai_generated_voice_confirmed_by_entrant: true,
+      ai_voice_publicly_disclosed_confirmed_by_entrant: true,
+      complete_human_review_confirmed_by_entrant: true,
+    });
+    assert.match(aiFrozen.record.boundary, /not machine-verified facts/u);
   } finally {
     await rm(temporaryRoot, { recursive: true, force: true });
   }
@@ -1033,6 +1184,32 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
   assert.equal(
     captionRows.map((caption) => caption.narration).join(" "),
     narration,
+  );
+  const founderCaptions = founderCaptionsFromAi(captions);
+  const captionNarration = (value) =>
+    value
+      .trim()
+      .split(/\r?\n\r?\n+/u)
+      .map((block) => block.split(/\r?\n/u).slice(2).join(" "))
+      .join(" ");
+  const expectedFounderNarration = narration.replace(
+    /^This demo uses AI narration for Fuzlullah Syed, a third-year medical student\./u,
+    "I’m Fuzlullah Syed, a third-year medical student.",
+  );
+  assert.equal(captionNarration(founderCaptions), expectedFounderNarration);
+  assert.doesNotMatch(founderCaptions, /uses AI narration/u);
+  assert.match(founderCaptions, /I’m Fuzlullah Syed/u);
+  const timingLines = (value) =>
+    value.match(/^\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}$/gmu);
+  assert.deepEqual(timingLines(founderCaptions), timingLines(captions));
+  for (const block of founderCaptions.trim().split(/\r?\n\r?\n+/u)) {
+    for (const line of block.split(/\r?\n/u).slice(2)) {
+      assert.ok([...line].length <= 42);
+    }
+  }
+  assert.throws(
+    () => founderCaptionsFromAi(founderCaptions),
+    /exactly one expected AI-identity cue/u,
   );
 });
 

@@ -1,8 +1,8 @@
-# Competitive positioning
+# Prior art and claim boundaries
 
-## Blunt conclusion
+## Scope conclusion
 
-“Healthcare AI crash-test and repair lab” is too broad and too crowded to win on concept alone. Deterministic agent replay, behavioral contracts, exact witness steps, trace shrinking, failure-to-regression workflows, healthcare CI gates, synthetic clinical environments, and prompt repair all exist publicly.
+“Healthcare AI crash-test and repair lab” is broader than the demonstrated contribution. Deterministic agent replay, behavioral contracts, exact witness steps, trace shrinking, failure-to-regression workflows, healthcare CI gates, synthetic clinical environments, and prompt repair all exist publicly.
 
 The defensible demonstration is narrower:
 
@@ -10,7 +10,7 @@ The defensible demonstration is narrower:
 
 That is the specific composition demonstrated here, not a claim of a new regression-testing algorithm, shrinking algorithm, replay system, agent-evaluation category, or proven market differentiation.
 
-## Closest public collisions
+## Closest public comparisons
 
 | Product or prior art | Verified public overlap | WitnessPatch's narrower demo distinction |
 |---|---|---|
@@ -42,9 +42,9 @@ That is the specific composition demonstrated here, not a claim of a new regress
 
 These are point-in-time public capability comparisons, not independent evidence of adoption, accuracy, commercial traction, or legal clearance. The official Build Week gallery was still unpublished during the July 20 late-window recheck, so a public repository alone does not prove that its project is an eligible final entry. PatchPilot separately links a public Devpost project from its repository; that still does not establish eligibility, judging outcome, or every repository claim. Pre-existing candidates are judged only on their documented post-start extensions under the official rules, so repository maturity is not itself a Stage Two score.
 
-## The narrow wedge
+## Demonstrated composition
 
-The demo must show this chain in one uninterrupted flow:
+The release demonstrates this chain in one uninterrupted flow:
 
 1. Every authored fact has a reveal time.
 2. A locked software contract identifies the earliest critical failing prefix.
@@ -57,17 +57,17 @@ The demo must show this chain in one uninterrupted flow:
 
 The exact-fact control is intentionally narrow. It does not prove a benign patient state, safe deferral, or generalization. The compiler's witness is not target-in-loop, counterfactual, or clinically minimal.
 
-## The sentence to own
+## One-sentence distinction
 
 > Most evals ask whether an answer was acceptable. WitnessPatch asks whether the required action happened before its deadline, using only facts available at that moment—and packages the missed deadline as a portable red test.
 
-## Revised pitch
+## Submission pitch
 
 WitnessPatch is a portable red-test compiler for time-critical AI agents. It turns one synthetic missed deadline into a conventional offline test by freezing what the agent knew, checking the declared action deadline, and preserving the observed failure as an executable handoff. A separate verifier checks the retained target patch, exact-fact control, mutations, and artifact bytes. Codex assists the build and authoring workflow; a retained post-start receipt records a `gpt-5.6-sol` / `ultra` request and a distinct quarantined candidate, while deterministic code owns every verdict.
 
-## Branding risk
+## Name and confusion boundary
 
-The earlier working name “Hippocratic CI” could imply affiliation with Hippocratic AI, an established healthcare-agent company publishing safety-validation work. WitnessPatch avoids that direct collision. Two separate public repositories use `PatchWitness`: an earlier pull-request-evidence CLI and a Build Week automation-repair candidate with the inverse name. The dated `21405c8` checkpoint preserves independent WitnessPatch usage before the Build Week candidate's public creation, but it does not remove branding or confusion risk. Do not rename during the final release window; use the distinctive subtitle **portable red-test compiler for time-critical AI agents** consistently. This is provenance evidence, not trademark or legal clearance.
+The earlier working name “Hippocratic CI” could imply affiliation with Hippocratic AI, an established healthcare-agent company publishing safety-validation work. WitnessPatch avoids that direct collision. Two separate public repositories use `PatchWitness`: an earlier pull-request-evidence CLI and a Build Week automation-repair candidate with the inverse name. The dated `21405c8` checkpoint preserves independent WitnessPatch usage before the Build Week candidate's public creation, but it does not remove branding or confusion risk. The release therefore uses the distinctive subtitle **portable red-test compiler for time-critical AI agents** consistently. This is provenance evidence, not trademark or legal clearance.
 
 ## Claims to avoid
 

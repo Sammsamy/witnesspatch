@@ -27,6 +27,13 @@ const CONFIRMATION_ARGUMENTS = new Set([
   "--feedback-confirmed",
   "--video-public-confirmed",
   "--founder-voice-confirmed",
+  "--ai-narration-confirmed",
+  "--ai-narration-disclosed-confirmed",
+  "--narration-human-reviewed-confirmed",
+]);
+const REQUIRED_CONFIRMATION_ARGUMENTS = Object.freeze([
+  "--feedback-confirmed",
+  "--video-public-confirmed",
 ]);
 
 function requireValue(condition, message) {
@@ -82,14 +89,14 @@ export function parseFreezeArguments(argv) {
   for (const argument of VALUE_ARGUMENTS) {
     requireValue(values.has(argument), `${argument} is required.`);
   }
-  for (const argument of CONFIRMATION_ARGUMENTS) {
+  for (const argument of REQUIRED_CONFIRMATION_ARGUMENTS) {
     requireValue(
       confirmations.has(argument),
       `${argument} is required as a human confirmation.`,
     );
   }
 
-  return Object.freeze({
+  const options = {
     repositoryUrl: values.get("--repository-url"),
     deploymentUrl: values.get("--deployment-url"),
     videoUrl: values.get("--video-url"),
@@ -97,8 +104,44 @@ export function parseFreezeArguments(argv) {
     feedbackSessionId: values.get("--feedback-session-id"),
     feedbackConfirmed: true,
     videoPublicConfirmed: true,
-    founderVoiceConfirmed: true,
+    founderVoiceConfirmed: confirmations.has("--founder-voice-confirmed"),
+    aiNarrationConfirmed: confirmations.has("--ai-narration-confirmed"),
+    aiNarrationDisclosedConfirmed: confirmations.has(
+      "--ai-narration-disclosed-confirmed",
+    ),
+    narrationHumanReviewedConfirmed: confirmations.has(
+      "--narration-human-reviewed-confirmed",
+    ),
+  };
+  return Object.freeze({
+    ...options,
+    narrationMode: validateNarrationConfirmations(options),
   });
+}
+
+export function validateNarrationConfirmations(options) {
+  const founderVoice = options.founderVoiceConfirmed === true;
+  const aiNarration = options.aiNarrationConfirmed === true;
+  requireValue(
+    founderVoice !== aiNarration,
+    "Confirm exactly one narration mode: founder voice or AI narration.",
+  );
+  requireValue(
+    options.narrationHumanReviewedConfirmed === true,
+    "Every final narrated video requires confirmation that the entrant reviewed the complete video for narration accuracy, pronunciation, intelligibility, and synchronization.",
+  );
+  if (founderVoice) {
+    requireValue(
+      options.aiNarrationDisclosedConfirmed !== true,
+      "AI narration disclosure confirmation may be used only with AI narration.",
+    );
+    return "founder_voice";
+  }
+  requireValue(
+    options.aiNarrationDisclosedConfirmed === true,
+    "AI narration requires confirmation that both the final video and public YouTube description explicitly disclose the AI-generated voice.",
+  );
+  return "ai_generated_voice";
 }
 
 export function validateRepositoryUrl(value) {
@@ -573,10 +616,7 @@ export async function freezeFinalRelease({
     options.videoPublicConfirmed === true,
     "The entrant must confirm that the YouTube video is publicly visible.",
   );
-  requireValue(
-    options.founderVoiceConfirmed === true,
-    "The entrant must confirm that the final video contains founder voice.",
-  );
+  const narrationMode = validateNarrationConfirmations(options);
   const repository = validateRepositoryUrl(options.repositoryUrl);
   const deploymentUrl = validateDeploymentUrl(options.deploymentUrl);
   const video = validateYouTubeUrl(options.videoUrl);
@@ -690,7 +730,17 @@ export async function freezeFinalRelease({
       video: {
         ...videoVerification,
         public_visibility_confirmed_by_entrant: options.videoPublicConfirmed,
-        founder_voice_confirmed_by_entrant: options.founderVoiceConfirmed,
+        narration: {
+          mode: narrationMode,
+          founder_voice_confirmed_by_entrant:
+            options.founderVoiceConfirmed === true,
+          ai_generated_voice_confirmed_by_entrant:
+            options.aiNarrationConfirmed === true,
+          ai_voice_publicly_disclosed_confirmed_by_entrant:
+            options.aiNarrationDisclosedConfirmed === true,
+          complete_human_review_confirmed_by_entrant:
+            options.narrationHumanReviewedConfirmed === true,
+        },
       },
       feedback: {
         returned_by_codex_feedback_confirmed_by_entrant:
@@ -700,7 +750,7 @@ export async function freezeFinalRelease({
       repository_clean: true,
     },
     boundary:
-      "This receipt binds one clean commit, its successful public Verify workflow run, public repository, byte-verified judge-facing static deployment, local video bytes, reachable YouTube record, and entrant-confirmed /feedback and founder-voice facts. It does not prove clinical validity, adoption, or judge outcome.",
+      "This receipt binds one clean commit, its successful public Verify workflow run, public repository, byte-verified judge-facing static deployment, local video bytes, reachable YouTube record, and entrant-confirmed /feedback, visibility, and narration-mode facts. For AI narration, disclosure and complete human review are entrant confirmations, not machine-verified facts. It does not prove that YouTube serves the same bytes as the local video, clinical validity, adoption, or judge outcome.",
   });
   const bytes = `${JSON.stringify(record, null, 2)}\n`;
   const digest = sha256(bytes);
