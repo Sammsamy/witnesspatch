@@ -309,6 +309,46 @@ async function verifyLocalAnchors(template, rootDir) {
       `Submission media changed after review: ${name}.`,
     );
   }
+  return Object.freeze({
+    staticClientManifestSha256: staticRecord.manifest_sha256,
+    staticClientFileCount: staticRecord.file_count,
+  });
+}
+
+export function parseStaticClientManifest(value) {
+  requireValue(
+    typeof value === "string" && value.endsWith("\n"),
+    "Static-client byte manifest must be newline-terminated text.",
+  );
+  const rows = value
+    .slice(0, -1)
+    .split("\n")
+    .map((line) => {
+      const match = line.match(/^([0-9a-f]{64})  ([^\r\n]+)$/u);
+      requireValue(match, "Static-client byte manifest contains an invalid row.");
+      const path = match[2];
+      requireValue(
+        path &&
+          !path.startsWith("/") &&
+          path !== ".." &&
+          !path.startsWith("../") &&
+          !path.includes("\\") &&
+          !/[\u0000-\u001f\u007f]/u.test(path),
+        `Static-client byte manifest contains an unsafe path: ${path}.`,
+      );
+      return Object.freeze({ sha256: match[1], path });
+    });
+  requireValue(rows.length > 0, "Static-client byte manifest is empty.");
+  requireValue(
+    new Set(rows.map((row) => row.path)).size === rows.length,
+    "Static-client byte manifest contains duplicate paths.",
+  );
+  const sortedPaths = rows.map((row) => row.path).toSorted();
+  requireValue(
+    rows.every((row, index) => row.path === sortedPaths[index]),
+    "Static-client byte manifest is not canonically sorted.",
+  );
+  return Object.freeze(rows);
 }
 
 async function verifyPublicRepository({
@@ -374,28 +414,91 @@ async function verifyPublicRepository({
   });
 }
 
-async function verifyDeployment({ deploymentUrl, expectedManifest, fetchImpl }) {
+async function verifyDeployment({
+  deploymentUrl,
+  expectedManifest,
+  expectedStaticManifest,
+  expectedStaticFileCount,
+  fetchImpl,
+  rootDir,
+}) {
+  const staticManifestText = await readFile(
+    join(rootDir, "output", "release", "dist-client.sha256"),
+    "utf8",
+  );
+  requireValue(
+    sha256(staticManifestText) === expectedStaticManifest,
+    "Generated static-client byte manifest does not match the reviewed release fingerprint.",
+  );
+  const staticRows = parseStaticClientManifest(staticManifestText);
+  requireValue(
+    staticRows.length === expectedStaticFileCount,
+    "Generated static-client byte manifest has the wrong file count.",
+  );
+  const rowsByPath = new Map(staticRows.map((row) => [row.path, row]));
+  const indexRow = rowsByPath.get("index.html");
+  const v2ManifestRow = rowsByPath.get("runs/v2/manifest.json");
+  requireValue(indexRow, "Static-client byte manifest is missing index.html.");
+  requireValue(
+    v2ManifestRow?.sha256 === expectedManifest,
+    "Static-client byte manifest has the wrong V2 manifest hash.",
+  );
   const rootResponse = await fetchRequired(
     fetchImpl,
     `${deploymentUrl}/`,
     "Deployment root",
   );
-  const html = await rootResponse.text();
+  const rootBytes = Buffer.from(await rootResponse.arrayBuffer());
+  const html = rootBytes.toString("utf8");
   requireValue(html.includes("WitnessPatch"), "Deployment root is not WitnessPatch.");
-  const manifestResponse = await fetchRequired(
-    fetchImpl,
-    `${deploymentUrl}/runs/v2/manifest.json`,
-    "Deployed V2 manifest",
+  requireValue(
+    sha256(rootBytes) === indexRow.sha256,
+    "Deployment root bytes do not match the reviewed static client.",
   );
-  const manifestDigest = sha256(Buffer.from(await manifestResponse.arrayBuffer()));
+  const excludedPaths = Object.freeze([
+    ".assetsignore",
+    ".vite/manifest.json",
+    "404.html",
+    "_headers",
+  ]);
+  for (const path of excludedPaths) {
+    requireValue(
+      rowsByPath.has(path),
+      `Expected deployment-control file is missing from the static client: ${path}.`,
+    );
+  }
+  const excluded = new Set(["index.html", ...excludedPaths]);
+  const publicRows = staticRows.filter((row) => !excluded.has(row.path));
+  await Promise.all(
+    publicRows.map(async (row) => {
+      const response = await fetchRequired(
+        fetchImpl,
+        new URL(
+          `/${row.path.split("/").map(encodeURIComponent).join("/")}`,
+          `${deploymentUrl}/`,
+        ),
+        `Deployed static file ${row.path}`,
+      );
+      const bytes = Buffer.from(await response.arrayBuffer());
+      requireValue(
+        sha256(bytes) === row.sha256,
+        `Deployed static file does not match the reviewed release: ${row.path}.`,
+      );
+    }),
+  );
+  const manifestDigest = v2ManifestRow.sha256;
   requireValue(
     manifestDigest === expectedManifest,
     "Deployed V2 manifest does not match the frozen local release.",
   );
   return Object.freeze({
     root_http_status: rootResponse.status,
-    v2_manifest_http_status: manifestResponse.status,
+    root_sha256: indexRow.sha256,
     v2_manifest_sha256: manifestDigest,
+    reviewed_static_manifest_sha256: expectedStaticManifest,
+    reviewed_static_file_count: staticRows.length,
+    public_files_byte_verified: publicRows.length + 1,
+    deployment_control_files_not_publicly_probed: excludedPaths,
   });
 }
 
@@ -532,7 +635,7 @@ export async function freezeFinalRelease({
       "utf8",
     ),
   );
-  await verifyLocalAnchors(template, rootDir);
+  const localAnchors = await verifyLocalAnchors(template, rootDir);
   commandRunner("npm", ["run", "verify:release"], {
     cwd: rootDir,
     failureMessage: "The complete local release verifier failed.",
@@ -558,7 +661,10 @@ export async function freezeFinalRelease({
   const deploymentVerification = await verifyDeployment({
     deploymentUrl,
     expectedManifest: template.v2_manifest_sha256,
+    expectedStaticManifest: localAnchors.staticClientManifestSha256,
+    expectedStaticFileCount: localAnchors.staticClientFileCount,
     fetchImpl,
+    rootDir,
   });
   const videoVerification = await verifyVideo({
     video,
@@ -594,7 +700,7 @@ export async function freezeFinalRelease({
       repository_clean: true,
     },
     boundary:
-      "This receipt binds one clean commit, its successful public Verify workflow run, public repository, deployed V2 manifest, local video bytes, reachable YouTube record, and entrant-confirmed /feedback and founder-voice facts. It does not prove clinical validity, adoption, or judge outcome.",
+      "This receipt binds one clean commit, its successful public Verify workflow run, public repository, byte-verified judge-facing static deployment, local video bytes, reachable YouTube record, and entrant-confirmed /feedback and founder-voice facts. It does not prove clinical validity, adoption, or judge outcome.",
   });
   const bytes = `${JSON.stringify(record, null, 2)}\n`;
   const digest = sha256(bytes);

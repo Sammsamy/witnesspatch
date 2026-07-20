@@ -21,6 +21,7 @@ import {
   freezeFinalRelease,
   parseFfprobeReport,
   parseFreezeArguments,
+  parseStaticClientManifest,
   selectSuccessfulVerifyRun,
   validateDeploymentUrl,
   validateFeedbackSessionId,
@@ -512,6 +513,23 @@ test("the final release template binds local artifacts but cannot masquerade as 
   const temporaryRoot = await mkdtemp(join(tmpdir(), "witnesspatch-freeze-test-"));
   try {
     const v2Bytes = Buffer.from('{"fixture":"synthetic"}\n');
+    const staticFiles = {
+      ".assetsignore": Buffer.from("ignored deployment control\n"),
+      ".vite/manifest.json": Buffer.from("{}\n"),
+      "404.html": Buffer.from("<title>Not found</title>\n"),
+      "THIRD_PARTY_NOTICES.md": Buffer.from("Synthetic notices\n"),
+      "_headers": Buffer.from("/*\n  X-Content-Type-Options: nosniff\n"),
+      "assets/app.js": Buffer.from('console.log("WitnessPatch");\n'),
+      "favicon.svg": Buffer.from("<svg></svg>\n"),
+      "index.html": Buffer.from("<title>WitnessPatch</title>\n"),
+      "index.rsc": Buffer.from("synthetic rsc\n"),
+      "runs/v2/manifest.json": v2Bytes,
+    };
+    const staticManifestText = Object.entries(staticFiles)
+      .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
+      .map(([path, bytes]) => `${sha256(bytes)}  ${path}\n`)
+      .join("");
+    const staticManifestDigest = sha256(staticManifestText);
     const media = Object.fromEntries(
       expectedImages.map((name) => [name, Buffer.from(`reviewed:${name}`)]),
     );
@@ -519,6 +537,12 @@ test("the final release template binds local artifacts but cannot masquerade as 
       mkdir(join(temporaryRoot, "submission", "release"), { recursive: true }),
       mkdir(join(temporaryRoot, "submission", "media"), { recursive: true }),
       mkdir(join(temporaryRoot, "public", "runs", "v2"), { recursive: true }),
+      mkdir(join(temporaryRoot, "dist", "client", ".vite"), { recursive: true }),
+      mkdir(join(temporaryRoot, "dist", "client", "assets"), { recursive: true }),
+      mkdir(join(temporaryRoot, "dist", "client", "runs", "v2"), {
+        recursive: true,
+      }),
+      mkdir(join(temporaryRoot, "output", "release"), { recursive: true }),
     ]);
     await Promise.all([
       writeFile(join(temporaryRoot, "LICENSE"), "MIT License\n"),
@@ -537,9 +561,19 @@ test("the final release template binds local artifacts but cannot masquerade as 
           "release",
           "static-client-fingerprint.json",
         ),
-        `${JSON.stringify({ manifest_sha256: "b".repeat(64) })}\n`,
+        `${JSON.stringify({
+          file_count: Object.keys(staticFiles).length,
+          manifest_sha256: staticManifestDigest,
+        })}\n`,
+      ),
+      writeFile(
+        join(temporaryRoot, "output", "release", "dist-client.sha256"),
+        staticManifestText,
       ),
       writeFile(join(temporaryRoot, "founder-demo.mp4"), "video-bytes"),
+      ...Object.entries(staticFiles).map(([path, bytes]) =>
+        writeFile(join(temporaryRoot, "dist", "client", path), bytes),
+      ),
       ...Object.entries(media).map(([name, bytes]) =>
         writeFile(join(temporaryRoot, "submission", "media", name), bytes),
       ),
@@ -550,7 +584,7 @@ test("the final release template binds local artifacts but cannot masquerade as 
       status: "not_frozen",
       submitted_commit: null,
       v2_manifest_sha256: sha256(v2Bytes),
-      static_client_manifest_sha256: "b".repeat(64),
+      static_client_manifest_sha256: staticManifestDigest,
       submission_media: Object.fromEntries(
         Object.entries(media).map(([name, bytes]) => [name, sha256(bytes)]),
       ),
@@ -603,6 +637,17 @@ test("the final release template binds local artifacts but cannot masquerade as 
         ),
       /successful completed Verify push run/u,
     );
+    assert.equal(
+      parseStaticClientManifest(staticManifestText).length,
+      Object.keys(staticFiles).length,
+    );
+    assert.throws(
+      () =>
+        parseStaticClientManifest(
+          `${"a".repeat(64)}  assets/app.js\n${"b".repeat(64)}  assets/app.js\n`,
+        ),
+      /duplicate paths/u,
+    );
     const commandRunner = (command, args) => {
       if (command === "npm") return "release verified";
       if (command === "ffprobe") {
@@ -643,9 +688,6 @@ test("the final release template binds local artifacts but cannot masquerade as 
           { status: 200, headers: { "content-type": "application/json" } },
         );
       }
-      if (href.endsWith("/runs/v2/manifest.json")) {
-        return new Response(v2Bytes, { status: 200 });
-      }
       if (href.startsWith("https://www.youtube.com/oembed")) {
         return new Response(JSON.stringify({ title: "WitnessPatch demo" }), {
           status: 200,
@@ -653,7 +695,17 @@ test("the final release template binds local artifacts but cannot masquerade as 
         });
       }
       if (href === "https://witnesspatch.example.workers.dev/") {
-        return new Response("<title>WitnessPatch</title>", { status: 200 });
+        return new Response(staticFiles["index.html"], { status: 200 });
+      }
+      if (href.startsWith("https://witnesspatch.example.workers.dev/")) {
+        const relativePath = new URL(href).pathname
+          .slice(1)
+          .split("/")
+          .map(decodeURIComponent)
+          .join("/");
+        const bytes = staticFiles[relativePath];
+        assert.ok(bytes, `Unexpected deployed path ${relativePath}`);
+        return new Response(bytes, { status: 200 });
       }
       throw new Error(`Unexpected test fetch: ${href}`);
     };
@@ -681,6 +733,10 @@ test("the final release template binds local artifacts but cannot masquerade as 
     assert.equal(
       frozen.record.verification.repository.remote_ci.head_sha,
       commit,
+    );
+    assert.equal(
+      frozen.record.verification.deployment.public_files_byte_verified,
+      Object.keys(staticFiles).length - 4,
     );
     assert.equal(frozen.record.verification.video.duration_seconds, 173.08);
     assert.equal(frozen.record.feedback_session_id, "feedback_123456");
