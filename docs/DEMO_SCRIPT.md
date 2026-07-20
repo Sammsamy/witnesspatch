@@ -2,7 +2,7 @@
 
 ## Current status
 
-The product flow is locally verified and recordable. The final public YouTube video required by the [Official Rules](https://openai.devpost.com/rules) has not been recorded or uploaded. Record a real one-take product run targeting `2:50–2:55`, never `3:00`; the controlling rule says the video must be shorter than three minutes.
+The product flow is locally verified. A `173.080`-second AI-narrated fallback has been rendered from the exact current narration table, SRT, and silent master with verified H.264 video, AAC audio, and sentence-level cue alignment; the official FAQ permits AI narration. It remains a local candidate, has not been uploaded, and must be auditioned before use. Founder narration remains preferable. The final public YouTube video required by the [Official Rules](https://openai.devpost.com/rules) does not yet exist; keep any uploaded cut below three minutes.
 
 Do not say the brother is a teammate until he has joined the Devpost draft and contributed. The founder may truthfully say, “I’m a third-year medical student”; that explains motivation, not clinical authority.
 
@@ -10,7 +10,7 @@ Do not say the brother is a teammate until he has joined the Devpost draft and c
 
 | Time | Exact narration | Screen action and proof |
 |---|---|---|
-| `0:00–0:13` | “I’m Fuzlullah Syed, a third-year medical student. Healthcare-agent failures die as screenshots. WitnessPatch turns one failed answer into a CI gate.” | Start at the top of the reference page. Keep `50`, `2` critical breaches, `T+02`, **Locked rules**, and **Healthcare-agent release gate** visible. |
+| `0:00–0:13` | “I’m Fuzlullah Syed, a third-year medical student. WitnessPatch turns a missed action deadline into a portable red test.” | Start at the top of the reference page. Keep `50`, `2` critical breaches, `T+02`, **Locked rules**, and **Healthcare-agent release gate** visible. |
 | `0:13–0:29` | “At T-plus-two, the agent knows the synthetic patient is eight days postpartum, with an unrelieved headache and visual changes. It still waits for blood pressure arriving four minutes later, breaking two locked rules.” | Point from `T+02` to the failed response and locked verifier. Do not scroll yet. |
 | `0:29–0:46` | “I chose the synthetic case and review boundary. During Build Week, Codex built and stress-tested the compiler. A separate run requesting GPT-5.6 Sol proposed repair data; locked code decides every score.” | Point to **GPT-5.6 Sol requested**, **Codex · Ultra requested configuration**, then **Locked rules—not model-graded**. |
 | `0:46–1:00` | “Compile Failure checks two saved inputs, recalculates the baseline, and builds a nine-file Node test bundle. It calls no model and does not rerun the agent.” | Select **Compile failure**. Wait until the button becomes **Verify retained repair**, then use **How it works** to move to the artifact panel. |

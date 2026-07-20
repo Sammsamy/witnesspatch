@@ -1,16 +1,16 @@
 1
 00:00:00,000 --> 00:00:04,000
 I’m Fuzlullah Syed, a third-year
-medical student. Healthcare-agent
+medical student.
 
 2
 00:00:04,000 --> 00:00:08,000
-failures die as screenshots.
-WitnessPatch turns one failed answer
+WitnessPatch turns a missed action
+deadline into a portable
 
 3
 00:00:08,000 --> 00:00:13,000
-into a CI gate.
+red test.
 
 4
 00:00:13,000 --> 00:00:18,000

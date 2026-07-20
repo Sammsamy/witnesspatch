@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "witnesspatch_final_release_fingerprint_template",
+  "status": "not_frozen",
+  "submitted_commit": null,
+  "v2_manifest_sha256": "46542e562fe15b7fcec50f5a42d45e145614791c2bac7432ce5289440b9597f2",
+  "static_client_manifest_sha256": "1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721",
+  "submission_media": {
+    "01-thumbnail-failure.png": "89a7215a12e38bdad8b20f68bcaa5e1213854eb029f0753708821e5aee486633",
+    "02-local-input-compiled-red.png": "1fac0225fb5d06675d94ea66b50396742c03fe811dc79f8e4d034cd43f129a67",
+    "03-reference-compiled-red.png": "97b5eca486f064a79da01576e7c6bb1f35ba05e90b4414ee1386e5462e5e3ed1",
+    "04-reference-verified-receipt.png": "f885d7c3df472b3a7bbf27e8dd5a49b990bd92f5b7064c61ac224e9b41cf3fd9"
+  },
+  "repository_url": null,
+  "deployment_url": null,
+  "video_url": null,
+  "video_sha256": null,
+  "feedback_session_id": null,
+  "boundary": "This template is not a release receipt. Replace every null only after the exact external artifact is verified, then set status to frozen."
+}

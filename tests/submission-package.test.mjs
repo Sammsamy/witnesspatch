@@ -126,7 +126,7 @@ test("authenticated overview copy stays inside the recorded field limits", async
     "utf8",
   );
   const title = extractQuotedField(draft, "Project name — 57/60 characters");
-  const pitch = extractQuotedField(draft, "Elevator pitch — 185/200 characters");
+  const pitch = extractQuotedField(draft, "Elevator pitch — 178/200 characters");
 
   assert.equal([...title].length, 57);
   assert.ok([...title].length <= 60);
@@ -134,11 +134,11 @@ test("authenticated overview copy stays inside the recorded field limits", async
     title,
     "WitnessPatch: Time-Fenced Contracts for Healthcare Agents",
   );
-  assert.equal([...pitch].length, 185);
+  assert.equal([...pitch].length, 178);
   assert.ok([...pitch].length <= 200);
   assert.equal(
     pitch,
-    "Turn a synthetic healthcare-agent failure into a replayable test, then check a fix a human must approve against locked rules—without patient data, an API key, or a model grading itself.",
+    "Turn one synthetic missed deadline into a portable red test: freeze what the agent knew, check whether action happened on time, then verify any repair offline before trusting it.",
   );
   assert.doesNotMatch(draft, /`OpenAI API`,/);
 
@@ -285,6 +285,14 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
     packageData.scripts["release:fingerprint"],
     "node build/verify-static-fingerprint.mjs",
   );
+  assert.equal(
+    packageData.scripts.demo,
+    "node targets/demo-agent/v2/run-demo.mjs",
+  );
+  assert.equal(
+    packageData.scripts["judge:proof"],
+    "node build/run-judge-proof.mjs",
+  );
   assert.match(
     packageData.scripts["deploy:dry-run"],
     /npm run release:static:check && npm run release:fingerprint && CI=1 wrangler deploy/u,
@@ -313,6 +321,57 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
       /^[0-9a-f]{40}$/u,
       `Workflow action is not pinned to a full commit SHA: ${actionRef}`,
     );
+  }
+});
+
+test("the final release template binds local artifacts but cannot masquerade as frozen", async () => {
+  const [templateBytes, v2ManifestBytes, staticRecordBytes, mediaManifest] =
+    await Promise.all([
+      readFile(
+        new URL(
+          "../submission/release/final-release-template.json",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+      readFile(new URL("../public/runs/v2/manifest.json", import.meta.url)),
+      readFile(
+        new URL(
+          "../submission/release/static-client-fingerprint.json",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+      readFile(
+        new URL("../submission/media/MANIFEST.md", import.meta.url),
+        "utf8",
+      ),
+    ]);
+  const template = JSON.parse(templateBytes);
+  const staticRecord = JSON.parse(staticRecordBytes);
+  const mediaRows = parseManifestRows(mediaManifest);
+
+  assert.equal(template.status, "not_frozen");
+  assert.equal(template.v2_manifest_sha256, sha256(v2ManifestBytes));
+  assert.equal(
+    template.static_client_manifest_sha256,
+    staticRecord.manifest_sha256,
+  );
+  assert.deepEqual(
+    template.submission_media,
+    Object.fromEntries(
+      expectedImages.map((name) => [name, mediaRows.get(name).sha256]),
+    ),
+  );
+  for (const field of [
+    "submitted_commit",
+    "repository_url",
+    "deployment_url",
+    "video_url",
+    "video_sha256",
+    "feedback_session_id",
+  ]) {
+    assert.equal(template[field], null, `${field} must remain unset before freeze`);
   }
 });
 

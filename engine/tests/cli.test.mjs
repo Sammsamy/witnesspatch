@@ -64,6 +64,33 @@ async function writeJson(path, value) {
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+async function compileTemporaryBundle(t, name = "compiled-witness") {
+  const directory = await temporaryDirectory(t);
+  const outDir = join(directory, name);
+  const result = invoke([
+    "compile",
+    "--case",
+    urgentCasePath,
+    "--run",
+    baselineInputPath,
+    "--out-dir",
+    outDir
+  ]);
+  assert.equal(result.status, 0, result.stderr);
+  return { directory, outDir };
+}
+
+async function refreshManifestRecord(outDir, fileName) {
+  const manifestPath = join(outDir, "manifest.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  const bytes = await readFile(join(outDir, fileName));
+  const record = manifest.files.find((item) => item.path === fileName);
+  assert.ok(record, `${fileName} must be listed in the manifest`);
+  record.bytes = bytes.length;
+  record.sha256 = createHash("sha256").update(bytes).digest("hex");
+  await writeJson(manifestPath, manifest);
+}
+
 test("evaluate emits an exact passing artifact and exits zero", () => {
   const result = invoke([
     "evaluate",
@@ -503,6 +530,22 @@ test("usage errors and policy-code arguments are rejected", () => {
     invalidFactScope.stderr,
     /--fact-scope must be either failure-prefix or full-trace/
   );
+
+  const missingBundle = invoke(["verify"]);
+  assert.equal(missingBundle.status, 2);
+  assert.equal(missingBundle.stdout, "");
+  assert.match(missingBundle.stderr, /verify requires --bundle/);
+
+  const verifyPolicyArgument = invoke([
+    "verify",
+    "--bundle",
+    rootDir,
+    "--policy",
+    "target.mjs"
+  ]);
+  assert.equal(verifyPolicyArgument.status, 2);
+  assert.equal(verifyPolicyArgument.stdout, "");
+  assert.match(verifyPolicyArgument.stderr, /Unknown argument --policy/);
 });
 
 test("compile emits a hash-listed static witness and executable red regression", async (t) => {
@@ -760,6 +803,160 @@ test("compile emits stable V2 bytes after identity and integrity hardening", asy
       `${name} changed from the hardened V2 compiler fixture`
     );
   }
+
+  const verified = invoke(["verify", "--bundle", outDir]);
+  assert.equal(verified.status, 0, verified.stderr);
+  assert.equal(JSON.parse(verified.stdout).target_rule_id, "INV-02");
+});
+
+test("verify accepts a compiler-exact bundle and reports bounded claims", async (t) => {
+  const { outDir } = await compileTemporaryBundle(t, "verified-bundle");
+  const result = invoke(["verify", "--bundle", outDir]);
+
+  assert.equal(result.status, 0, result.stderr);
+  const summary = JSON.parse(result.stdout);
+  assert.equal(summary.bundle_id, "witness-bundle-a7efd7e4acdbc6fa");
+  assert.equal(summary.case_id, "postpartum-warning-signs-001");
+  assert.equal(summary.source_run_id, "run-pws-001-baseline");
+  assert.equal(summary.target_rule_id, "INV-02");
+  assert.equal(summary.verified_file_count, 9);
+  assert.equal(summary.manifest_record_count, 8);
+  assert.equal(summary.evaluated_status, "fail");
+  assert.equal(summary.api_key_required, false);
+  assert.equal(summary.model_invoked, false);
+  assert.equal(summary.publisher_provenance_verified, false);
+  assert.match(
+    result.stderr,
+    /^WITNESSPATCH VERIFIED .* files="9" provenance="unverified"\n$/
+  );
+});
+
+test("verify rejects a one-byte change in every bundle file, including the manifest", async (t) => {
+  const { outDir } = await compileTemporaryBundle(t, "byte-tamper-bundle");
+  const fileNames = (await readdir(outDir)).sort();
+
+  for (const fileName of fileNames) {
+    const path = join(outDir, fileName);
+    const original = await readFile(path);
+    const tampered = Buffer.from(original);
+    assert.equal(tampered.at(-1), 0x0a, `${fileName} should end in newline`);
+    tampered[tampered.length - 1] = 0x20;
+    await writeFile(path, tampered);
+
+    const result = invoke(["verify", "--bundle", outDir]);
+    assert.equal(result.status, 2, `${fileName}: ${result.stderr}`);
+    assert.equal(result.stdout, "", fileName);
+    assert.match(result.stderr, /^WITNESSPATCH ERROR /, fileName);
+
+    await writeFile(path, original);
+  }
+
+  const restored = invoke(["verify", "--bundle", outDir]);
+  assert.equal(restored.status, 0, restored.stderr);
+});
+
+test("verify rejects unsafe paths, non-exact file sets, and non-regular files", async (t) => {
+  const { directory, outDir } = await compileTemporaryBundle(
+    t,
+    "unsafe-layout-bundle"
+  );
+  const bundleLink = join(directory, "bundle-link");
+  await symlink(outDir, bundleLink, "dir");
+  const linkedRoot = invoke(["verify", "--bundle", bundleLink]);
+  assert.equal(linkedRoot.status, 2);
+  assert.equal(linkedRoot.stdout, "");
+  assert.match(linkedRoot.stderr, /not a symbolic link/);
+
+  const extraPath = join(outDir, "unexpected.json");
+  await writeFile(extraPath, "{}\n", "utf8");
+  const extraFile = invoke(["verify", "--bundle", outDir]);
+  assert.equal(extraFile.status, 2);
+  assert.match(extraFile.stderr, /must contain exactly/);
+  await rm(extraPath);
+
+  const manifestPath = join(outDir, "manifest.json");
+  const originalManifest = await readFile(manifestPath);
+  await writeFile(manifestPath, Buffer.from([0xff]));
+  const malformedUtf8 = invoke(["verify", "--bundle", outDir]);
+  assert.equal(malformedUtf8.status, 2);
+  assert.match(malformedUtf8.stderr, /manifest\.json is not valid UTF-8/);
+  await writeFile(manifestPath, originalManifest);
+
+  await writeFile(manifestPath, "{", "utf8");
+  const malformedJson = invoke(["verify", "--bundle", outDir]);
+  assert.equal(malformedJson.status, 2);
+  assert.match(malformedJson.stderr, /manifest\.json is not valid JSON/);
+  await writeFile(manifestPath, originalManifest);
+
+  const unsafeManifest = JSON.parse(originalManifest.toString("utf8"));
+  unsafeManifest.files[0].path = "../case.json";
+  await writeJson(manifestPath, unsafeManifest);
+  const unsafePath = invoke(["verify", "--bundle", outDir]);
+  assert.equal(unsafePath.status, 2);
+  assert.match(unsafePath.stderr, /manifest schema validation failed/i);
+  await writeFile(manifestPath, originalManifest);
+
+  const outsideCase = join(directory, "outside-case.json");
+  const casePath = join(outDir, "case.json");
+  const originalCase = await readFile(casePath);
+  await writeFile(casePath, Buffer.alloc(4 * 1024 * 1024 + 1, 0x20));
+  const oversizedFile = invoke(["verify", "--bundle", outDir]);
+  assert.equal(oversizedFile.status, 2);
+  assert.match(oversizedFile.stderr, /case\.json exceeds the 4 MiB/);
+  await writeFile(casePath, originalCase);
+
+  const receiptPath = join(outDir, "receipt.json");
+  const originalReceipt = await readFile(receiptPath);
+  await rm(receiptPath);
+  const missingFile = invoke(["verify", "--bundle", outDir]);
+  assert.equal(missingFile.status, 2);
+  assert.match(missingFile.stderr, /must contain exactly/);
+  await mkdir(receiptPath);
+  const nestedFile = invoke(["verify", "--bundle", outDir]);
+  assert.equal(nestedFile.status, 2);
+  assert.match(nestedFile.stderr, /regular file, not a link or directory/);
+  await rm(receiptPath, { recursive: true });
+  await writeFile(receiptPath, originalReceipt);
+
+  await writeFile(outsideCase, originalCase);
+  await rm(casePath);
+  await symlink(outsideCase, casePath, "file");
+  const linkedFile = invoke(["verify", "--bundle", outDir]);
+  assert.equal(linkedFile.status, 2);
+  assert.equal(linkedFile.stdout, "");
+  assert.match(linkedFile.stderr, /regular file, not a link or directory/);
+});
+
+test("verify rejects rehashed semantic and executable tampering", async (t) => {
+  const { outDir } = await compileTemporaryBundle(t, "rehashed-tamper-bundle");
+  const receiptPath = join(outDir, "receipt.json");
+  const originalReceipt = await readFile(receiptPath);
+  const receipt = JSON.parse(originalReceipt.toString("utf8"));
+  receipt.selected_rule_id = "INV-03";
+  await writeJson(receiptPath, receipt);
+  await refreshManifestRecord(outDir, "receipt.json");
+
+  const relinkedReceipt = invoke(["verify", "--bundle", outDir]);
+  assert.equal(relinkedReceipt.status, 2);
+  assert.equal(relinkedReceipt.stdout, "");
+  assert.match(relinkedReceipt.stderr, /receipt\.selected_rule_id/);
+
+  await writeFile(receiptPath, originalReceipt);
+  await refreshManifestRecord(outDir, "receipt.json");
+  const regressionPath = join(outDir, "regression.test.mjs");
+  const regressionBytes = await readFile(regressionPath);
+  const rehashedExecutable = Buffer.from(regressionBytes);
+  rehashedExecutable[rehashedExecutable.length - 1] = 0x20;
+  await writeFile(regressionPath, rehashedExecutable);
+  await refreshManifestRecord(outDir, "regression.test.mjs");
+
+  const executableTamper = invoke(["verify", "--bundle", outDir]);
+  assert.equal(executableTamper.status, 2);
+  assert.equal(executableTamper.stdout, "");
+  assert.match(
+    executableTamper.stderr,
+    /regression\.test\.mjs does not match deterministic compiler output/
+  );
 });
 
 test("compile exits one for a valid passing run without creating output", async (t) => {
@@ -793,7 +990,9 @@ test("compile honors an explicit failed-rule selection without calling it earlie
     "--out-dir",
     outDir,
     "--rule",
-    "INV-03"
+    "INV-03",
+    "--fact-scope",
+    "failure-prefix"
   ]);
 
   assert.equal(result.status, 0, result.stderr);
@@ -804,6 +1003,10 @@ test("compile honors an explicit failed-rule selection without calling it earlie
   assert.equal(prefix.selection_policy, "explicit_failed_action_invariant");
   assert.equal(prefix.target_rule_id, "INV-03");
   assert.deepEqual(prefix.coincident_critical_failures, ["INV-02"]);
+
+  const verified = invoke(["verify", "--bundle", outDir]);
+  assert.equal(verified.status, 0, verified.stderr);
+  assert.equal(JSON.parse(verified.stdout).target_rule_id, "INV-03");
 });
 
 test("compile is portable across renamed case, step, evidence, rule, and control ids", async (t) => {

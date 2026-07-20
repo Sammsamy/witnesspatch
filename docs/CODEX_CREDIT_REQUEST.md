@@ -1,6 +1,6 @@
 # Codex credit request record
 
-Status: **submitted July 13, 2026; Google Forms displayed “Your response has been recorded.”** The live form says requests are first-come, first-served, not guaranteed, and due July 17 at 12:00 PM PT. One eligible entrant may request one code for $100 in Codex credits that expires July 31. These are not API credits, have no cash value, and will not become part of the judge-runtime architecture. The official FAQ says the last batch will be delivered shortly after the form closes, but neither the form nor FAQ specifies the approval channel or redemption steps.
+Status: **submitted July 13, 2026; Google Forms displayed “Your response has been recorded.” Approval and delivery remain unconfirmed.** As of the July 20 recheck, the official resources page says all available credits have been given out. The rules say granted credits must be used by July 21 at 5:00 PM PT; they are Codex credits, not API credits, have no cash value, and will not become part of the judge-runtime architecture. The request was submitted before the July 17 form deadline, but supply was limited, first-come/first-served, and not guaranteed.
 
 Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/policies/services-agreement/). The entrant provided the exact acknowledgment and explicitly authorized submission before the consequential action.
 
@@ -28,5 +28,6 @@ Submitting acknowledges the [OpenAI Services Agreement](https://openai.com/polic
 - [x] Entrant read and explicitly accepted the linked Services Agreement.
 - [x] Entrant explicitly approved submitting the completed Google form.
 - [x] The authenticated browser displayed the success receipt; no personal response data was committed.
-- [ ] Confirm that the form email is also the intended ChatGPT/Codex account email before treating any balance as mapped correctly; do not submit a duplicate request blindly.
-- [ ] Monitor the official Build Week channels and the supplied inbox for approval or redemption instructions. The form promises an emailed response copy, not necessarily an emailed credit code.
+- [x] The entrant later confirmed that the intended ChatGPT/Codex account email differs from the Devpost-account email entered in the generic form field. Keep both addresses private and treat account mapping as unresolved.
+- [ ] Check the original response-copy email for an organizer-enabled **Edit response** link. If none exists, ask the official Build Week support channel to correct the existing request; do not submit a duplicate because the FAQ limits requests to one code per entrant and the resources page now says supply is exhausted.
+- [ ] Monitor both supplied inboxes and `chatgpt.com` **Settings → Usage** on the intended account. The FAQ says this is where an awarded balance appears, but does not document how organizers resolve an email mismatch.

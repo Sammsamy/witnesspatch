@@ -2,7 +2,21 @@
 
 This is a retained local reproducibility record, not independent third-party validation. It verifies the exact local macOS and Debian environments named below; it is not proof of remote CI, a broad Linux compatibility matrix, or Windows support.
 
-## Current pre-publication cross-platform checkpoint
+## Current exact source/media checkpoint
+
+- Commit: `1086426e933cc5f5874cde62232b66f422d52157`
+- Source: fresh local clones with no inherited `node_modules`, generated output, or ignored workspace files
+- Commands in each clone: `npm ci` followed by `npm run verify:release`
+- macOS host: macOS 26.5.2 arm64; Node `v24.14.0`; npm `11.9.0`
+- macOS result: exit code `0`; 495 packages installed, 496 audited, zero vulnerabilities; all `151/151` aggregate test executions passed: `131/131` core, `6/6` rendered-product, `1/1` real development-server HTTP smoke, `7/7` submission-package, and `6/6` deployment-rendered checks
+- Linux host: local Docker container running Debian GNU/Linux 12 (bookworm) arm64; Node `v22.23.1`; npm `10.9.8`
+- Linux result: exit code `0`; 502 packages installed, 503 audited, zero vulnerabilities; `150/151` aggregate test executions passed, with only the case-insensitive-output-alias test expectedly skipped on the case-sensitive filesystem
+- Shared verified outcomes: both artifact profiles, production build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a Wrangler static-deployment dry run with 59 assets
+- Two-environment static snapshot: each `dist/client` directory contained 55 physical files; every canonical path and file SHA-256 row matched, and the SHA-256 of each identical canonical manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
+
+Neither temporary clone was used to edit the repository. This is the final exact cross-platform receipt for the current source, static build, and tracked submission media before the remaining documentation and CLI hardening. It does not prove remote CI, public deployment, video compliance, judge access, or Devpost completion. The exact final submitted commit still requires a release replay.
+
+## Earlier pre-publication cross-platform checkpoint
 
 - Commit: `d17d075da6a31d1e7ddc853b6a225b26bd9bf083`
 - Source: fresh local clones with no inherited `node_modules`, generated output, or ignored workspace files

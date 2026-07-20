@@ -18,6 +18,10 @@ import {
   parseStoredReviewZip,
   runReviewBundle
 } from "../../build/run-review-bundle.mjs";
+import {
+  formatJudgeProof,
+  runJudgeProof
+} from "../../build/run-judge-proof.mjs";
 import { runReviewPreflight } from "../../build/review-preflight.mjs";
 import { createStoredBundleZip } from "../browser-bundle-zip.mjs";
 import { compileBrowserWitness } from "../browser-witness-compiler.mjs";
@@ -26,6 +30,26 @@ const testDir = dirname(fileURLToPath(import.meta.url));
 const rootDir = dirname(dirname(testDir));
 const publicDir = join(rootDir, "public");
 const manifestPath = join(publicDir, "runs", "v2", "manifest.json");
+
+test("zero-argument judge proof compiles red, passes the repair, and rejects the mutation", async () => {
+  const result = await runJudgeProof({ rootDir });
+  assert.equal(result.bundle_files, 9);
+  assert.equal(result.target_rule_id, "INV-02");
+  assert.equal(result.failure_known_at_minute, 2);
+  assert.equal(result.baseline_exit_code, 1);
+  assert.equal(result.repair_exit_code, 0);
+  assert.equal(result.mutation_status, "fail");
+  assert.equal(result.mutation_score, 25);
+
+  const output = formatJudgeProof(result);
+  assert.equal(output.split("\n").length, 6);
+  assert.match(output, /^WITNESSPATCH JUDGE PROOF PASS$/mu);
+  assert.match(output, /^1 COMPILE  9-file red regression · INV-02 · T\+02$/mu);
+  assert.match(output, /^2 RED      baseline failed the compiled regression as required · exit 1$/mu);
+  assert.match(output, /^3 GREEN    retained repair passed that same regression · exit 0$/mu);
+  assert.match(output, /^4 MUTATION FAIL \(expected\) · always-escalate rejected · 25\/100$/mu);
+  assert.match(output, /^BOUNDARY   synthetic software proof only · no clinical validation or runtime model call$/mu);
+});
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");

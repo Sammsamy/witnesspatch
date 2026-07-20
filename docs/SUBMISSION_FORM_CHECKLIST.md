@@ -1,6 +1,6 @@
 # Build Week submission form checklist
 
-This file separates confirmed public requirements from authenticated fields and human facts that Codex cannot invent or submit. No Devpost project content has been saved or submitted. The separately authorized Codex-credit request was submitted July 13 and received a Google Forms success receipt; approval and delivery remain unconfirmed.
+This file separates confirmed public requirements from authenticated fields and human facts that Codex cannot invent or submit. No Devpost project content has been saved or submitted. The separately authorized Codex-credit request was submitted July 13 and received a Google Forms success receipt; approval and delivery remain unconfirmed, and its email-to-ChatGPT-account mapping is unresolved.
 
 ## Confirmed public fields and evidence
 
@@ -9,7 +9,7 @@ This file separates confirmed public requirements from authenticated fields and 
 - [x] Category: `Developer Tools`.
 - [x] English project description and 22/25 truthful “Built with” tags frozen in `docs/SUBMISSION_DRAFT.md`.
 - [x] Four candidate direct 1200 x 800 PNG media assets were recaptured from the current source-hash-bound production build and recorded by exact byte size, SHA-256, and thirteen rendered/computed source fingerprints in `submission/media/MANIFEST.md`; no upload has occurred and final external-field freeze remains pending.
-- [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6.
+- [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6. A verified `173.080`-second local AI-narrated fallback exists and the FAQ permits AI narration, but it must be auditioned and publicly uploaded; founder voice remains preferable.
 - [ ] Repository URL: either public with relevant licensing or private and shared with both `testing@devpost.com` and `build-week-event@openai.com`.
 - [x] README includes local setup, sample inputs, supported and unverified platform boundaries, Codex collaboration, GPT-5.6 contribution, and retained human decisions.
 - [ ] Add the final public no-rebuild URL and exact submitted release fingerprint to the README after deployment.
@@ -18,7 +18,7 @@ This file separates confirmed public requirements from authenticated fields and 
 
 ## Authenticated form audit
 
-The joined challenge's authenticated submission manager was inspected read-only on July 13. It contains five steps and an automatically created blank draft; no project content was saved or submitted during the audit.
+The joined challenge's authenticated submission manager was rechecked read-only on July 20. Draft `1079808` remains `Untitled`, shows `1/5` steps complete, lists only its creator, and has blank overview, story, tags, links, media/video, category, repository, judge-testing, developer-tool, and `/feedback` fields. No project content was saved or submitted during the audit.
 
 - [x] Open the joined challenge's submission manager while logged in and confirm an OpenAI Build Week draft exists.
 - [x] Record the authenticated fields before drafting into the form:
@@ -35,12 +35,9 @@ The joined challenge's authenticated submission manager was inspected read-only 
 
 - [x] The current project creator is registered for OpenAI Build Week and has an authenticated draft.
 - [x] The current creator reports United States residence; the United States is on the official supported-country list. Age-of-majority and conflict checks remain separate.
-- [ ] The brother registers, joins the draft, and accepts the invitation before July 21 at 5:00 PM PT.
-- [ ] Each brother is at least the age of majority where he resides.
-- [ ] Each brother resides in an eligible supported country or territory.
-- [ ] Neither brother has an excluded OpenAI/Devpost/judge/employer/affiliate conflict.
-- [ ] The team has designated one eligible representative to submit and receive any team prize.
-- [ ] The representative has authority from the other team member.
+- [ ] Choose the truthful final entrant type: submit solo unless the brother has actually contributed, registered, joined the draft, accepted the invitation, and agreed to the rules before July 21 at 5:00 PM PT.
+- [ ] Confirm the creator is at least the age of majority, resides in an eligible jurisdiction, and has no excluded OpenAI/Devpost/judge/employer/affiliate conflict.
+- [ ] If entering as a team, separately confirm the brother's age, eligible residence, conflicts, accepted membership, contributions, designated representative, and the representative's authority; otherwise mark every team-only item not applicable and make no team claim.
 - [ ] Ownership of all original code, copy, media, and submitted assets is confirmed.
 - [ ] Confirm the project was not developed or derived with prohibited OpenAI/Devpost financial or preferential support; resolve the Section 4 ordinary-paid-plan ambiguity with the organizer.
 
@@ -54,6 +51,7 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [ ] Authorize every original asset and contribution before release.
 - [ ] Verify the private repository and its GitHub Actions checks from a judge-equivalent account after sharing it with both judging addresses.
 - [ ] Verify the exact submitted commit and record its hash.
+- [x] Add `submission/release/final-release-template.json`, which binds the current V2 manifest, reviewed static-client fingerprint, and four image hashes while failing visibly as `not_frozen` with every external field unset.
 - [ ] Record one release fingerprint joining the submitted commit, V2 manifest SHA-256, deployed-build URL, repository URL, and video URL.
 - [ ] Freeze the submitted version after July 21 at 5:00 PM PDT except for organizer-authorized narrow corrections.
 
@@ -65,8 +63,9 @@ The joined challenge's authenticated submission manager was inspected read-only 
 - [x] Exact Devpost username confirmed read-only from the authenticated account menu; the value remains in private task context.
 - [x] Submit the authenticated credit form with the exact three-sentence `Developer Tools` response only after the representative approved the response, explicitly accepted the OpenAI Services Agreement, and authorized the consequential Submit action; preserve the success receipt without committing personal data.
 - [x] Request the optional $100 Codex credits before July 17 at 12:00 PM PT. Approval is first-come, first-served while supplies last and is not guaranteed.
-- [ ] Confirm that the supplied form email corresponds to the intended ChatGPT/Codex account before treating any balance as mapped correctly; do not submit a duplicate request blindly.
-- [ ] Monitor official Build Week channels and the supplied inbox for delivery/redemption instructions; the published materials do not specify the delivery channel or redemption flow.
+- [x] The entrant later confirmed that the intended ChatGPT/Codex account uses a different email from the Devpost-account email submitted in the generic form field. Treat any balance mapping as unresolved and keep both addresses private.
+- [ ] Check the response-copy email for an organizer-enabled **Edit response** link or ask official support to correct the existing request. Do not submit a duplicate: the FAQ limits requests to one code per entrant, and the resources page now says all available credits have been given out.
+- [ ] Monitor both supplied inboxes and the intended account's `chatgpt.com` **Settings → Usage** for delivery or a balance. Granted credits must be used by July 21 at 5:00 PM PT under the controlling rules.
 - [x] The optional request is Codex credits only; it does not provide API credits and will not become a judge-runtime dependency.
 - [ ] Confirm Auto top-up remains disabled in the relevant OpenAI account; Codex cannot infer account settings.
 - [ ] Do not purchase credits or add a paid runtime dependency.
@@ -82,7 +81,7 @@ The joined challenge's authenticated submission manager was inspected read-only 
 ## Final release audit
 
 - [x] `npm ci` and `npm run verify:release` passed from fresh local clones at checkpoint `a056fe3` on macOS with Node 22.15.0 and 24.14.0 (`94/94` core, `4/4` rendered); rule-audit checkpoint `950fea6` also passed from a fresh clone on Node 24.14.0 (`94/94` core, `5/5` rendered).
-- [x] Pre-publication checkpoint `d17d075` passes the full release verifier from fresh macOS and local Debian clones: macOS `131/131` core tests; Debian `130/131` pass plus one expected filesystem skip; both `6/6` rendered checks, `1/1` real development-server HTTP smoke, `6/6` submission-package checks, the distribution-license gate, a 59-asset deployment dry run, and byte-identical physical 55-file `dist/client` snapshots with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
+- [x] Exact source/media checkpoint `1086426` passes the full release verifier from fresh macOS and local Debian clones: macOS `151/151` aggregate tests; Debian `150/151` pass plus one expected filesystem skip; both `131` discovered core tests, `6/6` rendered checks, `1/1` real development-server HTTP smoke, `7/7` submission-package checks, `6/6` deployment-rendered checks, the distribution-license gate, a 59-asset deployment dry run, and byte-identical physical 55-file `dist/client` snapshots with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
 - [x] Release-code checkpoint `15f1aee` passes `npm ci` and `npm run verify:release` from a fresh local clone on Node 24.14.0 (`104/104` core, `5/5` rendered, Wrangler dry run reporting 56 assets).
 - [x] Release-code checkpoint `9f2cd8d` fixes the development-server first-request failure and passes the expanded verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, Wrangler dry run reporting 59 assets).
 - [x] Submission-package checkpoint `b4c8217` passes `npm ci` and the full expanded release verifier from a fresh local clone (`104/104` core, `5/5` rendered, `1/1` dev HTTP smoke, `4/4` submission checks, Wrangler dry run reporting 59 assets, zero install vulnerabilities).

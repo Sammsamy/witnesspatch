@@ -1,8 +1,8 @@
 # WitnessPatch
 
-**Compile a time-fenced healthcare-agent contract failure into a red regression, then verify a review-gated target repair.**
+**WitnessPatch — portable red-test compiler for time-critical AI agents.**
 
-Here, time-fenced means every authored fact has a reveal time and every action contract has a deadline. WitnessPatch is synthetic developer safety tooling for teams building patient-facing healthcare agents. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic software owns every displayed verdict. The post-start V2 reference demonstrates a real executable policy change, an exact-fact negative control, a portable static witness compiler, and browser-side verification that fails closed.
+WitnessPatch turns a missed safety deadline into a portable red test. It freezes what an agent knew at each timestamp, checks whether the required action happened on time, and compiles that exact observed failure into a hash-bound `node:test` bundle that runs offline before any repair can be trusted. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic software owns every displayed verdict.
 
 The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. Licensed-physician fixture/wording review is pending, clinical validation is not claimed, and external health-AI builder validation is still pending.
 
@@ -23,6 +23,14 @@ Those checks establish the declared synthetic software behavior only. They do no
 
 Requires Node.js 22.15 or newer; `.nvmrc` pins the minimum version exercised by the repository.
 
+For the shortest executable judge path, one zero-argument command compiles the V2 failure into a nine-file regression, proves it red on the baseline and green on the retained repair, then confirms the always-escalate mutation fails its exact-fact control:
+
+```bash
+npm run judge:proof
+```
+
+The expected mutation failure is a passing guardrail check. This command uses only retained synthetic inputs and local deterministic code; it makes no model or network call and is not clinical validation.
+
 ```bash
 npm ci
 npm run artifacts:v2:verify
@@ -42,7 +50,7 @@ The verifier's trust anchor is the manifest shipped with the same app build; it 
 
 The current source-hash-bound UI candidate passed a fresh production-Chrome replay on both paths. The reference flow showed `50 → nine-file RED bundle → 100`, with `2/2` exact manifest inputs, a judge-readable bundle map for `INV-02` at T+02 and `9→3` facts, `23/23` retained artifact responses, reference `2/2` regrades plus `4/4` holdouts, fresh-candidate IR `2/2` plus `4/4`, and an explicit four-path baseline/repair/control/mutant closure. The baseline remains visibly red after the retained repair passes. The separate local-input flow loaded the included pair, then freshly produced `50/100`, `INV-02` and `INV-03`, `9→3` facts, and `2 hashes computed · 0 externally verified`; after the two expected same-origin sample fetches, compilation made no further requests. Both flows recorded zero console warnings or errors, and the same-page controls emitted no `/.rsc` or `404` requests. The local ZIP passed `unzip -t`; all nine files were byte-identical to the shipped CLI output, the default regression exited red, and the supplied repaired candidate exited green.
 
-Pre-publication checkpoint `d17d075` passed `npm ci` followed by `npm run verify:release` from fresh clones on macOS 26.5.2 arm64 with Node 24.14.0/npm 11.9.0 and a local Debian 12 arm64 container with Node 22.23.1/npm 10.9.8. macOS passed `131/131` core tests; Debian passed `130/131` and expectedly skipped the case-insensitive-filesystem check on its case-sensitive filesystem. Both passed `6/6` rendered-product checks, the `1/1` real development-server HTTP smoke, `6/6` submission-package checks, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run. Their physical 55-file `dist/client` snapshots matched byte-for-byte; the SHA-256 of each canonical 55-line manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`. `npm run verify:release` now fails if the built client differs from that reviewed fingerprint. The current submission gate also binds four recaptured media assets to thirteen rendered/computed source fingerprints. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). The exact submitted commit must still receive remote CI and a final replay after the repository URL, deployment, video, and form copy are frozen; Windows remains unverified.
+Exact source/media checkpoint `1086426` passed `npm ci` followed by `npm run verify:release` from fresh clones on macOS 26.5.2 arm64 with Node 24.14.0/npm 11.9.0 and a local Debian 12 arm64 container with Node 22.23.1/npm 10.9.8. macOS passed all `151/151` aggregate test executions: `131/131` core, `6/6` rendered-product, `1/1` real development-server HTTP smoke, `7/7` submission-package, and `6/6` deployment-rendered checks. Debian passed `150/151`, with only the expected case-insensitive-filesystem check skipped on its case-sensitive filesystem. Both passed build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run. Their physical 55-file `dist/client` snapshots matched byte-for-byte; the SHA-256 of each canonical 55-line manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`. `npm run verify:release` fails if the built client differs from that reviewed fingerprint. The submission gate also binds four recaptured media assets to thirteen rendered/computed source fingerprints. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). The exact submitted commit must still receive remote CI and a final replay after the repository URL, deployment, video, and form copy are frozen; Windows remains unverified.
 
 The release bundle can also be built and checked without publishing:
 
@@ -56,10 +64,10 @@ Publication remains an explicit release action. The selected route is a public s
 
 | Surface | Current evidence | Claim boundary |
 | --- | --- | --- |
-| Source install and release verification | Fresh-clone commit `d17d075` passes the complete verifier on macOS 26.5.2 arm64/Node 24.14.0 and local Debian 12 arm64/Node 22.23.1; both yield the same canonical physical 55-file `dist/client` byte manifest and pass the 59-asset Wrangler dry run | Verified only for that pre-publication checkpoint and those exact local environments; remote CI and an exact submitted-commit replay remain |
+| Source install and release verification | Fresh-clone commit `1086426` passes the complete verifier on macOS 26.5.2 arm64/Node 24.14.0 and local Debian 12 arm64/Node 22.23.1; both yield the same canonical physical 55-file `dist/client` byte manifest and pass the 59-asset Wrangler dry run | Verified only for that exact source/media checkpoint and those exact local environments; remote CI and an exact submitted-commit replay remain |
 | Browser replay | A fresh production-Chrome session passed the current source-hash-bound reference compile/verify and included-sample local compile/export, with exact CLI parity, red/green regression execution, no requests after the two expected sample fetches, no `/.rsc`/`404` navigation, and zero console warnings or errors; exact 390 x 844 reference and local replays had no horizontal overflow | Chrome on macOS is verified for these paths and mobile viewport; no broad browser matrix is claimed |
 | Static hosting package | Wrangler dry run passes with 59 assets | Packaging is verified; no public deployment exists yet |
-| Linux | Fresh-clone commit `d17d075` passes locally in a Debian 12 arm64 container with Node 22.23.1; `130/131` core tests pass and the one case-insensitive-filesystem test is expectedly skipped | This is one local Linux environment, not a browser matrix; remote GitHub Actions has not run in the judge-shared repository |
+| Linux | Fresh-clone commit `1086426` passes locally in a Debian 12 arm64 container with Node 22.23.1; `150/151` aggregate tests pass and the one case-insensitive-filesystem test is expectedly skipped | This is one local Linux environment, not a browser matrix; remote GitHub Actions has not run in the judge-shared repository |
 | Windows | No clean checkout or browser run | Unverified |
 
 ## Portable evaluator and compiler
@@ -84,6 +92,14 @@ npm run witnesspatch -- compile \
 ```
 
 It independently regrades the supplied run, selects the earliest failed critical action invariant by default, records earlier noncritical and coincident failures, and emits canonical snapshots, a failing prefix, static witness, red `node:test` regression, receipt, and exact-byte SHA-256 manifest. With the two exact manifest-listed public inputs and `--fact-scope failure-prefix` above, the shipped CLI emits the same nine bytesets as the browser export. Use `--fact-scope full-trace` to begin reduction from every authored timeline fact instead. The CLI refuses existing or symlinked output paths and invokes neither a model nor a target adapter.
+
+Verify a detached bundle before running its regression:
+
+```bash
+npm run witnesspatch -- verify --bundle output/compiled-witness-v2
+```
+
+The verifier rejects extra, missing, linked, or non-regular files; invalid UTF-8/JSON and schemas; broken case/run/rule links; hash or byte-count mismatches; nondeterministic evaluations; and any bytes that do not reproduce the compiler-exact nine-file bundle. A pass establishes local bundle consistency, not publisher identity, origin, or external provenance.
 
 The compiler holds the supplied decisions fixed while reducing fact identifiers for the encoded contract predicate. Its result is a static recorded-decision contract witness. It is not target-in-loop minimization, a counterfactual claim about what the agent would do on changed inputs, or clinical minimality.
 

@@ -8,17 +8,17 @@ This draft is aligned to the published [OpenAI Build Week Official Rules](https:
 
 > WitnessPatch: Time-Fenced Contracts for Healthcare Agents
 
-**Elevator pitch — 185/200 characters**
+**Elevator pitch — 178/200 characters**
 
-> Turn a synthetic healthcare-agent failure into a replayable test, then check a fix a human must approve against locked rules—without patient data, an API key, or a model grading itself.
+> Turn one synthetic missed deadline into a portable red test: freeze what the agent knew, check whether action happened on time, then verify any repair offline before trusting it.
 
 **Category**
 
-> Developer Tools. WitnessPatch is testing and release-gating infrastructure for teams building healthcare agents: it binds authored facts to reveal times and actions to deadlines, then outputs a red test bundle and deterministic verifier—not patient-facing advice or automated medical decisions.
+> Developer Tools. WitnessPatch is a portable red-test compiler for time-critical AI agents: it binds authored facts to reveal times and required actions to deadlines, then exports the observed miss as an offline `node:test` bundle—not patient-facing advice or an automated medical decision.
 
 ## Inspiration
 
-Healthcare-agent safety failures can end as screenshots or model-written critiques. Those do not preserve exactly what the agent knew, which authored contract failed, or whether a repair survives a nearby overreach control. I am a third-year medical student; that perspective motivated the problem, but it is not licensed clinical authority.
+Healthcare-agent safety failures can end as screenshots or model-written critiques. Those do not preserve exactly what the agent knew when a deadline passed, which required action was missed, or whether a repair merely makes every case urgent. I am a third-year medical student; that perspective motivated the problem, but it is not licensed clinical authority.
 
 ## Problem
 
@@ -54,13 +54,13 @@ Do not add `OpenAI API`; the product does not use it.
 
 ## What is different
 
-Failure-to-regression workflows are established: Trajectly, ORP, Braintrust, Promptfoo, and AgentRx cover substantial parts of replay, contracts, diagnosis, datasets, or CI. WitnessPatch does not claim those primitives. Its narrower demonstrated composition is the final portable artifact handoff and closure below.
+Failure-to-regression workflows are established: Trajectly, ORP, Braintrust, Promptfoo, AgentRx, and several public Build Week repositories cover substantial parts of replay, repair, evidence bundles, provenance, or CI. WitnessPatch does not claim those primitives. Its narrower demonstrated wedge is a **portable red-test compiler for missed action deadlines**: most evals ask whether an answer was acceptable; WitnessPatch asks whether the required action happened before its declared deadline using only the authored facts available then.
 
-- **Time-locked facts:** the grader checks which authored facts were visible at every decision.
+- **Time-fenced action deadlines:** the grader checks which authored facts were visible at every decision and whether the required action occurred before its declared deadline.
 - **Portable conventional-test handoff:** a known failure plus an authored action contract becomes a nine-file `node:test` package with a documented WitnessPatch CLI dependency rather than only a platform dataset row or dashboard result.
 - **Model-independent verdict:** GPT-5.6 helps build and author; it cannot edit the runtime grader, artifact hashes, or expected holdouts.
-- **Executable closure:** judges can inspect a real target diff and regression, not only a risk score or generated critique.
-- **Fail-closed browser proof:** tampering, truncation, redirects, unsafe paths, evaluation drift, holdout drift, or missing WebCrypto keep the failing baseline active.
+- **Executable handoff and closure:** judges receive the already-observed miss as a conventional red test, then can inspect a separate target diff and prove that the scoped repair turns it green.
+- **Fail-closed browser and detached-bundle proof:** browser tampering, truncation, redirects, unsafe paths, evaluation drift, holdout drift, or missing WebCrypto keep the failing baseline active; `witnesspatch verify --bundle PATH` separately rejects changed, missing, extra, linked, schema-invalid, or non-reproducible bundle files.
 - **Scoped overreach control:** an exact complete fact set rejects one always-escalate mutation. It is intentionally not labeled clinically benign.
 - **No API dependency for judging:** replay and deterministic verification need no API key, billing, model call, database, or server secret.
 - **Visible clinical boundary:** blood-pressure classifications are fixture-supplied only at `118/74` and `168/112`; no numeric threshold, middle, borderline, discordant, or repeat-reading behavior is inferred or tested.
@@ -82,12 +82,13 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Exact-fact negative control under the repaired policy: `100/100`.
 - Always-escalate mutation on that exact control: `25/100`, expected failure.
 - Live reference compilation: `2/2` exact synthetic input hashes, full case/run validation, and an exportable nine-file red ZIP for `INV-02` at T+02. For the two manifest-listed public inputs, the CLI with `--fact-scope failure-prefix` produces the same nine file contents. The exported default regression exits red; pointing it at the supplied repaired run exits green.
+- Detached-bundle verification: `witnesspatch verify --bundle PATH` checks the exact file set, safe regular-file boundary, schemas, semantic links, manifest hashes, fresh evaluation, and compiler-exact bytes; it explicitly reports publisher provenance as unverified.
 - Local-input compilation: a separate browser workspace accepts a declared-synthetic case and failed run, freshly regrades it, exports the same nine-file format, and preserves `0 externally verified` in the portable receipt and manifest.
 - V2 artifact manifest: `23/23` exact hashes against the same-build manifest; this is integrity, not a publisher signature.
 - Reference browser recomputation: `2/2` fresh regrades and `4/4` V2 holdouts.
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
-- Local release verification: pre-publication checkpoint `d17d075` passed `npm ci` and `npm run verify:release` from fresh clones on macOS 26.5.2 arm64/Node 24.14.0 and a local Debian 12 arm64 container/Node 22.23.1. macOS passed `131/131` core tests; Debian passed `130/131` and expectedly skipped one case-insensitive-filesystem test. Both passed `6/6` rendered checks, the `1/1` real development-server HTTP smoke, `6/6` submission-package checks, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run; their physical 55-file `dist/client` snapshots matched byte-for-byte with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
+- Local release verification: exact source/media checkpoint `1086426` passed `npm ci` and `npm run verify:release` from fresh clones on macOS 26.5.2 arm64/Node 24.14.0 and a local Debian 12 arm64 container/Node 22.23.1. macOS passed `151/151` aggregate test executions; Debian passed `150/151`, with only the expected case-insensitive-filesystem test skipped. Both passed `131` discovered core tests, `6/6` rendered checks, `1/1` real development-server HTTP smoke, `7/7` submission-package checks, `6/6` deployment-rendered checks, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run; their physical 55-file `dist/client` snapshots matched byte-for-byte with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
 - Current source-bound real-Chrome QA: the reference path visibly completed `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, and the four-case baseline/repair/control/mutant closure. The local path loaded the included pair and produced a nine-file `50/100` red bundle with `2` hashes computed and `0` externally verified, exact CLI byte parity, red/green executable closure, and no requests after the two expected sample fetches. Both paths recorded zero console errors or warnings; same-page controls produced no `/.rsc` or `404` requests. Exact 390 x 844 reference and local replays had no horizontal overflow.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
@@ -136,6 +137,6 @@ Open `http://localhost:3000`. The local release path and hydrated browser flow a
 
 - **Try it URL:** pending public static deployment.
 - **Repository URL:** pending private repository creation and judge sharing.
-- **Video URL:** pending public founder-voice YouTube upload shorter than three minutes.
+- **Video URL:** pending public YouTube upload shorter than three minutes. Founder voice is preferred; a locally verified AI-narrated fallback exists and is permitted by the official FAQ but has not been auditioned or uploaded.
 - **`/feedback` Session ID:** pending. In this primary task, open `/feedback`, share the existing session, submit, and use the returned Session ID—not the technical task/thread UUID.
 - **External validation language:** keep pending until participant-confirmed evidence exists.

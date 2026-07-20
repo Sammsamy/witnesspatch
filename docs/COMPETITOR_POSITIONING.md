@@ -6,7 +6,7 @@
 
 The defensible demonstration is narrower:
 
-> Trace dashboards, deterministic replayers, and failure-to-dataset eval tools already exist. WitnessPatch starts from a known failure plus an authored action contract, emits a portable conventional-test bundle with a documented CLI dependency, then closes the handoff with time-fenced facts, a bounded static witness, an inspectable repair, an exact-fact control, and mutation checks. For the two manifest-listed public inputs, its browser and CLI `failure-prefix` outputs are byte-identical.
+> WitnessPatch turns a missed safety deadline into a portable red test. It freezes what the agent knew at each timestamp, checks whether the required action happened on time, and compiles that exact failure into a hash-bound `node:test` bundle that runs offline before any repair can be trusted.
 
 That is the specific composition demonstrated here, not a claim of a new regression-testing algorithm, shrinking algorithm, replay system, agent-evaluation category, or proven market differentiation.
 
@@ -14,6 +14,9 @@ That is the specific composition demonstrated here, not a claim of a new regress
 
 | Product or prior art | Verified public overlap | WitnessPatch's narrower demo distinction |
 |---|---|---|
+| [PatchWitness](https://github.com/kyawzinIT99/PatchWitness) | Public Build Week candidate with an inverse name and a failed AI automation → minimal repair → replay assertions → portable proof-bundle story | WitnessPatch's dated local history predates that repository's public creation; the product must nevertheless avoid generic patch/proof language and lead with time-fenced action deadlines plus offline red-test compilation |
+| [ApprenticeOS](https://github.com/igd27400-ctrl/ApprenticeOS), [Counterexample Studio](https://github.com/sravan27/counterexample-studio), [Aegis](https://github.com/Abi5678/aegis), and [CrossPatch](https://github.com/asadvendor-boop/CrossPatch) | Public Build Week candidates cover expert correction to regression, minimized replayable traces, competing repairs, protected holdouts, evidence bundles, mutation controls, and human gates | The narrow wedge is not generic repair or proof: it compiles a supplied, already-observed missed action deadline using only facts available at that time into a conventional offline red test |
+| [RENKEVIA](https://github.com/Elbrak17/renkevia) | Public Build Week healthcare change compiler with deterministic synthetic-patient regressions, provenance, specialist review, and a human gate | WitnessPatch starts from a captured incident, preserves time-of-knowledge boundaries, and exports a red `node:test` handoff before evaluating any separate repair |
 | [Trajectly](https://github.com/trajectly/trajectly) / [product site](https://www.trajectly.dev/) | Deterministic offline fixture replay, behavioral contracts, exact witness steps, shortest-trace shrinking, one-command reproduction, CI exit codes, and no-key execution; public releases existed by March 5, 2026 | Its public documentation does not show this exact conventional `node:test` package plus inspectable repair, exact-fact control, always-escalate mutant, and manifest-listed browser/CLI `failure-prefix` byte-parity composition |
 | [Open Reflection Protocol](https://github.com/Fujo930/ORP) | Its headline turns agent failures into regression tests; it compiles captured evidence into runnable evals and compares before/after behavior | Time-fenced facts, a deterministic healthcare action oracle, reduced fixed-decision witness, exact control/mutation closure, and byte-bound browser/CLI verification are not documented there |
 | [Braintrust failure-to-regression workflow](https://www.braintrust.dev/articles/turn-llm-production-failures-into-regression-tests) | Failed trace to labeled/versioned regression dataset, deterministic or model scorer, and CI/release gate—the broad title framing is an exact collision | Emits a portable conventional test bundle rather than a platform dataset/scorer row, with a static witness, target diff, exact control, mutant, and cross-runtime integrity closure |
@@ -30,7 +33,7 @@ That is the specific composition demonstrated here, not a claim of a new regress
 
 [OpenAI HealthBench](https://openai.com/index/healthbench/), [Microsoft HealthAgentBench](https://github.com/microsoft/HealthAgentBench), [Doctorina MedBench](https://arxiv.org/abs/2603.25821), [AgentClinic](https://arxiv.org/abs/2405.07960), and [MedDialogRubrics](https://arxiv.org/abs/2601.03023) further show that medical conversations, sequential environments, simulated patients, safety traps, and regression evaluation are established categories. [ExAnte](https://aclanthology.org/2026.eacl-long.72/) covers temporal leakage as an adjacent primitive. [Hypothesis](https://hypothesis.readthedocs.io/en/latest/tutorial/replaying-failures.html) is established prior art for shrinking, replaying, and preserving failing examples, so WitnessPatch's `9→3` result must remain labeled a bounded recorded-decision predicate witness rather than a minimal counterexample.
 
-These are point-in-time public capability comparisons, not independent evidence of adoption, accuracy, commercial traction, or legal clearance.
+These are point-in-time public capability comparisons, not independent evidence of adoption, accuracy, commercial traction, or legal clearance. The official Build Week gallery was still unpublished during the July 20 recheck, so the linked Build Week repositories are public candidates rather than confirmed final Devpost entries.
 
 ## The narrow wedge
 
@@ -49,15 +52,15 @@ The exact-fact control is intentionally narrow. It does not prove a benign patie
 
 ## The sentence to own
 
-> At T+02, the target had the facts required by the locked synthetic contract but delayed the declared route. WitnessPatch emits a red regression, then separately verifies the retained target patch and fails closed unless the urgent trace, exact-fact control, hashes, and scoped holdouts all recompute.
+> Most evals ask whether an answer was acceptable. WitnessPatch asks whether the required action happened before its deadline, using only facts available at that moment—and packages the missed deadline as a portable red test.
 
 ## Revised pitch
 
-WitnessPatch compiles one synthetic, time-locked healthcare-agent contract failure into a reviewable regression. A separate verifier checks the retained target patch, exact-fact control, mutations, and artifact bytes. Codex assists the build and authoring workflow; a retained post-start receipt records a `gpt-5.6-sol` / `ultra` request and a distinct quarantined candidate, while deterministic code owns every verdict. The V2 demo exposes the trace, static witness, executable diff, exact-fact control, fresh candidate boundary, and same-build integrity receipt while keeping physician review and broader clinical behavior explicitly out of scope.
+WitnessPatch is a portable red-test compiler for time-critical AI agents. It turns one synthetic missed deadline into a conventional offline test by freezing what the agent knew, checking the declared action deadline, and preserving the observed failure as an executable handoff. A separate verifier checks the retained target patch, exact-fact control, mutations, and artifact bytes. Codex assists the build and authoring workflow; a retained post-start receipt records a `gpt-5.6-sol` / `ultra` request and a distinct quarantined candidate, while deterministic code owns every verdict.
 
 ## Branding risk
 
-The earlier working name “Hippocratic CI” could imply affiliation with Hippocratic AI, an established healthcare-agent company publishing safety-validation work. WitnessPatch avoids that direct collision. A point-in-time name/domain search is not trademark or legal clearance.
+The earlier working name “Hippocratic CI” could imply affiliation with Hippocratic AI, an established healthcare-agent company publishing safety-validation work. WitnessPatch avoids that direct collision. A separate public Build Week candidate named `PatchWitness` creates an inverse-name collision, but the dated `21405c8` checkpoint preserves independent WitnessPatch usage before that repository's public creation. Do not rename during the final release window; use the distinctive subtitle **portable red-test compiler for time-critical AI agents** consistently. This is provenance evidence, not trademark or legal clearance.
 
 ## Claims to avoid
 
