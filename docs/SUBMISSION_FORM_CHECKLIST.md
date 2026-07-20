@@ -9,7 +9,7 @@ This file separates confirmed public requirements from authenticated fields and 
 - [x] Category: `Developer Tools`.
 - [x] English project description and 22/25 truthful “Built with” tags frozen in `docs/SUBMISSION_DRAFT.md`.
 - [x] Four candidate direct 1200 x 800 PNG media assets were recaptured from the current source-hash-bound production build and recorded by exact byte size, SHA-256, and thirteen rendered/computed source fingerprints in `submission/media/MANIFEST.md`; no upload has occurred and final external-field freeze remains pending.
-- [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6. A verified `173.080`-second local AI-narrated fallback exists and the FAQ permits AI narration, but it must be auditioned and publicly uploaded; founder voice remains preferable.
+- [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6. The current no-physician-review screen master is verified at `173.080` seconds with exact geometry and no audio; founder voice, full audition, and public upload remain required.
 - [x] Add a fail-closed `npm run video:founder` handoff that combines one cue-aligned founder track with the reviewed silent master, normalizes audio, checks the exact timing/geometry/codecs, refuses overwrite, and records hashes without claiming it can verify the speaker or spoken words.
 - [x] Repository URL: `https://github.com/Sammsamy/witnesspatch` is public and GitHub detects MIT.
 - [x] README includes local setup, sample inputs, supported and unverified platform boundaries, Codex collaboration, GPT-5.6 contribution, and retained human decisions.

@@ -2,7 +2,7 @@
 
 ## Current status
 
-The product flow is locally verified. The existing local AI-narrated fallback and silent master predate the explicit no-physician-review disclosure and are not final submission media. They must be regenerated from this current narration table, SRT, and app state. Founder narration remains preferable. The final public YouTube video required by the [Official Rules](https://openai.devpost.com/rules) does not yet exist; keep any uploaded cut below three minutes.
+The product flow is locally verified. On July 20, 2026, the silent founder screen master was regenerated from the public deployment after the explicit no-physician-review boundary was added. The reviewed local file is `output/playwright/witnesspatch-founder-screen-master-final.webm`: `173.080` seconds, `1400 x 900`, one VP8 video stream, no audio stream, SHA-256 `fecf946058dc978454a12fba2f2d7dc5c3a411dd743f4ae1cc3edb086ac132e3`. Frame review confirms a real local sample load and nine-file compile, the retained repair verification, and the final `not_performed` / `not claimed` / `Not permitted` receipt. The founder voice and final public YouTube video required by the [Official Rules](https://openai.devpost.com/rules) do not yet exist; keep the uploaded cut below three minutes.
 
 The entrant is submitting individually; do not introduce a teammate or shared-build claim. The founder may truthfully say, “I’m a third-year medical student”; that explains motivation, not clinical authority.
 
@@ -26,7 +26,7 @@ The entrant is submitting individually; do not introduce a teammate or shared-bu
 - Load the page and wait at least five seconds before recording so hydration is complete.
 - Record around `1400` CSS pixels wide at 1440p or higher, with clear English founder narration.
 - Use a window or selected-region recorder with the founder's microphone, or mux a separately recorded founder track onto a clean silent browser master. Playwright's page video has no microphone audio and is rehearsal evidence only.
-- For the separate-track route, play the reviewed silent master from `0:00` while recording one uninterrupted voice-only track. Start speaking with the first frame, keep the table's cue boundaries, and stop between `2:48` and `2:54.5`. Then run `npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"`. The command loudness-normalizes the track, pads only the end if needed, produces the reviewed 2:53 H.264/AAC MP4, and writes byte-hash evidence. If the media tools are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute paths.
+- For the separate-track route, play `output/playwright/witnesspatch-founder-screen-master-final.webm` from `0:00` while recording one uninterrupted voice-only track. Start speaking with the first frame, keep the table's cue boundaries, and stop between `2:48` and `2:54.5`. Then run `npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"`. The command loudness-normalizes the track, pads only the end if needed, produces the reviewed 2:53 H.264/AAC MP4, and writes byte-hash evidence. If the media tools are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute paths.
 - Start from a fresh baseline. Do not precompile, splice in success, or begin on a generated artifact.
 - Hide bookmarks, notifications, credentials, local paths, unrelated tabs, and private Codex traces.
 - Use the **How it works** and **WitnessPatch** navigation buttons for controlled movement instead of free scrolling.

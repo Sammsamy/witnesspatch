@@ -64,6 +64,8 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
+The entrant-local silent master was regenerated from the public deployment on July 20 after the no-physician-review disclosure was added. It is `173.080` seconds at `1400 x 900`, contains no audio, and ends on the explicit `not_performed` / `not claimed` / `Not permitted` receipt. The founder voice, public YouTube upload, and human audition remain incomplete.
+
 To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:53 screen cut, run the fail-closed assembler below. It refuses the wrong screen geometry, a non-silent or wrong-duration master, founder audio outside the narrow timing window, existing outputs, and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths; the final release freeze honors the same `ffprobe` override.
 
 ```bash
