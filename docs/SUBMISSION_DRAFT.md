@@ -1,6 +1,6 @@
 # Submission draft
 
-This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). The entrant authorized an individual submission and a public MIT-licensed repository. Repository creation, exact-commit CI, `/feedback` session ID, public video, and final hosted URL still require completion before submission.
+This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). The entrant authorized an individual submission; the [public MIT repository](https://github.com/Sammsamy/witnesspatch), exact-commit CI, and [live static replay](https://witnesspatch.ankigpt.workers.dev) now exist. `/feedback`, founder-voice public video, external builder review, final release freeze, and Devpost submission still require completion.
 
 ## Exact project overview fields
 
@@ -140,12 +140,12 @@ npm run verify:release
 npm run dev
 ```
 
-Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Source install, build, and release verification also pass in the exact local Debian 12 arm64/Node 22.23.1 environment documented above; no Linux browser matrix is claimed. Remote GitHub Actions and Windows remain unverified.
+Open `http://localhost:3000`. The local release path and hydrated browser flow are verified on macOS. Source install, build, and release verification also pass in the exact local Debian 12 arm64/Node 22.23.1 environment documented above; no Linux browser matrix is claimed. Public exact-commit GitHub Actions passes; Windows remains unverified.
 
 ## Form placeholders that must remain blank until real
 
-- **Try it URL:** pending public static deployment.
-- **Repository URL:** pending authorization and creation. Preferred completion route: public with an approved open-source license; rules fallback: private and shared with both judging addresses.
+- **Try it URL:** https://witnesspatch.ankigpt.workers.dev
+- **Repository URL:** https://github.com/Sammsamy/witnesspatch
 - **Video URL:** pending public YouTube upload shorter than three minutes. Founder voice is preferred; a locally verified AI-narrated fallback exists and is permitted by the official FAQ but has not been auditioned or uploaded.
 - **`/feedback` Session ID:** pending. In this primary task, open `/feedback`, share the existing session, submit, and use the returned Session ID—not the technical task/thread UUID.
 - **External validation language:** keep pending until participant-confirmed evidence exists.

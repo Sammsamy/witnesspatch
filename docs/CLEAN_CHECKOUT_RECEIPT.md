@@ -7,7 +7,10 @@ This is a retained local reproducibility record, not independent third-party val
 - State: recaptured source/media worktree before the public release commit
 - Static snapshot: 55 physical `dist/client` files with canonical manifest SHA-256 `523aeaa83f9028036b258b192c989bc5a10fbba9b21280273bb1b2283fc744d5`
 - Local result: `npm run verify:release` exits `0`; all `158/158` aggregate executions pass (`136` core, `6` rendered-product, `1` development-server smoke, `9` submission-package, and `6` deployment-rendered), followed by the license audit and a 59-asset Cloudflare dry run
-- Boundary: the fingerprint is locally release-gated; the exact commit, public GitHub Actions result, deployment URL, and deployed-byte comparison must be appended only after those checks pass
+- First public release commit: `4d27f3962733124dc820a54bbb8b430b83680db8`; public default branch and MIT detection confirmed
+- Public CI: successful exact-commit `Verify` push run `29772464327` at `https://github.com/Sammsamy/witnesspatch/actions/runs/29772464327`
+- Deployment: `https://witnesspatch.ankigpt.workers.dev`; all 53 served files byte-match the reviewed build, while `.assetsignore` and `_headers` are deployment-control files; clean public compile/verify recorded zero console warnings and errors
+- Boundary: this is the first public release checkpoint, not the still-unfrozen submitted commit. Founder video, `/feedback`, external builder evidence, final freeze, and Devpost submission remain outstanding
 
 ## Current exact release candidate
 

@@ -11,11 +11,11 @@ This file separates confirmed public requirements from authenticated fields and 
 - [x] Four candidate direct 1200 x 800 PNG media assets were recaptured from the current source-hash-bound production build and recorded by exact byte size, SHA-256, and thirteen rendered/computed source fingerprints in `submission/media/MANIFEST.md`; no upload has occurred and final external-field freeze remains pending.
 - [ ] Public YouTube URL for a working demo shorter than three minutes, with audio explaining the product, Codex, and GPT-5.6. A verified `173.080`-second local AI-narrated fallback exists and the FAQ permits AI narration, but it must be auditioned and publicly uploaded; founder voice remains preferable.
 - [x] Add a fail-closed `npm run video:founder` handoff that combines one cue-aligned founder track with the reviewed silent master, normalizes audio, checks the exact timing/geometry/codecs, refuses overwrite, and records hashes without claiming it can verify the speaker or spoken words.
-- [ ] Repository URL: either public with relevant licensing or private and shared with both `testing@devpost.com` and `build-week-event@openai.com`.
+- [x] Repository URL: `https://github.com/Sammsamy/witnesspatch` is public and GitHub detects MIT.
 - [x] README includes local setup, sample inputs, supported and unverified platform boundaries, Codex collaboration, GPT-5.6 contribution, and retained human decisions.
-- [ ] Add the final public no-rebuild URL and exact submitted release fingerprint to the README after deployment.
+- [x] Add the current public no-rebuild URL and first public release evidence to the README. The exact submitted release fingerprint remains a final-freeze task after video and `/feedback` exist.
 - [ ] In this primary Codex build task, open `/feedback`, choose to share the existing session, submit the feedback, and copy the returned Session ID. Do not substitute the technical task/thread UUID.
-- [ ] Free working demo, functioning test build, or equivalent no-rebuild path available through at least August 9 at 5:00 PM PDT.
+- [x] Free working demo and public repository are live without login; keep them available through at least August 9 at 5:00 PM PDT.
 
 ## Authenticated form audit
 
@@ -45,12 +45,12 @@ The joined challenge's authenticated submission manager was rechecked read-only 
 ## Repository and release choice
 
 - [x] Final source route authorized: publish `Sammsamy/witnesspatch` publicly under the MIT License and submit Fuzlullah Syed individually.
-- [ ] Publish the authorized MIT state, rerun the distribution audit, and confirm GitHub detects the matching SPDX identifier from a logged-out request.
+- [x] Publish the authorized MIT state, rerun the distribution audit, and confirm GitHub detects `MIT` from a logged-out request.
 - [x] Inventory the 624 locked packages and the 15 packages/credited sources actually present in the static client; preserve the scoped MIT and BSD-3-Clause notices byte-for-byte in the deployed bundle.
-- [x] Complete the current public-static-demo/private-source-repository distribution audit; repeat it before shipping a packaged CLI, server image, vendored dependencies, or public source under a new project license.
+- [x] Complete the public MIT source/static-demo distribution audit; repeat it before shipping a packaged CLI, server image, vendored dependencies, or public source under a new project license.
 - [x] Replace unrecorded favicon/icon path data with project-authored geometric primitives and record the bundled visual-asset boundary in `docs/ASSET_PROVENANCE.md`.
-- [ ] Authorize every original asset and contribution before release.
-- [ ] Verify the final repository and its GitHub Actions checks from a logged-out or judge-equivalent account; for the private fallback, also verify both judging addresses have access.
+- [x] Entrant confirmed ownership or authorization for all submitted code and assets.
+- [x] Verify public visibility, MIT detection, default-branch commit, and the first public `Verify` run through logged-out GitHub API requests. Repeat for the exact final submitted commit during freeze.
 - [ ] Verify the exact submitted commit and record its hash.
 - [x] Add `submission/release/final-release-template.json`, which binds the current V2 manifest, reviewed static-client fingerprint, and four image hashes while failing visibly as `not_frozen` with every external field unset.
 - [x] Add `npm run release:freeze`, which writes only to ignored `output/release/` and refuses to freeze unless the tree is clean, the full release verifier passes, the exact commit is the default-branch tip of a public licensed GitHub repository with a successful completed public `Verify` push run on that commit, the deployed root and every fingerprint-listed judge-facing file byte-match the reviewed build, the local founder video decodes below 180 seconds with audio, YouTube oEmbed is reachable, and the entrant explicitly confirms founder voice, public visibility, and a real Codex-returned `/feedback` ID.
