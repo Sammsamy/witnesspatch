@@ -43,15 +43,16 @@ The joined challenge's authenticated submission manager was rechecked read-only 
 
 ## Repository and release choice
 
-- [x] Choose the release route: public static demo plus private all-rights-reserved source repository shared with both judging addresses.
-- [x] Keep the source private for this submission; if that decision changes, replace the all-rights-reserved `LICENSE` only after ownership and third-party compatibility review.
+- [ ] Authorize the final source route. The standing completion target is a public repository with an entrant-approved open-source license; the current `UNLICENSED` checkout cannot be published until ownership and license authorization are explicit. A private repository shared with both judging addresses remains the rules-compliant fallback but does not satisfy this task's stricter public-repository goal.
+- [ ] If the public route is authorized, add the approved license, update `package.json`, rerun the distribution audit, and confirm GitHub detects the matching SPDX identifier. If the private fallback is chosen, retain `UNLICENSED` and share it with both judging addresses.
 - [x] Inventory the 624 locked packages and the 15 packages/credited sources actually present in the static client; preserve the scoped MIT and BSD-3-Clause notices byte-for-byte in the deployed bundle.
 - [x] Complete the current public-static-demo/private-source-repository distribution audit; repeat it before shipping a packaged CLI, server image, vendored dependencies, or public source under a new project license.
 - [x] Replace unrecorded favicon/icon path data with project-authored geometric primitives and record the bundled visual-asset boundary in `docs/ASSET_PROVENANCE.md`.
 - [ ] Authorize every original asset and contribution before release.
-- [ ] Verify the private repository and its GitHub Actions checks from a judge-equivalent account after sharing it with both judging addresses.
+- [ ] Verify the final repository and its GitHub Actions checks from a logged-out or judge-equivalent account; for the private fallback, also verify both judging addresses have access.
 - [ ] Verify the exact submitted commit and record its hash.
 - [x] Add `submission/release/final-release-template.json`, which binds the current V2 manifest, reviewed static-client fingerprint, and four image hashes while failing visibly as `not_frozen` with every external field unset.
+- [x] Add `npm run release:freeze`, which writes only to ignored `output/release/` and refuses to freeze unless the tree is clean, the full release verifier passes, the exact commit is the default-branch tip of a public licensed GitHub repository, the deployed V2 manifest byte-matches, the local founder video decodes below 180 seconds with audio, YouTube oEmbed is reachable, and the entrant explicitly confirms founder voice, public visibility, and a real Codex-returned `/feedback` ID.
 - [ ] Record one release fingerprint joining the submitted commit, V2 manifest SHA-256, deployed-build URL, repository URL, and video URL.
 - [ ] Freeze the submitted version after July 21 at 5:00 PM PDT except for organizer-authorized narrow corrections.
 
@@ -90,9 +91,9 @@ The joined challenge's authenticated submission manager was rechecked read-only 
 - [x] Current source-hash-bound local production-browser reference and included-sample desktop QA passes with zero console errors or warnings, no `/.rsc`/`404` same-page navigation, and no requests after the two expected sample fetches; exact 390 x 844 reference and local replays have no horizontal overflow. This does not replace logged-out testing of the eventual public URL.
 - [x] Submission title, pitch, tags, four-image count, PNG geometry, byte limits, and refreshed media/source-manifest hashes pass the automated release gate.
 - [ ] Repeat the clean-checkout release verifier on the exact final submitted commit.
-- [ ] Remote GitHub Actions CI passes on the exact submitted commit and is visible inside the judge-shared private repository.
+- [ ] Remote GitHub Actions CI passes on the exact submitted commit and is visible through the final repository route.
 - [ ] Static demo passes logged-out desktop and mobile checks with no console errors.
 - [ ] Every displayed score and hash recomputes from the submitted artifacts.
 - [ ] Video shows only behavior present in the submitted release.
-- [ ] Public demo, video, and test links work without founder credentials; the private repository and CI work from a judge-equivalent account.
+- [ ] Public demo, video, and test links work without founder credentials; repository source and CI work through the authorized final route.
 - [ ] Rules, FAQ, resources, schedule, and authenticated form are rechecked immediately before submission.

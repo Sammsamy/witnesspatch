@@ -60,7 +60,23 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
-Publication remains an explicit release action. The selected route is a public static demo plus an all-rights-reserved private source repository shared with both judging addresses. The official rules require free, unrestricted judge access through judging, so the deployment and judge-equivalent private-repository access must be verified before submission.
+After the public repository, deployment, founder-voice YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip; byte-checks the deployed V2 manifest; decodes the local video below 180 seconds with audio and video streams; checks YouTube oEmbed reachability; and requires explicit human confirmations for public visibility, founder voice, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit:
+
+```bash
+npm run release:freeze -- \
+  --repository-url "PUBLIC_GITHUB_URL" \
+  --deployment-url "PUBLIC_DEPLOYMENT_URL" \
+  --video-url "PUBLIC_YOUTUBE_URL" \
+  --video-file "LOCAL_FINAL_VIDEO_PATH" \
+  --feedback-session-id "CODEX_FEEDBACK_SESSION_ID" \
+  --feedback-confirmed \
+  --video-public-confirmed \
+  --founder-voice-confirmed
+```
+
+The command refuses to overwrite a prior final receipt. Preserve an unsuccessful or superseded freeze before starting a separately labeled attempt.
+
+Publication and licensing remain explicit release actions. The standing completion target is a public source repository with an entrant-approved open-source license plus a public static demo; the current checkout remains `UNLICENSED` until that authorization is received. The rules-compliant fallback is a private repository shared with both judging addresses, but that fallback does not satisfy this task's stricter public-repository goal. Either route still requires free judge access and exact-commit CI verification before submission.
 
 ### Verified platform boundary
 

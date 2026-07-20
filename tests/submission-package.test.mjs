@@ -1,9 +1,27 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readdir, readFile, stat } from "node:fs/promises";
-import { isAbsolute, relative, sep } from "node:path";
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { isAbsolute, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import {
+  freezeFinalRelease,
+  parseFfprobeReport,
+  parseFreezeArguments,
+  validateDeploymentUrl,
+  validateFeedbackSessionId,
+  validateRepositoryUrl,
+  validateYouTubeUrl,
+} from "../build/freeze-final-release.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("..", import.meta.url));
 const mediaDirectory = new URL("../submission/media/", import.meta.url);
@@ -355,7 +373,13 @@ test("the threat model preserves the exact integrity and non-claim boundary", as
 });
 
 test("the final release template binds local artifacts but cannot masquerade as frozen", async () => {
-  const [templateBytes, v2ManifestBytes, staticRecordBytes, mediaManifest] =
+  const [
+    templateBytes,
+    v2ManifestBytes,
+    staticRecordBytes,
+    mediaManifest,
+    packageBytes,
+  ] =
     await Promise.all([
       readFile(
         new URL(
@@ -376,10 +400,12 @@ test("the final release template binds local artifacts but cannot masquerade as 
         new URL("../submission/media/MANIFEST.md", import.meta.url),
         "utf8",
       ),
+      readFile(new URL("../package.json", import.meta.url), "utf8"),
     ]);
   const template = JSON.parse(templateBytes);
   const staticRecord = JSON.parse(staticRecordBytes);
   const mediaRows = parseManifestRows(mediaManifest);
+  const packageJson = JSON.parse(packageBytes);
 
   assert.equal(template.status, "not_frozen");
   assert.equal(template.v2_manifest_sha256, sha256(v2ManifestBytes));
@@ -402,6 +428,239 @@ test("the final release template binds local artifacts but cannot masquerade as 
     "feedback_session_id",
   ]) {
     assert.equal(template[field], null, `${field} must remain unset before freeze`);
+  }
+
+  assert.equal(
+    packageJson.scripts["release:freeze"],
+    "node build/freeze-final-release.mjs",
+  );
+  const parsed = parseFreezeArguments([
+    "--repository-url",
+    "https://github.com/Sammsamy/witnesspatch",
+    "--deployment-url",
+    "https://witnesspatch.example.workers.dev",
+    "--video-url",
+    "https://youtu.be/AbCdEf12345",
+    "--video-file",
+    "/tmp/witnesspatch.mp4",
+    "--feedback-session-id",
+    "feedback_123456",
+    "--feedback-confirmed",
+    "--video-public-confirmed",
+    "--founder-voice-confirmed",
+  ]);
+  assert.equal(
+    validateRepositoryUrl(parsed.repositoryUrl).normalized,
+    "https://github.com/Sammsamy/witnesspatch",
+  );
+  assert.equal(
+    validateDeploymentUrl(parsed.deploymentUrl),
+    "https://witnesspatch.example.workers.dev",
+  );
+  assert.equal(
+    validateYouTubeUrl(parsed.videoUrl).normalized,
+    "https://www.youtube.com/watch?v=AbCdEf12345",
+  );
+  assert.equal(
+    validateFeedbackSessionId(parsed.feedbackSessionId),
+    "feedback_123456",
+  );
+  assert.deepEqual(
+    parseFfprobeReport({
+      format: { duration: "179.999" },
+      streams: [{ codec_type: "video" }, { codec_type: "audio" }],
+    }),
+    { durationSeconds: 179.999, videoStreams: 1, audioStreams: 1 },
+  );
+  assert.throws(
+    () => parseFreezeArguments([]),
+    /--repository-url is required/u,
+  );
+  assert.throws(
+    () =>
+      validateRepositoryUrl(
+        "https://github.com/Sammsamy/witnesspatch?unreviewed=true",
+      ),
+    /canonical HTTPS GitHub repository URL/u,
+  );
+  assert.throws(
+    () => validateYouTubeUrl("https://example.com/video"),
+    /canonical public YouTube/u,
+  );
+  assert.throws(
+    () => validateFeedbackSessionId("a".repeat(40)),
+    /Git commit or SHA-256/u,
+  );
+  assert.throws(
+    () => validateFeedbackSessionId("feedback_123456", "feedback_123456"),
+    /technical task\/thread UUID/u,
+  );
+  assert.throws(
+    () =>
+      parseFfprobeReport({
+        format: { duration: "180" },
+        streams: [{ codec_type: "video" }, { codec_type: "audio" }],
+      }),
+    /below 180 seconds/u,
+  );
+
+  const temporaryRoot = await mkdtemp(join(tmpdir(), "witnesspatch-freeze-test-"));
+  try {
+    const v2Bytes = Buffer.from('{"fixture":"synthetic"}\n');
+    const media = Object.fromEntries(
+      expectedImages.map((name) => [name, Buffer.from(`reviewed:${name}`)]),
+    );
+    await Promise.all([
+      mkdir(join(temporaryRoot, "submission", "release"), { recursive: true }),
+      mkdir(join(temporaryRoot, "submission", "media"), { recursive: true }),
+      mkdir(join(temporaryRoot, "public", "runs", "v2"), { recursive: true }),
+    ]);
+    await Promise.all([
+      writeFile(join(temporaryRoot, "LICENSE"), "MIT License\n"),
+      writeFile(
+        join(temporaryRoot, "package.json"),
+        `${JSON.stringify({ license: "MIT" })}\n`,
+      ),
+      writeFile(
+        join(temporaryRoot, "public", "runs", "v2", "manifest.json"),
+        v2Bytes,
+      ),
+      writeFile(
+        join(
+          temporaryRoot,
+          "submission",
+          "release",
+          "static-client-fingerprint.json",
+        ),
+        `${JSON.stringify({ manifest_sha256: "b".repeat(64) })}\n`,
+      ),
+      writeFile(join(temporaryRoot, "founder-demo.mp4"), "video-bytes"),
+      ...Object.entries(media).map(([name, bytes]) =>
+        writeFile(join(temporaryRoot, "submission", "media", name), bytes),
+      ),
+    ]);
+    const syntheticTemplate = {
+      schema_version: "1.0.0",
+      kind: "witnesspatch_final_release_fingerprint_template",
+      status: "not_frozen",
+      submitted_commit: null,
+      v2_manifest_sha256: sha256(v2Bytes),
+      static_client_manifest_sha256: "b".repeat(64),
+      submission_media: Object.fromEntries(
+        Object.entries(media).map(([name, bytes]) => [name, sha256(bytes)]),
+      ),
+      repository_url: null,
+      deployment_url: null,
+      video_url: null,
+      video_sha256: null,
+      feedback_session_id: null,
+      boundary: "template",
+    };
+    await writeFile(
+      join(
+        temporaryRoot,
+        "submission",
+        "release",
+        "final-release-template.json",
+      ),
+      `${JSON.stringify(syntheticTemplate)}\n`,
+    );
+    const commit = "c".repeat(40);
+    const commandRunner = (command, args) => {
+      if (command === "npm") return "release verified";
+      if (command === "ffprobe") {
+        return JSON.stringify({
+          format: { duration: "173.08" },
+          streams: [{ codec_type: "video" }, { codec_type: "audio" }],
+        });
+      }
+      if (command === "git" && args[0] === "ls-remote") {
+        return `${commit}\trefs/heads/main`;
+      }
+      if (command === "git" && args.join(" ") === "rev-parse --show-toplevel") {
+        return temporaryRoot;
+      }
+      if (command === "git" && args.join(" ") === "rev-parse HEAD") return commit;
+      if (command === "git" && args[0] === "status") return "";
+      throw new Error(`Unexpected test command: ${command} ${args.join(" ")}`);
+    };
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      if (href.startsWith("https://api.github.com/repos/")) {
+        return new Response(
+          JSON.stringify({
+            private: false,
+            default_branch: "main",
+            license: { spdx_id: "MIT" },
+          }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        );
+      }
+      if (href.endsWith("/runs/v2/manifest.json")) {
+        return new Response(v2Bytes, { status: 200 });
+      }
+      if (href.startsWith("https://www.youtube.com/oembed")) {
+        return new Response(JSON.stringify({ title: "WitnessPatch demo" }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      if (href === "https://witnesspatch.example.workers.dev/") {
+        return new Response("<title>WitnessPatch</title>", { status: 200 });
+      }
+      throw new Error(`Unexpected test fetch: ${href}`);
+    };
+    const frozen = await freezeFinalRelease({
+      options: {
+        ...parsed,
+        videoFile: join(temporaryRoot, "founder-demo.mp4"),
+      },
+      rootDir: temporaryRoot,
+      fetchImpl,
+      commandRunner,
+      now: () => new Date("2026-07-20T12:00:00.000Z"),
+      technicalThreadId: "different_thread_123",
+    });
+    assert.equal(frozen.record.status, "frozen");
+    assert.equal(frozen.record.submitted_commit, commit);
+    assert.equal(
+      frozen.record.verification.repository.exact_commit_is_default_branch_tip,
+      true,
+    );
+    assert.equal(frozen.record.verification.video.duration_seconds, 173.08);
+    assert.equal(frozen.record.feedback_session_id, "feedback_123456");
+    assert.equal(
+      sha256(await readFile(frozen.outputPath)),
+      frozen.digest,
+    );
+    await assert.rejects(
+      freezeFinalRelease({
+        options: {
+          ...parsed,
+          videoFile: join(temporaryRoot, "founder-demo.mp4"),
+        },
+        rootDir: temporaryRoot,
+        fetchImpl,
+        commandRunner,
+      }),
+      /final release receipt already exists/u,
+    );
+    await rm(join(temporaryRoot, "output"), { recursive: true, force: true });
+    await assert.rejects(
+      freezeFinalRelease({
+        options: {
+          ...parsed,
+          videoFile: join(temporaryRoot, "founder-demo.mp4"),
+          founderVoiceConfirmed: false,
+        },
+        rootDir: temporaryRoot,
+        fetchImpl,
+        commandRunner,
+      }),
+      /must confirm that the final video contains founder voice/u,
+    );
+  } finally {
+    await rm(temporaryRoot, { recursive: true, force: true });
   }
 });
 

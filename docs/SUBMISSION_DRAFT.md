@@ -1,6 +1,6 @@
 # Submission draft
 
-This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). The selected route is a private, all-rights-reserved repository to be shared with both judging addresses; repository creation, judge-equivalent access verification, teammate eligibility, `/feedback` session ID, public video, and final hosted URL still require completion before submission.
+This draft is aligned to the published [OpenAI Build Week Official Rules](https://openai.devpost.com/rules). The standing completion target is a public repository with an entrant-approved open-source license; the current checkout remains `UNLICENSED` until that consequential choice is authorized. A judge-shared private repository remains the rules-compliant fallback. Repository creation, exact-commit CI, teammate eligibility, `/feedback` session ID, public video, and final hosted URL still require completion before submission.
 
 ## Exact project overview fields
 
@@ -144,7 +144,7 @@ Open `http://localhost:3000`. The local release path and hydrated browser flow a
 ## Form placeholders that must remain blank until real
 
 - **Try it URL:** pending public static deployment.
-- **Repository URL:** pending private repository creation and judge sharing.
+- **Repository URL:** pending authorization and creation. Preferred completion route: public with an approved open-source license; rules fallback: private and shared with both judging addresses.
 - **Video URL:** pending public YouTube upload shorter than three minutes. Founder voice is preferred; a locally verified AI-narrated fallback exists and is permitted by the official FAQ but has not been auditioned or uploaded.
 - **`/feedback` Session ID:** pending. In this primary task, open `/feedback`, share the existing session, submit, and use the returned Session ID—not the technical task/thread UUID.
 - **External validation language:** keep pending until participant-confirmed evidence exists.
