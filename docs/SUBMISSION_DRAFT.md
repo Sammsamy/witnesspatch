@@ -46,13 +46,13 @@ Maya can run the reference or compile the included synthetic pair locally. The b
 
 ## How I built it
 
-A pre-start V1 prototype already existed. Build Week added the portable compiler, fail-closed browser verifier, narrower V2, and fresh model record; only those extensions are submitted.
+A pre-start V1 prototype already existed. Build Week added the portable compiler, fail-closed browser verifier, narrower V2, and fresh model record; only those extensions are claimed as Build Week work.
 
 During Build Week, Codex helped implement and adversarially test the compiler, browser grader, detached verifier, and release path, exposing path traversal, stale evaluation, schema drift, truncation, and browser tampering. Deterministic code owns every verdict.
 
 GPT-5.6 contributed through a separate post-start Codex workflow that requested GPT-5.6 Sol with Ultra reasoning. It received the baseline and two authored contracts and returned schema-constrained declarative repair data. Fixed code compiled that data into a distinct candidate and evaluated it against withheld software holdouts. The candidate remains quarantined and was never installed. Its receipt records the requested configuration; it does not independently prove which model was served.
 
-GPT-5.6 proposes bounded logic; locked code owns grading, hashes, compilation, and holdouts. The public demo and CLI run offline without an API key, paid credit, request-time model call, database, account, or target rerun.
+GPT-5.6 proposes bounded logic; locked code owns grading. The exported bundle and CLI work offline. The hosted demo fetches static assets but requires no API key, request-time model call, database, account, or target rerun.
 
 ## Proof, not a green badge
 
