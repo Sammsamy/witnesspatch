@@ -306,6 +306,9 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
     /&& npm run deploy:dry-run$/u,
   );
   assert.match(workflow, /npm run verify:release/u);
+  assert.match(workflow, /npm run judge:proof/u);
+  assert.match(workflow, /GITHUB_STEP_SUMMARY/u);
+  assert.match(workflow, /output\/release\/judge-proof\.log/u);
   assert.match(workflow, /output\/release\/dist-client\.sha256/u);
   assert.match(workflow, /include-hidden-files:\s+true/u);
   assert.match(workflow, /persist-credentials:\s+false/u);
@@ -320,6 +323,29 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
       actionRef,
       /^[0-9a-f]{40}$/u,
       `Workflow action is not pinned to a full commit SHA: ${actionRef}`,
+    );
+  }
+});
+
+test("the threat model preserves the exact integrity and non-claim boundary", async () => {
+  const threatModel = await readFile(
+    new URL("../docs/THREAT_MODEL.md", import.meta.url),
+    "utf8",
+  );
+
+  for (const required of [
+    "compiler-exact reconstructed bytes",
+    "publisher identity",
+    "clinical correctness",
+    "absence of undisclosed patient data",
+    "target-in-loop, causal, or counterfactual behavior",
+    "requested GPT-5.6 model/effort",
+    "npm run judge:proof",
+    "output/release/judge-proof.log",
+  ]) {
+    assert.ok(
+      threatModel.includes(required),
+      `Threat model is missing required boundary: ${required}`,
     );
   }
 });

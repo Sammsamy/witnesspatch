@@ -19,6 +19,8 @@ The reference case is not clinical decision support, does not process patient da
 
 Those checks establish the declared synthetic software behavior only. They do not establish semantic completeness, diagnosis, treatment, physician review, or real-world safety.
 
+The [threat model](docs/THREAT_MODEL.md) maps concrete tampering and resource-exhaustion attacks to the exact failing checks, and separates bundle integrity from publisher authenticity, clinical correctness, and host compromise.
+
 ## Run it without an API key
 
 Requires Node.js 22.15 or newer; `.nvmrc` pins the minimum version exercised by the repository.

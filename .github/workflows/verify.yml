@@ -42,6 +42,20 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Publish the six-line judge proof
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p output/release
+          npm run judge:proof | tee output/release/judge-proof.log
+          {
+            echo "## WitnessPatch judge proof"
+            echo
+            echo '```text'
+            cat output/release/judge-proof.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Verify artifacts, tests, build, lint, types, and static release packaging
         run: |
           set -o pipefail
@@ -53,6 +67,7 @@ jobs:
         with:
           name: witnesspatch-static-release-${{ github.sha }}-${{ github.run_attempt }}
           path: |
+            output/release/judge-proof.log
             output/release/verify-release.log
             output/release/dist-client.sha256
             dist/client
