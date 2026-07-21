@@ -8,13 +8,12 @@ function readExportedHtml() {
 
 test("the deployed static export contains the WitnessPatch product shell", async () => {
   const html = await readExportedHtml();
-  assert.match(html, /<title>Replayable safety tests for healthcare agents · WitnessPatch/);
-  assert.match(html, /At T\+02/);
-  assert.match(html, /still waited/);
-  assert.match(html, /Compile failure/);
-  assert.match(html, /Compile your files/);
-  assert.match(html, /Locked verifier/);
-  assert.match(html, /not model-graded/);
+  assert.match(html, /<title>Turn late AI agent actions into tests \| WitnessPatch/);
+  assert.match(html, /deadline had already/);
+  assert.match(html, /Turn failure into test/);
+  assert.match(html, /Compare your runs/);
+  assert.match(html, /What each run must do/);
+  assert.match(html, /same for every run/);
   assert.match(html, /fully synthetic/i);
 });
 
@@ -24,23 +23,26 @@ test("exposes the evidence, executable test, and safety boundary", async () => {
   assert.match(html, /CDC Hear Her/);
   assert.match(html, /AIM/);
   assert.match(html, /ACOG/);
-  assert.match(html, /No regression is pre-rendered here/);
-  assert.match(html, /response held fixed · smallest set for INV-02/);
+  assert.match(html, /No test is generated yet/);
+  assert.match(html, /Recorded responses stay fixed\. The agent is not rerun\./);
   assert.doesNotMatch(
     html,
     /the repair passes the urgent trace and exact negative control/,
   );
   assert.doesNotMatch(html, /engine\/tests\/v2-clinical-scope.test.mjs/);
   assert.doesNotMatch(html, /engine\/tests\/target-repair.test.mjs/);
-  assert.match(html, /Static recorded decisions · no target or model rerun/);
-  assert.match(html, /Match actions to visible words/);
-  assert.match(html, /Developer safety tooling—not clinical decision support/);
-  assert.match(html, /licensed-physician fixture\/wording review not performed/i);
-  assert.match(html, /clinical validation not claimed/i);
+  assert.match(
+    html,
+    /The compiler uses recorded decisions\. It does not rerun the agent or call a model\./,
+  );
+  assert.match(html, /Match the recorded action/);
+  assert.match(html, /Developer safety tooling\. Not clinical decision support/);
+  assert.match(html, /No physician reviewed the fixture or wording/i);
+  assert.match(html, /No clinical validation was performed/i);
   assert.match(html, /PWS-V2-001/);
-  assert.match(html, /Assists fixture &amp; repair authoring/);
-  assert.match(html, /GPT-5\.6 Sol requested/);
-  assert.match(html, /no OpenAI or clinical-organization endorsement implied/);
+  assert.match(html, /Compare imported agent runs/);
+  assert.match(html, /Up to six WitnessPatch run files/);
+  assert.match(html, /no OpenAI or clinical organization endorsement is implied/i);
   assert.match(html, /npm run artifacts:v2:verify/);
   assert.match(html, /processed locally and are not submitted/);
   assert.match(html, /cannot detect PHI or prove de-identification/);
@@ -80,9 +82,9 @@ test("exports a judge-ready static replay without a request-time Worker", async 
     readFile(staticConfigUrl, "utf8").then(JSON.parse),
   ]);
 
-  assert.match(html, /<title>Replayable safety tests for healthcare agents · WitnessPatch/);
-  assert.match(html, /Compile failure/);
-  assert.match(html, /Compile your files/);
+  assert.match(html, /<title>Turn late AI agent actions into tests \| WitnessPatch/);
+  assert.match(html, /Turn failure into test/);
+  assert.match(html, /Compare your runs/);
   assert.ok(rsc.length > 0, "static export must retain its RSC payload");
   assert.match(html, /witnesspatch-v2-c9fb4568/);
   assert.match(rsc, /"deploymentVersion":"witnesspatch-v2-c9fb4568"/);

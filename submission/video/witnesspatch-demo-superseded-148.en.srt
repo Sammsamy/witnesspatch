@@ -1,0 +1,128 @@
+1
+00:00:00,000 --> 00:00:05,000
+This demo uses AI narration for Fuzlullah
+Syed, a third-year medical student.
+
+2
+00:00:05,000 --> 00:00:10,000
+AI agents can sound reasonable
+and still act too late.
+
+3
+00:00:10,000 --> 00:00:15,000
+WitnessPatch freezes what the agent knew
+at T-plus-two and compiles the missed
+
+4
+00:00:15,000 --> 00:00:20,000
+deadline into a portable red test.
+
+5
+00:00:20,000 --> 00:00:25,000
+This fully synthetic baseline scores
+fifty, with two critical breaches.
+
+6
+00:00:25,000 --> 00:00:29,000
+Codex built and stress-tested the compiler
+during Build Week; GPT-5.6 Sol
+
+7
+00:00:29,000 --> 00:00:34,000
+proposed separate repair data.
+
+8
+00:00:34,000 --> 00:00:40,000
+Locked code—not the model—scores it and
+builds a nine-file Node test bundle.
+
+9
+00:00:40,000 --> 00:00:46,000
+The test stays red at INV-02,
+T-plus-two. The manifest, original inputs,
+
+10
+00:00:46,000 --> 00:00:52,000
+earliest failing prefix, receipt, and
+executable test travel together as a
+
+11
+00:00:52,000 --> 00:00:58,000
+conventional Node package. A reviewer can
+inspect and run it offline,
+
+12
+00:00:58,000 --> 00:01:04,000
+without an API key, model call,
+or target rerun.
+
+13
+00:01:04,000 --> 00:01:10,000
+This is not a canned demo. Compile Your
+Files loads a schema-valid synthetic case
+
+14
+00:01:10,000 --> 00:01:16,000
+and failed run. The browser hashes and
+regrades them locally; here I load the
+
+15
+00:01:16,000 --> 00:01:22,000
+included pair, confirm it is synthetic,
+and compile.
+
+16
+00:01:22,000 --> 00:01:27,000
+The result is the same nine-file red
+bundle, with two computed hashes
+
+17
+00:01:27,000 --> 00:01:32,000
+and zero claims of external verification.
+
+18
+00:01:32,000 --> 00:01:39,000
+Back on the reference, the verifier checks
+twenty-three saved files and recomputes
+
+19
+00:01:39,000 --> 00:01:45,000
+both runs. The retained repair reaches
+one hundred with zero critical failures,
+
+20
+00:01:45,000 --> 00:01:51,000
+while the original regression remains red.
+
+21
+00:01:51,000 --> 00:01:57,000
+The repair must pass four holdouts.
+An exact-fact control still passes;
+
+22
+00:01:57,000 --> 00:02:03,000
+an always-escalate mutant fails.
+Sol’s proposal stays quarantined, and the
+
+23
+00:02:03,000 --> 00:02:09,000
+browser only interprets constrained data.
+
+24
+00:02:09,000 --> 00:02:14,000
+The receipt records every hash, regrade,
+holdout, and requested model setup;
+
+25
+00:02:14,000 --> 00:02:19,000
+it does not claim which model was served.
+This is developer tooling for synthetic
+
+26
+00:02:19,000 --> 00:02:24,000
+tests: no patient data, no clinical use,
+no physician review, and no clinical
+
+27
+00:02:24,000 --> 00:02:28,000
+validation claim.

@@ -4,13 +4,13 @@
   "status": "not_frozen",
   "submitted_commit": null,
   "v2_manifest_sha256": "3e72fd8cf8edc0a00bbc513eb6bf498d24a550f8717d9df24d2837350f608541",
-  "static_client_manifest_sha256": "9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a",
+  "static_client_manifest_sha256": "4a5bc546ef3b55c76b48b7901432cbe17f6c5b4c192d8eee5259aacb4931e509",
   "submission_media": {
-    "01-thumbnail-failure.png": "89a7215a12e38bdad8b20f68bcaa5e1213854eb029f0753708821e5aee486633",
-    "02-local-input-compiled-red.png": "ea776cd9ea2cfb4585768171f547f57b65349f4deb3bae31c73e6461bcebb1cf",
-    "03-reference-compiled-red.png": "65d4a36bb46bc9f1b198eea829655b172f65a52d2e8c3166a0d035cba1c27e78",
-    "04-reference-verified-receipt.png": "abffffc42a85ebafecb643c3e7f290cc844ad74ede2e106333116701f3dd7761",
-    "05-reference-success-closure.png": "959b5442cbdb8b4543b3c0da921fda148311fde27976da2d11dd911780a5d4ad"
+    "01-thumbnail-failure.png": "cb0d679bfd196b5e3d7f6c240b4f3ff1f4b01c077db973f2b0cf4f7e2bed55b1",
+    "02-model-run-comparison.png": "1ea323424dcd5585a06179c4bc56e90f37e23b59c6362a7292e3767ab1266e8d",
+    "03-reference-compiled-test.png": "d509189f69e3ccb2f66902a73d07a51bf87d20b281f5df79ebb6d0280dcfa7c9",
+    "04-reference-verified-receipt.png": "1e3bd10f91d847c6b99de90570b624125a0595348ea9dd9ab3f9a9f017a7cdec",
+    "05-reference-success-closure.png": "abc9f12f3cfdf13b21fe79c28f8cad0671c8e949913b60e8b49627a9aa2ab399"
   },
   "repository_url": null,
   "deployment_url": null,

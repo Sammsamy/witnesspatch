@@ -4,10 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default: "WitnessPatch",
-    template: "%s · WitnessPatch",
+    template: "%s | WitnessPatch",
   },
   description:
-    "Turn a synthetic healthcare-agent failure into a replayable test, then check a human-gated repair against locked rules.",
+    "Compare recorded agent runs under the same deadline rules, then turn a missed action into a Node test developers can keep in CI.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

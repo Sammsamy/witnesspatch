@@ -42,6 +42,10 @@ export function validateFinalPreflightManifest(value) {
     "Final release preflight manifest is invalid.",
   );
   requireValue(
+    value.status === "ready_for_review",
+    "Final release preflight is superseded or not ready for review.",
+  );
+  requireValue(
     typeof value.repository_url === "string" &&
       typeof value.deployment_url === "string",
     "Final release preflight manifest is missing public endpoints.",
@@ -217,7 +221,7 @@ export async function preflightFinalRelease({
     captions_sha256: candidate.captions_sha256,
     youtube_description_sha256: candidate.youtube_description_sha256,
     remaining_human_gates: Object.freeze([
-      "Entrant watches and listens to the complete 2:28 candidate.",
+      "Entrant watches and listens to the complete reviewed candidate.",
       "Entrant authorizes and completes the public YouTube upload.",
       "Entrant completes Codex /feedback and supplies its returned Session ID.",
       "Run release:freeze with the public URL, Session ID, and explicit confirmations.",

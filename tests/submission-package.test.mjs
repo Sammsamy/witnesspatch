@@ -44,8 +44,8 @@ const mediaDirectory = new URL("../submission/media/", import.meta.url);
 const fiveMegabytes = 5 * 1024 * 1024;
 const expectedImages = [
   "01-thumbnail-failure.png",
-  "02-local-input-compiled-red.png",
-  "03-reference-compiled-red.png",
+  "02-model-run-comparison.png",
+  "03-reference-compiled-test.png",
   "04-reference-verified-receipt.png",
   "05-reference-success-closure.png",
 ];
@@ -160,20 +160,20 @@ test("submission overview copy stays inside the recorded field limits", async ()
     new URL("../docs/SUBMISSION_DRAFT.md", import.meta.url),
     "utf8",
   );
-  const title = extractQuotedField(draft, "Project name — 57/60 characters");
-  const pitch = extractQuotedField(draft, "Elevator pitch — 178/200 characters");
+  const title = extractQuotedField(draft, "Project name");
+  const pitch = extractQuotedField(draft, "Elevator pitch");
 
-  assert.equal([...title].length, 57);
+  assert.equal([...title].length, 48);
   assert.ok([...title].length <= 60);
   assert.equal(
     title,
-    "WitnessPatch: Time-Fenced Contracts for Healthcare Agents",
+    "WitnessPatch: Turn Late Agent Actions Into Tests",
   );
-  assert.equal([...pitch].length, 178);
+  assert.equal([...pitch].length, 168);
   assert.ok([...pitch].length <= 200);
   assert.equal(
     pitch,
-    "Turn one synthetic missed deadline into a portable red test: freeze what the agent knew, check whether action happened on time, then verify any repair offline before trusting it.",
+    "When an AI agent acts too late, WitnessPatch saves the missed deadline as a Node test that teams can rerun against imported WitnessPatch run files before every release.",
   );
   assert.match(draft, /## Inspiration\n/);
   assert.match(draft, /## Approach\n/);
@@ -340,7 +340,7 @@ test("the reviewed static-client fingerprint is enforced and documented", async 
   const readme = documents[0];
   assert.match(
     readme,
-    /For the shortest executable judge path[\s\S]*?```bash\nnpm ci\nnpm run judge:proof\n```/u,
+    /For the shortest judge path[\s\S]*?```bash\nnpm ci\nnpm run judge:proof\n```/u,
   );
   assert.ok(
     readme.indexOf("## Run it without an API key") <
@@ -475,12 +475,17 @@ test("the threat model preserves the exact integrity and non-claim boundary", as
   }
 });
 
-test("the tracked final preflight manifest binds current release text without requiring the ignored MP4", async () => {
+test("the tracked superseded preflight cannot approve the prohibited 148-second video", async () => {
   const manifestBytes = await readFile(
     new URL("../submission/release/final-preflight.json", import.meta.url),
     "utf8",
   );
-  const manifest = validateFinalPreflightManifest(JSON.parse(manifestBytes));
+  const manifest = JSON.parse(manifestBytes);
+  assert.equal(manifest.status, "superseded_do_not_upload");
+  assert.throws(
+    () => validateFinalPreflightManifest(manifest),
+    /superseded or not ready/u,
+  );
   const candidate = manifest.video_candidate;
   const [captionsBytes, descriptionBytes, gitignore] = await Promise.all([
     readFile(new URL(`../${candidate.captions_path}`, import.meta.url)),
@@ -961,6 +966,7 @@ Movie analyzed with 0 error.`;
     const syntheticPreflight = {
       schema_version: "1.0.0",
       kind: "witnesspatch_final_release_preflight",
+      status: "ready_for_review",
       repository_url: "https://github.com/Sammsamy/witnesspatch",
       deployment_url: "https://witnesspatch.example.workers.dev",
       video_candidate: {
@@ -1295,30 +1301,30 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
   assert.deepEqual(
     validateFounderMedia(
       {
-        format: { duration: "148.000" },
+        format: { duration: "167.000" },
         streams: [
           { codec_type: "video", codec_name: "h264", width: 1400, height: 900 },
         ],
       },
       {
-        format: { duration: "146.250" },
+        format: { duration: "164.000" },
         streams: [{ codec_type: "audio", codec_name: "aac" }],
       },
     ),
-    { videoDuration: 148, audioDuration: 146.25 },
+    { videoDuration: 167, audioDuration: 164 },
   );
   assert.throws(
     () =>
       validateFounderMedia(
         {
-          format: { duration: "148.000" },
+          format: { duration: "167.000" },
           streams: [
             { codec_type: "video", codec_name: "h264", width: 1400, height: 900 },
             { codec_type: "audio" },
           ],
         },
         {
-          format: { duration: "146.250" },
+          format: { duration: "164.000" },
           streams: [{ codec_type: "audio" }],
         },
       ),
@@ -1328,13 +1334,13 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
     () =>
       validateFounderMedia(
         {
-          format: { duration: "148.000" },
+          format: { duration: "167.000" },
           streams: [
             { codec_type: "video", codec_name: "vp8", width: 1400, height: 900 },
           ],
         },
         {
-          format: { duration: "146.250" },
+          format: { duration: "164.000" },
           streams: [{ codec_type: "audio" }],
         },
       ),
@@ -1344,17 +1350,17 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
     () =>
       validateFounderMedia(
         {
-          format: { duration: "148.000" },
+          format: { duration: "167.000" },
           streams: [
             { codec_type: "video", codec_name: "h264", width: 1400, height: 900 },
           ],
         },
         {
-          format: { duration: "147.501" },
+          format: { duration: "166.501" },
           streams: [{ codec_type: "audio" }],
         },
       ),
-    /no later than 2:27\.5/u,
+    /no later than 2:46\.5/u,
   );
   const [script, captions, readme] = await Promise.all([
     readFile(new URL("../docs/DEMO_SCRIPT.md", import.meta.url), "utf8"),
@@ -1367,16 +1373,16 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
   assert.match(script, new RegExp(reviewedScreenMaster.sha256));
   assert.match(readme, new RegExp(reviewedScreenMaster.sha256));
   const rowPattern =
-    /^\| `(\d+):(\d+)–(\d+):(\d+)` \| “([^”]+)” \|/gm;
+    /^\| `(\d+):(\d+) to (\d+):(\d+)` \| “([^”]+)” \|/gm;
   const rows = [...script.matchAll(rowPattern)].map((match) => ({
     start: Number(match[1]) * 60 + Number(match[2]),
     end: Number(match[3]) * 60 + Number(match[4]),
     narration: match[5],
   }));
 
-  assert.equal(rows.length, 10);
+  assert.equal(rows.length, 9);
   assert.equal(rows[0].start, 0);
-  assert.equal(rows.at(-1).end, 148);
+  assert.equal(rows.at(-1).end, 167);
   assert.ok(rows.at(-1).end < 180);
 
   for (const [index, row] of rows.entries()) {
@@ -1411,7 +1417,8 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
     return ((hours * 60 + minutes) * 60 + seconds) * 1000 + milliseconds;
   };
 
-  const captionRows = captions
+  const founderCaptions = founderCaptionsFromAi(captions);
+  const captionRows = founderCaptions
     .trim()
     .split(/\r?\n\r?\n+/)
     .map((block) => {
@@ -1444,7 +1451,7 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
 
   assert.ok(captionRows.length >= 25 && captionRows.length <= 35);
   assert.equal(captionRows[0].startMs, 0);
-  assert.equal(captionRows.at(-1).endMs, 148_000);
+  assert.equal(captionRows.at(-1).endMs, 167_000);
 
   const captionsByScriptRow = rows.map(() => []);
   for (const [index, caption] of captionRows.entries()) {
@@ -1494,20 +1501,16 @@ test("founder demo timeline stays continuous, speakable, and below three minutes
     captionRows.map((caption) => caption.narration).join(" "),
     narration,
   );
-  const founderCaptions = founderCaptionsFromAi(captions);
   const captionNarration = (value) =>
     value
       .trim()
       .split(/\r?\n\r?\n+/u)
       .map((block) => block.split(/\r?\n/u).slice(2).join(" "))
       .join(" ");
-  const expectedFounderNarration = narration.replace(
-    /^This demo uses AI narration for Fuzlullah Syed, a third-year medical student\./u,
-    "I’m Fuzlullah Syed, a third-year medical student.",
-  );
+  const expectedFounderNarration = narration;
   assert.equal(captionNarration(founderCaptions), expectedFounderNarration);
   assert.doesNotMatch(founderCaptions, /uses AI narration/u);
-  assert.match(founderCaptions, /I’m Fuzlullah Syed/u);
+  assert.match(founderCaptions, /Hi, I’m Fuzlullah Syed/u);
   const timingLines = (value) =>
     value.match(/^\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}$/gmu);
   assert.deepEqual(timingLines(founderCaptions), timingLines(captions));

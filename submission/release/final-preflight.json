@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0.0",
   "kind": "witnesspatch_final_release_preflight",
+  "status": "superseded_do_not_upload",
   "repository_url": "https://github.com/Sammsamy/witnesspatch",
   "deployment_url": "https://witnesspatch.ankigpt.workers.dev",
   "video_candidate": {
@@ -20,12 +21,12 @@
       "sample_rate_hz": 48000,
       "channels": 2
     },
-    "captions_path": "submission/video/witnesspatch-demo.en.srt",
+    "captions_path": "submission/video/witnesspatch-demo-superseded-148.en.srt",
     "captions_sha256": "592269c325273643e6ab9be080f98c9fadf5e41aa3feb40aa9e333d393bcfcf5",
     "youtube_description_path": "submission/video/youtube-description.txt",
     "youtube_description_sha256": "8d042b7eef41376a26ecdfbd5223b28d3a019283446b3f2936fff0ca11d47e21",
     "entrant_complete_review": "pending",
     "public_youtube_upload": "pending"
   },
-  "boundary": "This tracked manifest binds the machine-verifiable local AI-narrated candidate, captions, and prepared YouTube description. It does not claim entrant audition, public upload, equality between local and YouTube-served bytes, or a Codex /feedback Session ID."
+  "boundary": "Historical evidence only. This 148-second AI-narrated candidate shows a superseded interface and must not pass current preflight or be uploaded. A new founder-narrated final video is required."
 }

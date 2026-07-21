@@ -18,7 +18,7 @@ const defaultVideoFile = join(
   projectRoot,
   "output",
   "playwright",
-  "witnesspatch-founder-screen-master-final.mp4",
+  "witnesspatch-founder-screen-master-v9-plain-copy.mp4",
 );
 const defaultOutputFile = join(
   projectRoot,
@@ -28,8 +28,8 @@ const defaultOutputFile = join(
 );
 const valueArguments = new Set(["--audio-file", "--video-file", "--out"]);
 export const reviewedScreenMaster = Object.freeze({
-  durationSeconds: 148,
-  sha256: "7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8",
+  durationSeconds: 167,
+  sha256: "1876dd490082d9de93901ebe411b4a1d63e6f3c85ceaa7f6a579deb2fa7014bf",
 });
 const aiCaptionsFile = join(
   projectRoot,
@@ -40,7 +40,7 @@ const aiCaptionsFile = join(
 const aiIdentityCaption =
   "This demo uses AI narration for Fuzlullah\nSyed, a third-year medical student.";
 const founderIdentityCaption =
-  "I’m Fuzlullah Syed, a third-year\nmedical student.";
+  "Hi, I’m Fuzlullah Syed, a third-year\nmedical student.";
 
 function requireValue(condition, message) {
   if (!condition) throw new Error(message);
@@ -131,7 +131,7 @@ export function validateFounderMedia(videoReport, audioReport) {
     Number.isFinite(videoDuration) &&
       videoDuration >= reviewedScreenMaster.durationSeconds - 0.5 &&
       videoDuration <= reviewedScreenMaster.durationSeconds + 0.5,
-    "The screen master must be the reviewed 2:28 cut.",
+    "The screen master must be the reviewed 2:47 cut.",
   );
   requireValue(
     videoStreams.length === 1 &&
@@ -145,8 +145,8 @@ export function validateFounderMedia(videoReport, audioReport) {
     "The reviewed screen master must remain silent before founder audio is added.",
   );
   requireValue(
-    Number.isFinite(audioDuration) && audioDuration >= 142 && audioDuration <= 147.5,
-    "Founder audio must run from 2:22 through no later than 2:27.5 so no final words are truncated.",
+    Number.isFinite(audioDuration) && audioDuration >= 155 && audioDuration <= 166.5,
+    "Clean founder audio must run from 2:35 through no later than 2:46.5 so no final words are truncated.",
   );
   requireValue(
     narrationStreams.length >= 1,
@@ -222,7 +222,7 @@ export async function assembleFounderVideo(options) {
   const videoBytes = await readFile(options.videoFile);
   requireValue(
     sha256(videoBytes) === reviewedScreenMaster.sha256,
-    "The screen master bytes do not match the reviewed 2:28 cut.",
+    "The screen master bytes do not match the reviewed 2:47 cut.",
   );
   const sourceVideo = probe(options.videoFile, ffprobe);
   const sourceAudio = probe(options.audioFile, ffprobe);
@@ -283,7 +283,7 @@ export async function assembleFounderVideo(options) {
       (stream) => stream.codec_type === "audio",
     );
     requireValue(
-      Number.isFinite(finalDuration) && finalDuration >= 147.5 && finalDuration < 149,
+      Number.isFinite(finalDuration) && finalDuration >= 166.5 && finalDuration < 168,
       "Assembled founder video is not the expected sub-three-minute duration.",
     );
     requireValue(

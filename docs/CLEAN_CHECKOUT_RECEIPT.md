@@ -5,6 +5,8 @@ This is entrant-authored reproducibility evidence, not independent validation, a
 ## Current notice-corrected candidate
 
 - Static client: `55` physical files, canonical manifest SHA-256 `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`.
+
+Post-receipt note: the later plain-language working tree has local 55-file fingerprint `4a5bc546ef3b55c76b48b7901432cbe17f6c5b4c192d8eee5259aacb4931e509`. It is outside this historical clean-checkout receipt and still requires its own commit, CI run, deployment match, and final freeze.
 - Local release command: `npm run verify:release` exits `0` on macOS and reports `136/136` core tests, `6/6` rendered-product checks, `1/1` development-server smoke check, `9/9` submission-package checks, and `6/6` deployment-rendered checks: `158/158` aggregate executions.
 - The same run passes deterministic V1/V2 artifact verification, the zero-argument judge proof, build, lint, typecheck, the 624-entry license audit, byte-identical bundled notices, the static fingerprint, and a 59-asset Cloudflare dry run.
 - The corrected `THIRD_PARTY_NOTICES.md` now describes the public MIT source/static route and confirmed entrant-authored visual assets. Because that file is distributed, its byte change intentionally produced the new static fingerprint above.

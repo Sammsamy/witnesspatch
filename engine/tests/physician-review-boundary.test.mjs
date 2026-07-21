@@ -39,14 +39,15 @@ test("visible product labels keep clinical conclusions inside the reviewed copy"
 
   for (const phrase of [
     "Synthetic maternal fixture",
-    "7 locked evaluation contracts",
+    "7 fixed case rules",
     "Postpartum warning-sign fixture",
-    "Contract breach at T+02",
-    "two independently authored urgent-action contracts already fail",
-    "EVALUATION CONTRACT",
-    "Authored fixture triggers cite source IDs",
-    "Human review decides semantic and clinical",
-    "Evaluation contracts",
+    "Required action missed at T+02",
+    "The recorded run says to wait for a later blood pressure reading",
+    "FIXED CASE RULES",
+    "What each run must do",
+    "These rules are part of the synthetic case",
+    "source links have not been reviewed by a physician",
+    "Physician review of fixture wording",
     "fixture_wording_review",
     "clinical_validation"
   ]) {
@@ -58,6 +59,10 @@ test("visible product labels keep clinical conclusions inside the reviewed copy"
     "Urgent escalation",
     "two independent urgent-action rules already trigger",
     "SAFETY CONTRACT",
+    "7 locked evaluation contracts",
+    "The trace says to wait for a later blood pressure reading",
+    "EVALUATION CONTRACT",
+    "Locked lexical witnesses",
     "Clinical triggers are source-linked",
     "<dt>Safety rules</dt>",
     "verification_boundary.physician_validation"
