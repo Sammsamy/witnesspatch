@@ -10,6 +10,7 @@ import test from "node:test";
 import {
   compileBrowserWitness,
   compileBrowserWitnessFromBytes,
+  inspectBrowserRunFromBytes,
   MAX_LOCAL_INPUT_BYTES
 } from "../browser-witness-compiler.mjs";
 import { compileWitnessBundle } from "../compile-witness.mjs";
@@ -230,6 +231,8 @@ test("local selected bytes byte-match the manifest-bound browser result", async 
     external_manifest_verified: false
   });
   assert.equal(local.case_id, "postpartum-warning-signs-v2-001");
+  assert.equal(local.input_case_sha256, digest(inputs.caseBytes));
+  assert.equal(local.input_run_sha256, digest(inputs.runBytes));
   assert.equal(local.source_run_id, "run-pws-v2-001-baseline");
   assert.equal(local.fresh_evaluation.status, "fail");
   assert.equal(local.file_count, 9);
@@ -248,6 +251,276 @@ test("local selected bytes byte-match the manifest-bound browser result", async 
   assert.match(exportedManifest.verification, /not publisher provenance/);
   assert.deepEqual(local.files, reference.files);
   assert.equal(local.manifest_sha256, reference.manifest_sha256);
+});
+
+test("the local inspector compares passing and failing traces without invoking a model", async () => {
+  const { manifest, routes } = await fixture();
+  const { caseBytes, runBytes } = exactInputBytes(manifest, routes);
+  const repairedRecord = manifest.files.find((record) => record.id === "repaired");
+  const repairedBytes = await readFile(join(publicDir, repairedRecord.path));
+
+  const [baseline, repaired] = await Promise.all([
+    inspectBrowserRunFromBytes({
+      caseBytes,
+      runBytes,
+      subtle: webcrypto.subtle
+    }),
+    inspectBrowserRunFromBytes({
+      caseBytes,
+      runBytes: repairedBytes,
+      subtle: webcrypto.subtle
+    })
+  ]);
+
+  assert.equal(baseline.status, "inspected");
+  assert.equal(baseline.evaluation.status, "fail");
+  assert.equal(baseline.evaluation.score, 50);
+  assert.deepEqual(baseline.evaluation.critical_failures, ["INV-02", "INV-03"]);
+  assert.deepEqual(baseline.evaluation.first_missed_contract, {
+    id: "INV-02",
+    deadline_minute: 2,
+    critical: true
+  });
+  assert.equal(baseline.can_compile_failure, true);
+  assert.equal(baseline.compile_blocker, null);
+  assert.equal(repaired.evaluation.status, "pass");
+  assert.equal(repaired.evaluation.score, 100);
+  assert.equal(repaired.evaluation.first_missed_contract, null);
+  assert.equal(repaired.can_compile_failure, false);
+  assert.match(repaired.compile_blocker, /fresh evaluation passes/i);
+  assert.match(baseline.trust_boundary, /never calls a model|Model names/u);
+});
+
+test("model declarations switch complete trace bytes without changing locked grading", async () => {
+  const { manifest, routes } = await fixture();
+  const { caseBytes, runBytes } = exactInputBytes(manifest, routes);
+  const original = rawRunFromArtifact(JSON.parse(runBytes.toString("utf8")));
+  const terra = structuredClone(original);
+  terra.run_id = "run-terra-comparison";
+  terra.provenance.model_config_requested = "gpt-5.6-terra";
+  terra.provenance.reasoning_effort_requested = "medium";
+  const otherProvider = structuredClone(original);
+  otherProvider.run_id = "run-other-provider-comparison";
+  otherProvider.provenance.model_config_requested = "provider-x/model-y";
+  delete otherProvider.provenance.reasoning_effort_requested;
+  const terraBytes = Buffer.from(`${JSON.stringify(terra, null, 2)}\n`);
+  const otherBytes = Buffer.from(`${JSON.stringify(otherProvider, null, 2)}\n`);
+
+  const [terraInspection, otherInspection] = await Promise.all([
+    inspectBrowserRunFromBytes({
+      caseBytes,
+      runBytes: terraBytes,
+      subtle: webcrypto.subtle
+    }),
+    inspectBrowserRunFromBytes({
+      caseBytes,
+      runBytes: otherBytes,
+      subtle: webcrypto.subtle
+    })
+  ]);
+
+  assert.equal(terraInspection.requested_model, "gpt-5.6-terra");
+  assert.equal(terraInspection.requested_reasoning_effort, "medium");
+  assert.equal(otherInspection.requested_model, "provider-x/model-y");
+  assert.equal(otherInspection.requested_reasoning_effort, null);
+  assert.deepEqual(terraInspection.evaluation, otherInspection.evaluation);
+  assert.notEqual(terraInspection.run_input_sha256, otherInspection.run_input_sha256);
+});
+
+test("local compilation reports the selected trace configuration and exact raw hash", async () => {
+  const { manifest, routes } = await fixture();
+  const { caseBytes, runBytes } = exactInputBytes(manifest, routes);
+  const selected = rawRunFromArtifact(JSON.parse(runBytes.toString("utf8")));
+  selected.run_id = "run-luna-selected";
+  selected.provenance.model_config_requested = "gpt-5.6-luna";
+  selected.provenance.reasoning_effort_requested = "low";
+  const selectedBytes = Buffer.from(`${JSON.stringify(selected, null, 2)}\n`);
+
+  const compiled = await compileBrowserWitnessFromBytes({
+    caseBytes,
+    runBytes: selectedBytes,
+    subtle: webcrypto.subtle
+  });
+
+  assert.equal(compiled.source_run_id, "run-luna-selected");
+  assert.equal(compiled.source_requested_model, "gpt-5.6-luna");
+  assert.equal(compiled.source_requested_reasoning_effort, "low");
+  assert.equal(compiled.source_model_invocation_logged, false);
+  assert.equal(compiled.input_run_sha256, digest(selectedBytes));
+  assert.equal(compiled.receipt.input_run_sha256, digest(selectedBytes));
+});
+
+test("the inspector and compiler agree when a noncritical miss still meets a lowered pass threshold", async () => {
+  const { manifest, routes } = await fixture();
+  const { caseBytes } = exactInputBytes(manifest, routes);
+  const repairedRecord = manifest.files.find((record) => record.id === "repaired");
+  const repairedArtifact = JSON.parse(
+    await readFile(join(publicDir, repairedRecord.path), "utf8")
+  );
+  const caseData = JSON.parse(caseBytes.toString("utf8"));
+  caseData.pass_threshold = 85;
+  const run = rawRunFromArtifact(repairedArtifact);
+  run.variant = "candidate";
+  delete run.repair;
+  run.decisions[0].actions = run.decisions[0].actions.filter(
+    (action) => action !== "ask_recent_pregnancy"
+  );
+  const changedCaseBytes = Buffer.from(`${JSON.stringify(caseData, null, 2)}\n`);
+  const changedRunBytes = Buffer.from(`${JSON.stringify(run, null, 2)}\n`);
+
+  const inspection = await inspectBrowserRunFromBytes({
+    caseBytes: changedCaseBytes,
+    runBytes: changedRunBytes,
+    subtle: webcrypto.subtle
+  });
+
+  assert.equal(inspection.evaluation.status, "pass");
+  assert.equal(inspection.evaluation.score, 85);
+  assert.deepEqual(inspection.evaluation.first_missed_contract, {
+    id: "INV-01",
+    deadline_minute: 0,
+    critical: false
+  });
+  assert.equal(inspection.can_compile_failure, false);
+  assert.match(inspection.compile_blocker, /fresh evaluation passes/i);
+  await assert.rejects(
+    compileBrowserWitnessFromBytes({
+      caseBytes: changedCaseBytes,
+      runBytes: changedRunBytes,
+      subtle: webcrypto.subtle
+    }),
+    /fresh evaluation passes/i
+  );
+});
+
+test("the inspector distinguishes control-only failures from passing runs", async () => {
+  const { manifest, routes } = await fixture();
+  const { caseBytes } = exactInputBytes(manifest, routes);
+  const repairedRecord = manifest.files.find((record) => record.id === "repaired");
+  const repairedArtifact = JSON.parse(
+    await readFile(join(publicDir, repairedRecord.path), "utf8")
+  );
+  const run = rawRunFromArtifact(repairedArtifact);
+  run.variant = "candidate";
+  delete run.repair;
+  run.decisions[0].fact_refs.push(
+    "blood_pressure_168_112_authored_endpoint"
+  );
+  const changedRunBytes = Buffer.from(`${JSON.stringify(run, null, 2)}\n`);
+
+  const inspection = await inspectBrowserRunFromBytes({
+    caseBytes,
+    runBytes: changedRunBytes,
+    subtle: webcrypto.subtle
+  });
+
+  assert.equal(inspection.evaluation.status, "fail");
+  assert.equal(inspection.evaluation.first_missed_contract, null);
+  assert.equal(inspection.can_compile_failure, false);
+  assert.match(inspection.compile_blocker, /failed action invariant/i);
+  await assert.rejects(
+    compileBrowserWitnessFromBytes({
+      caseBytes,
+      runBytes: changedRunBytes,
+      subtle: webcrypto.subtle
+    }),
+    /failed action invariant/i
+  );
+});
+
+test("the inspector reports repaired-variant and reduction-budget blockers before compilation", async () => {
+  const { manifest, routes } = await fixture();
+  const { caseBytes, runBytes } = exactInputBytes(manifest, routes);
+  const repairedRecord = manifest.files.find((record) => record.id === "repaired");
+  const repairedArtifact = JSON.parse(
+    await readFile(join(publicDir, repairedRecord.path), "utf8")
+  );
+  const failedRepair = rawRunFromArtifact(JSON.parse(runBytes.toString("utf8")));
+  failedRepair.run_id = "run-failed-repair-variant-test";
+  failedRepair.variant = "repaired";
+  failedRepair.repair = repairedArtifact.repair;
+  const failedRepairBytes = Buffer.from(
+    `${JSON.stringify(failedRepair, null, 2)}\n`
+  );
+  const repairedInspection = await inspectBrowserRunFromBytes({
+    caseBytes,
+    runBytes: failedRepairBytes,
+    subtle: webcrypto.subtle
+  });
+  assert.equal(repairedInspection.evaluation.status, "fail");
+  assert.equal(repairedInspection.can_compile_failure, false);
+  assert.match(repairedInspection.compile_blocker, /declared as repaired/i);
+  await assert.rejects(
+    compileBrowserWitnessFromBytes({
+      caseBytes,
+      runBytes: failedRepairBytes,
+      subtle: webcrypto.subtle
+    }),
+    /declared as repaired/i
+  );
+
+  const caseData = JSON.parse(caseBytes.toString("utf8"));
+  caseData.timeline[0].facts_revealed.push(
+    "extra_fact_01",
+    "extra_fact_02",
+    "extra_fact_03",
+    "extra_fact_04",
+    "extra_fact_05",
+    "extra_fact_06",
+    "extra_fact_07",
+    "extra_fact_08"
+  );
+  const rawRun = rawRunFromArtifact(JSON.parse(runBytes.toString("utf8")));
+  const expandedCaseBytes = Buffer.from(`${JSON.stringify(caseData, null, 2)}\n`);
+  const rawRunBytes = Buffer.from(`${JSON.stringify(rawRun, null, 2)}\n`);
+  const budgetInspection = await inspectBrowserRunFromBytes({
+    caseBytes: expandedCaseBytes,
+    runBytes: rawRunBytes,
+    subtle: webcrypto.subtle
+  });
+  assert.equal(budgetInspection.evaluation.status, "fail");
+  assert.equal(budgetInspection.can_compile_failure, false);
+  assert.deepEqual(budgetInspection.evaluation.first_missed_contract, {
+    id: "INV-02",
+    deadline_minute: 2,
+    critical: true
+  });
+  assert.match(budgetInspection.compile_blocker, /16-fact browser reduction limit/i);
+  await assert.rejects(
+    compileBrowserWitnessFromBytes({
+      caseBytes: expandedCaseBytes,
+      runBytes: rawRunBytes,
+      subtle: webcrypto.subtle
+    }),
+    /16-fact browser reduction limit/i
+  );
+});
+
+test("local model provenance fails closed on logged or malformed declarations", async () => {
+  const { manifest, routes } = await fixture();
+  const { caseBytes, runBytes } = exactInputBytes(manifest, routes);
+  const missingModel = rawRunFromArtifact(JSON.parse(runBytes.toString("utf8")));
+  missingModel.provenance.model_invocation_logged = true;
+  delete missingModel.provenance.model_config_requested;
+  await assert.rejects(
+    inspectBrowserRunFromBytes({
+      caseBytes,
+      runBytes: Buffer.from(`${JSON.stringify(missingModel)}\n`),
+      subtle: webcrypto.subtle
+    }),
+    /Logged model invocations must declare model_config_requested/
+  );
+
+  const malformedModel = rawRunFromArtifact(JSON.parse(runBytes.toString("utf8")));
+  malformedModel.provenance.model_config_requested = 56;
+  await assert.rejects(
+    inspectBrowserRunFromBytes({
+      caseBytes,
+      runBytes: Buffer.from(`${JSON.stringify(malformedModel)}\n`),
+      subtle: webcrypto.subtle
+    }),
+    /model_config_requested must be a non-empty string/
+  );
 });
 
 test("local compilation accepts a raw run and freshly creates the evaluated artifact", async () => {
@@ -388,7 +661,7 @@ test("local compilation rejects stale evaluated claims and passing runs", async 
       runBytes: repairedBytes,
       subtle: webcrypto.subtle
     }),
-    /not a compilable failure/
+    /fresh evaluation passes/i
   );
 });
 

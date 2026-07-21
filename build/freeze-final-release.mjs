@@ -708,6 +708,7 @@ export async function verifyTrackedAiNarrationPackage({
   requireValue(
     manifest.schema_version === "1.0.0" &&
       manifest.kind === "witnesspatch_final_release_preflight" &&
+      manifest.status === "ready_for_review" &&
       candidate?.id === "ai-piper-ljspeech-v1" &&
       candidate.narration_mode === "ai_generated_voice",
     "Tracked AI narration preflight package is invalid.",

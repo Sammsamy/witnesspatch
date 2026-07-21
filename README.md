@@ -1,27 +1,26 @@
 # WitnessPatch
 
-**WitnessPatch — portable red-test compiler for time-critical AI agents.**
+**When an AI agent acts too late, WitnessPatch turns the exact miss into a test.**
 
-WitnessPatch turns a missed safety deadline into a portable red test. It freezes what an agent knew at each timestamp, checks whether the required action happened on time, and compiles that exact observed failure into a hash-bound `node:test` bundle that runs offline before any repair can be trusted. Codex workflows configured to request GPT-5.6 Sol with Ultra reasoning assist implementation and fixture/repair authoring; deterministic software owns every displayed verdict.
+Give WitnessPatch a synthetic case with timestamped facts and a WitnessPatch run file that records what an agent said and did. It finds the first required action the agent missed, then exports that failure as a standard `node:test` package developers can keep in CI. Teams can import up to six structured run files tagged with different model names and check all of them against the same rules. The app does not call a model, and model labels from imported files are marked as unverified.
 
-[Live no-rebuild demo](https://witnesspatch.ankigpt.workers.dev) · [Public MIT repository](https://github.com/Sammsamy/witnesspatch) · [Current default-branch CI](https://github.com/Sammsamy/witnesspatch/actions/workflows/verify.yml?query=branch%3Acodex%2Fbuild-week)
+Codex helped build the compiler and write adversarial tests. A separate workflow requested GPT-5.6 Sol with Ultra reasoning to return repair data in a restricted JSON format. The software calculates every displayed result. The recorded request does not independently prove which model was served.
 
-![WitnessPatch preserves the red baseline while the scoped repair passes its exact control and rejects an always-escalate mutation](submission/media/05-reference-success-closure.png)
+[Live demo](https://witnesspatch.ankigpt.workers.dev) | [Public MIT repository](https://github.com/Sammsamy/witnesspatch) | [Current default-branch CI](https://github.com/Sammsamy/witnesspatch/actions/workflows/verify.yml?query=branch%3Acodex%2Fbuild-week)
+
+![The original run fails, the repaired run passes, and an overreacting version is rejected](submission/media/05-reference-success-closure.png)
 
 The reference case is not clinical decision support, does not process patient data, and does not certify clinical safety. No physician review or clinical validation was performed; clinical validation is not claimed.
 
 ## The judge proof
 
-1. A fully synthetic agent receives facts on a locked timeline.
-2. At T+02 it knows the patient is eight days postpartum, has a persistent unrelieved headache, and reports visual changes, but it delays the declared urgent route.
-3. Locked, source-ID-linked action contracts score the baseline `50/100` with two critical failures.
-4. The live browser compiler hashes the exact synthetic case and failing run, freshly regrades them, and turns the earliest failed critical contract into an exportable nine-file red regression ZIP plus a static recorded-decision witness, reducing the T+02 predicate from 9 facts to 3 while holding recorded decisions fixed. For the two manifest-listed public inputs, the shipped CLI with `--fact-scope failure-prefix` produces the same nine file contents as the browser; generic inputs and full-trace scope are outside that byte-parity claim.
-5. A retained V2 reference patch changes the executable target policy, not the case or grader.
-6. The unchanged urgent fixture passes at `100/100`; an exact-fact negative control remains at `100/100`; and an always-escalate mutant fails at `25/100`.
-7. Only after the red bundle exists does the browser verify `23/23` exact retained-artifact hashes, freshly regrade both reference runs, and rerun `4/4` reference software holdouts before showing the repaired state.
-8. It separately interprets the fresh post-start candidate's declarative JSON IR for `2/2` case regrades and `4/4` mutation holdouts without executing retained JavaScript; the Node verifier executes that quarantined candidate and checks the same exact signature.
+1. The synthetic case reveals facts over time.
+2. At minute two, the agent has enough facts to act but tells the user to wait.
+3. WitnessPatch turns that missed deadline into a Node test.
+4. The original run fails the test, and the separate example repair passes it.
+5. Four extra checks reject an overreacting version that treats every case as urgent.
 
-Those checks establish the declared synthetic software behavior only. They do not establish semantic completeness, diagnosis, treatment, physician review, or real-world safety.
+The downloadable package contains the case, failed run, evidence, receipt, and test. It runs without the original agent or a model call. These checks cover only the authored synthetic rules. They do not prove clinical correctness or real-world safety.
 
 The [threat model](docs/THREAT_MODEL.md) maps concrete tampering and resource-exhaustion attacks to the exact failing checks, and separates bundle integrity from publisher authenticity, clinical correctness, and host compromise.
 
@@ -29,7 +28,7 @@ The [threat model](docs/THREAT_MODEL.md) maps concrete tampering and resource-ex
 
 Requires Node.js 22.15 or newer; `.nvmrc` pins the minimum version exercised by the repository.
 
-For the shortest executable judge path, first install the locked dependencies, then run one zero-argument command. It compiles the V2 failure into a nine-file regression, proves it red on the baseline and green on the retained repair, then confirms the always-escalate mutation fails its exact-fact control:
+For the shortest judge path, install the dependencies and run one command. It creates a nine-file test from the failed run, confirms that the original still fails and the example repair passes, then rejects a deliberately overreacting version:
 
 ```bash
 npm ci
@@ -40,14 +39,14 @@ Expected six-line proof:
 
 ```text
 WITNESSPATCH JUDGE PROOF PASS
-1 COMPILE  9-file red regression · INV-02 · T+02
-2 RED      baseline failed the compiled regression as required · exit 1
-3 GREEN    retained repair passed that same regression · exit 0
-4 MUTATION FAIL (expected) · always-escalate rejected · 25/100
-BOUNDARY   synthetic software proof only · no clinical validation or runtime model call
+1 COMPILE  9-file red regression, INV-02 at T+02
+2 RED      baseline failed the compiled regression as required, exit 1
+3 GREEN    retained repair passed that same regression, exit 0
+4 MUTATION FAIL (expected), always-escalate rejected at 25/100
+BOUNDARY   synthetic software proof only, with no clinical validation or runtime model call
 ```
 
-The expected mutation failure is a passing guardrail check. This command uses only retained synthetic inputs and local deterministic code; it makes no model or network call and is not clinical validation.
+The final failure is expected: the deliberately overreacting version must fail. The command uses only saved synthetic files and local software. It makes no model or network call and is not clinical validation.
 
 ```bash
 npm run artifacts:v2:verify
@@ -55,21 +54,25 @@ npm run verify:release
 npm run dev
 ```
 
-Open `http://localhost:3000`. First select **Compile failure**: the browser verifies the exact case and baseline bytes, applies the same schema and semantic input validation as Node, freshly regrades the failure, and materializes the nine-file red bundle—including the generated `node:test` regression, receipt, and manifest. **Export complete 9-file ZIP** downloads the usable bundle. Then select **Verify retained repair**. The browser hashes the complete 23-artifact same-build V2 profile, checks its case fingerprint, recomputes the 9→3 static witness, regrades the two retained reference runs, and reruns four reference holdouts locally. It also verifies the fresh model receipt, exact input and prompt links, proposal, compiled candidate, and patch, then safely interprets the declarative JSON IR across two cases and four mutation holdouts. It does **not** execute the generated test or retained JavaScript candidates, rerun a target, invoke a model, or apply either patch in-browser; `npm run artifacts:v2:verify` performs the Node-side policy execution and exact-signature checks. Any compilation or verification error fails closed and leaves the failing baseline active.
+Open `http://localhost:3000`. Select **Turn failure into test** to create and export the nine-file package. Then select **Check example repair** to recalculate both saved runs and run four extra checks. The browser never runs saved JavaScript, calls a model, reruns the original agent, or applies a patch. `npm run artifacts:v2:verify` runs the saved JavaScript in Node and confirms that its results match. Any error leaves the failed run visible.
 
-### Compile your own synthetic trace
+### Compare saved runs
 
-Select **Compile your files** in the top bar to open the separate local-input workspace. Choose a schema-valid synthetic `case.json` and failing raw or evaluated `run.json`, or select **Load included sample** and wait until both loaded filenames appear. Then confirm that neither input contains patient or production data and select **Compile red witness**. The workspace validates declarations and schema shape, checks the embedded case identity, freshly regrades any claimed evaluation, bounds browser work, and exports the same nine-file red regression format without unlocking the retained-reference repair view.
+Select **Compare your runs** in the top bar. Choose one synthetic `case.json` and up to six WitnessPatch `run.json` files. Confirm that the files contain no patient or production data, then select **Compare saved runs**. WitnessPatch checks every file against the same case and rules. Select a failed run and choose **Create test from selected failure** to export its nine-file test package.
 
-Selected bytes are processed in the browser and are not submitted by WitnessPatch. Each file is limited to 512 KiB. The returned receipt deliberately says `2 hashes computed · 0 externally verified`: local SHA-256 values establish byte identity for the export, not publisher provenance. WitnessPatch enforces the synthetic-data declarations in its schemas but cannot detect undisclosed PHI or prove de-identification. The fixed maternal reference remains available as a one-click judge path.
+Each result comes from a separate imported file. Changing the selection changes the file being checked, not just its label. Model names and reasoning settings come from the file and appear as unverified. Passing runs can be compared, but only failed runs can become tests.
+
+Selected bytes are processed in the browser and are not submitted by WitnessPatch. Each file is limited to 512 KiB. The receipt says `2 hashes computed, 0 externally verified`. Local SHA-256 values identify the exported files, but they do not prove who created them. WitnessPatch checks the synthetic data declarations in its schemas but cannot detect undisclosed patient information or prove deidentification. The fixed maternal reference remains available as a one click judge path.
 
 The verifier's trust anchor is the manifest shipped with the same app build; it is an integrity check, not a publisher signature. Judges need no OpenAI API key, model call, database, or hosting login to inspect or replay the reference.
 
-The current source-hash-bound UI candidate passed a fresh production-Chrome replay on both paths. The reference flow showed `50 → nine-file RED bundle → 100`, with `2/2` exact manifest inputs, a judge-readable bundle map for `INV-02` at T+02 and `9→3` facts, `23/23` retained artifact responses, reference `2/2` regrades plus `4/4` holdouts, fresh-candidate IR `2/2` plus `4/4`, and an explicit four-path baseline/repair/control/mutant closure. The baseline remains visibly red after the retained repair passes. The separate local-input flow loaded the included pair, then freshly produced `50/100`, `INV-02` and `INV-03`, `9→3` facts, and `2 hashes computed · 0 externally verified`; after the two expected same-origin sample fetches, compilation made no further requests. Both flows recorded zero console warnings or errors, and the same-page controls emitted no `/.rsc` or `404` requests. The local ZIP passed `unzip -t`; all nine files were byte-identical to the shipped CLI output, the default regression exited red, and the supplied repaired candidate exited green.
+The prior public checkpoint passed its own production Chrome replay. The current plain-language build now has a fresh local desktop and mobile replay, new screenshots, a 167-second silent screen master, and the static fingerprint below. It still needs a commit, current public CI, deployment byte matching, and a founder-narrated final video. The historical checkpoint remains in the [clean checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md).
 
 Exact candidate `87dee97` passed `npm ci` followed by `npm run verify:release` from fresh clones on macOS 26.5.2 arm64 with Node 24.14.0/npm 11.9.0 and a local Debian 12 arm64 container with Node 22.23.1/npm 10.9.8. macOS passed all `158/158` aggregate test executions: `136/136` core, `6/6` rendered-product, `1/1` real development-server HTTP smoke, `9/9` submission-package, and `6/6` deployment-rendered checks. Debian passed `157/158`, with only the expected case-insensitive-filesystem check skipped on its case-sensitive filesystem. Both passed the zero-argument judge proof, detached-bundle verification coverage, threat-model boundary check, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run. Their physical 55-file `dist/client` snapshots matched byte-for-byte; the SHA-256 of each canonical 55-line manifest was `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`. CI also promotes the six-line proof to the GitHub job summary and retains it as a release artifact. `npm run verify:release` fails if the built client differs from that reviewed fingerprint. The submission gate also binds the recaptured media assets to thirteen rendered/computed source fingerprints. See the [clean-checkout receipt](docs/CLEAN_CHECKOUT_RECEIPT.md). Every final tip must receive public CI and the final replay; Windows remains unverified.
 
 Prior independently verified static-release checkpoint `7dd4df9275d5df75f6da4bc4c3722fdc92a2138e` passed the full local release verifier: macOS `158/158` aggregate executions, license inventory, build, lint, typecheck, and a 59-asset Cloudflare dry run. Its exact public `Verify` push run [`29781423832`](https://github.com/Sammsamy/witnesspatch/actions/runs/29781423832) passed, GitHub detected MIT, and all 51 public files byte-matched the deployment. The unchanged 55-file client incorporates the security-updated dependency lock, corrected distributed notice, final public claim, narration, and release-gate cleanup and is locked to static fingerprint `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`; `.assetsignore`, `.vite/manifest.json`, `404.html`, and `_headers` are generated hosting-control files rather than public assets. The final freeze will recheck the then-current default-branch tip, public CI, deployed bytes, video, and `/feedback` record together.
+
+The current plain-language working tree builds to 55 files with local static fingerprint `4a5bc546ef3b55c76b48b7901432cbe17f6c5b4c192d8eee5259aacb4931e509`. That hash is local review evidence only until the current tip is committed, checked by public CI, and deployed.
 
 The release bundle can also be built and checked without publishing:
 
@@ -77,23 +80,17 @@ The release bundle can also be built and checked without publishing:
 npm run deploy:dry-run
 ```
 
-The entrant-local silent master was recaptured from the public deployment on July 20 with visible action callouts, then shortened only across idle holds. It is `148.000` seconds at `1400 x 900`, contains one H.264 video stream and no audio, and ends on the explicit `not_performed` / `not claimed` / `Not permitted` receipt. Its reviewed SHA-256 is `7d5604126e1e88d8cba07b4e1878f874e35fb881cdbe33c02e59443cf82b4de8`; the founder-track assembler rejects any other bytes. The Apple System Voice rehearsal is quarantined and must not be published because the [macOS license](https://www.apple.com/legal/sla/docs/macOSTahoe.pdf) does not permit public sharing of System Voice recordings. The replacement release candidate uses [Piper 1.5.0](https://github.com/OHF-Voice/piper1-gpl/tree/v1.5.0) with the pinned [`en_US-ljspeech-high` voice](https://huggingface.co/rhasspy/piper-voices/blob/5b44ec7bab7c5822cfec48fbd5aa99db71a823d6/en/en_US/ljspeech/high/MODEL_CARD). The voice repository [declares MIT](https://huggingface.co/rhasspy/piper-voices/blob/main/README.md), and the voice card records training from scratch on the [public-domain LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/). Piper and its weights are local production tools, not shipped WitnessPatch dependencies. The `148.000`-second candidate has 3,700 frames, preserves the reviewed screen-video stream byte-for-byte, and has SHA-256 `6845baadea1476bf50b57b9b03ff1fc8f669d7a5328e3fcd16d251bb89542c7e`. It remains pending complete entrant audition and public upload. The video opening and prepared YouTube description both disclose the synthetic narration; the final freeze still requires explicit entrant confirmation of complete human review.
+The earlier `148.000` second screen master and its Piper narrated candidate show the prior interface. They are superseded historical evidence and must not be uploaded or used for founder recording. Their hashes remain in the repository only to document the earlier checkpoint. The Apple System Voice rehearsal also remains prohibited from public sharing under the [macOS license](https://www.apple.com/legal/sla/docs/macOSTahoe.pdf).
 
-To turn a separately recorded, cue-aligned founder voice track into the reviewed 2:28 screen cut, run the fail-closed assembler below. It refuses the wrong screen bytes, codec, geometry, silence, or duration; founder audio shorter than 2:22 or longer than 2:27.5; existing outputs; and any final MP4 that does not decode as one 1400 x 900 H.264 stream plus one 48 kHz stereo AAC stream. It also writes byte hashes and a boundary receipt beside the ignored output. If `ffmpeg` and `ffprobe` are not on `PATH`, set `WITNESSPATCH_FFMPEG_BIN` and `WITNESSPATCH_FFPROBE_BIN` to their absolute executable paths for this assembly command. The separate `release:freeze` verifier uses `ffprobe` when available and fails over to `/usr/bin/avmediainfo` on macOS; other platforms still require `ffprobe` or `WITNESSPATCH_FFPROBE_BIN`.
+A founder-narrated video is still required. The reviewed silent screen master is `output/playwright/witnesspatch-founder-screen-master-v9-plain-copy.mp4`: `167.000` seconds, H.264 at `1400 x 900`, SHA-256 `1876dd490082d9de93901ebe411b4a1d63e6f3c85ceaa7f6a579deb2fa7014bf`. The entrant must record the approved script, then review the complete assembled video with headphones before upload.
 
-```bash
-npm run video:founder -- --audio-file "FOUNDER_AUDIO_FILE"
-```
-
-The assembler cannot identify the speaker or verify the spoken words. Audition the entire output against [the timed script](docs/DEMO_SCRIPT.md). For founder narration, upload the founder-specific `.en.srt` path printed by the assembler; it deterministically replaces only the opening AI-disclosure cue. For the Piper AI-narration route, upload `submission/video/witnesspatch-demo.en.srt`.
-
-While the public YouTube URL and `/feedback` Session ID are still pending, the no-argument preflight below completes every machine-verifiable gate that does not depend on them. It requires a clean public default-branch tip, successful exact-commit `Verify` push run, MIT detection, full local release replay, 51-file byte-matched deployment, the exact tracked Piper candidate bytes, one H.264 1400 x 900 stream, one 48 kHz stereo AAC stream, tracked caption bytes, and the source-controlled YouTube description with AI-voice and clinical-boundary disclosure. It reports the entrant audition, upload, `/feedback`, and final freeze as remaining human gates; it never converts them into a pass by assumption.
+The preflight command must fail for this working tree because it is still tied to the old media and fingerprint. After the new deployment and media are recorded, it will rerun the automated checks and leave the public video, `/feedback`, and final submission as human steps.
 
 ```bash
 npm run release:preflight
 ```
 
-After the public repository, deployment, narrated YouTube video, and real `/feedback` ID exist, one fail-closed command creates the ignored final receipt. It reruns the complete release verifier; requires a clean commit plus a locally declared and GitHub-detected open-source license; proves the exact commit is the public repository's default-branch tip and has a successful completed public `Verify` push run from `.github/workflows/verify.yml`; byte-checks the deployed root plus every fingerprint-listed judge-facing file while explicitly excluding only four hosting-control files that are not public assets; double-hashes the stable local video while decoding exactly one H.264 1400 x 900 stream plus one 48 kHz stereo AAC stream below 180 seconds; for the AI route, requires the exact tracked candidate, captions, and prepared-description hashes; checks YouTube oEmbed reachability; rechecks that the commit and worktree did not change during verification; and requires explicit human confirmations for public visibility, exactly one narration mode, and the Codex-returned `/feedback` ID. It writes `output/release/final-release.json` and its SHA-256 without creating a self-referential tracked commit. The founder-voice route is:
+After the repository, deployment, YouTube video, and `/feedback` ID are ready, run `release:freeze`. It checks the clean commit, public CI, deployed files, local video format and hash, YouTube reachability, and required entrant confirmations, then writes the final receipt. The founder-voice route is:
 
 ```bash
 npm run release:freeze -- \
@@ -127,8 +124,8 @@ The entrant authorized a public source release under the MIT License plus a publ
 | Surface | Current evidence | Claim boundary |
 | --- | --- | --- |
 | Source install and release verification | Static-release checkpoint `7dd4df9` passes the complete verifier on macOS (`158/158`) plus exact-commit `Verify` push run `29781423832`; prior source checkpoint `87dee97` also passed local Debian 12 arm64 (`157/158`, one expected filesystem skip) | The exact final submitted commit still requires its own release freeze; Windows remains unverified |
-| Browser replay | A fresh production-Chrome session passed the current source-hash-bound reference compile/verify and included-sample local compile/export, with exact CLI parity, red/green regression execution, no requests after the two expected sample fetches, no `/.rsc`/`404` navigation, and zero console warnings or errors; exact 390 x 844 reference and local replays had no horizontal overflow | Chrome on macOS is verified for these paths and mobile viewport; no broad browser matrix is claimed |
-| Static hosting package | Public deployment is live; 51/51 public assets byte-match the reviewed build and four generated fingerprint files are hosting controls rather than public assets | Clean public compile/verify passed with zero console warnings or errors; availability must be maintained through the judging window |
+| Browser replay | A fresh local production-Chrome session passed the current reference and saved-run paths. It fetched the three included JSON files, switched the selected saved run, created the failed run's nine-file test, recorded zero console warnings or errors, and had no horizontal overflow at 390 x 844. | Local Chrome on macOS is verified for these paths. Current public deployment matching and a broad browser matrix are not claimed. |
+| Static hosting package | The prior public checkpoint is live and its 51 public assets matched that reviewed build. | The current plain-language build still needs its own commit, CI run, deployment, and byte match. |
 | Linux | Fresh-clone commit `87dee97` passes locally in a Debian 12 arm64 container with Node 22.23.1; `157/158` aggregate tests pass and the one case-insensitive-filesystem test is expectedly skipped | This is one local Linux environment, not a browser matrix; Windows remains unverified |
 | Windows | No clean checkout or browser run | Unverified |
 
@@ -174,7 +171,7 @@ WITNESSPATCH_CANDIDATE="$PWD/engine/fixtures/v2/postpartum-warning-signs-repaire
   node --test output/compiled-witness-v2/regression.test.mjs
 ```
 
-## What GPT-5.6 contributes—and what it cannot do
+## What GPT-5.6 contributes and what it cannot do
 
 The default Codex workflow requests GPT-5.6 Sol with Ultra reasoning and is used to build and audit the post-start extension. It assists with code, adversarial tests, fixture wording, and declarative repair exploration. It cannot edit the locked result at runtime:
 
@@ -185,7 +182,7 @@ The default Codex workflow requests GPT-5.6 Sol with Ultra reasoning and is used
 
 The unchanged pre-start V1 Sol candidate is preserved only as lineage. Under V2 it scores `85/100` on the urgent fixture and cannot execute the exact-fact negative control, so it is rejected rather than relabeled as a V2 model result.
 
-A separate post-start Codex CLI run requested `gpt-5.6-sol` with `ultra` reasoning through ChatGPT-plan authentication. It produced schema-constrained declarative JSON that fixed code compiled into a distinct candidate. That candidate is quarantined and was not installed. The urgent and exact-control contracts were supplied to the run; the four-check holdout definition and checked-in repaired policy were not. Browser-safe IR interpretation and Node execution both match the exact `2/2` case and `4/4` software-holdout signature. The receipt records the requested model and reasoning effort; it is not independent attestation of served-model identity. Its empty `credential_environment_scrubbed` list means no matching credential variables were present to remove, not that active secrets were scrubbed.
+A post-start Codex run requested `gpt-5.6-sol` with `ultra` reasoning and returned restricted JSON. WitnessPatch converted it into a separate candidate and tested it on two cases plus four checks the model had not received. The candidate was never installed. The receipt records the requested settings, not which model actually answered.
 
 The retained V2 reference repair and the fresh candidate remain separate evidence. Neither passing result is clinical validation, proof of generalization, or permission to install a model-authored patch without review.
 
@@ -197,22 +194,12 @@ The retained V2 reference repair and the fresh candidate remain separate evidenc
 | GPT-5.6 output is retained byte-for-byte with prompt/input links and hashes | The retained reference repair is separately inspectable and is never relabeled as the fresh model candidate |
 
 ```text
-synthetic case + locked action contracts
-                  │
-       Codex (Sol/Ultra requested) assists
-         implementation and authoring
-                  │
-        executable target policy
-                  │
-       deterministic grading kernel
-                  │
- static recorded-decision contract witness
-                  │
-      red regression + target patch
-                  │
- urgent fixture + exact-fact negative control
-                  │
- reference + quarantined candidate receipts
+Synthetic case and fixed rules
+  -> Codex-assisted implementation
+  -> recorded run
+  -> software grading
+  -> failing Node test
+  -> separate repair checks
 ```
 
 ## Clinical claim boundary
@@ -223,11 +210,11 @@ The exact-fact negative control activates only when every authored fact in that 
 
 The declared rules link to current public guidance from:
 
-- [CDC Hear Her — Urgent Maternal Warning Signs](https://www.cdc.gov/hearher/maternal-warning-signs/index.html)
-- [Alliance for Innovation on Maternal Health — Severe Hypertension in Pregnancy Patient Safety Bundle](https://saferbirth.org/psbs/severe-hypertension-in-pregnancy/)
-- [ACOG — Headaches and Pregnancy](https://www.acog.org/womens-health/faqs/headaches-and-pregnancy)
-- [ACOG — Preeclampsia and High Blood Pressure During Pregnancy](https://www.acog.org/womens-health/faqs/preeclampsia-and-high-blood-pressure-during-pregnancy)
-- [ACOG — 3 Conditions to Watch for After Childbirth](https://www.acog.org/womens-health/experts-and-stories/the-latest/3-conditions-to-watch-for-after-childbirth)
+- [CDC Hear Her: Urgent Maternal Warning Signs](https://www.cdc.gov/hearher/maternal-warning-signs/index.html)
+- [Alliance for Innovation on Maternal Health: Severe Hypertension in Pregnancy Patient Safety Bundle](https://saferbirth.org/psbs/severe-hypertension-in-pregnancy/)
+- [ACOG: Headaches and Pregnancy](https://www.acog.org/womens-health/faqs/headaches-and-pregnancy)
+- [ACOG: Preeclampsia and High Blood Pressure During Pregnancy](https://www.acog.org/womens-health/faqs/preeclampsia-and-high-blood-pressure-during-pregnancy)
+- [ACOG: 3 Conditions to Watch for After Childbirth](https://www.acog.org/womens-health/experts-and-stories/the-latest/3-conditions-to-watch-for-after-childbirth)
 
 The software verifies that declared source IDs resolve; it does not prove that a rule is semantically complete or clinically correct. The [clinical claim audit](docs/CLINICAL_CLAIM_AUDIT.md) maps every remaining medical statement to primary public guidance or an explicit non-claim boundary. No physician fixture/wording review was performed. The [external review packet](docs/EXTERNAL_REVIEW_PACKET.md) defines what evidence a future review would need, and the [33-minute builder packet](docs/BUILDER_REVIEW_PACKET.md) makes that software review reproducible; neither is completed submission evidence.
 
@@ -249,7 +236,7 @@ docs/                 requirements, provenance, demo, and validation records
 
 ## Build Week provenance
 
-The [OpenAI Build Week Official Rules](https://openai.devpost.com/rules) allow an existing project only when it is meaningfully extended with Codex and/or GPT-5.6 after the July 13, 2026 submission start; only the post-start additions are judged. WitnessPatch therefore discloses its pre-start V1 prototype and presents the portable compiler, fail-closed browser verifier, and clinically narrower V2 namespace as the Build Week work. See [the before/after ledger](docs/BUILD_WEEK_PROVENANCE.md).
+Under the [official rules](https://openai.devpost.com/rules), only meaningful post-start extensions are judged. WitnessPatch discloses its pre-start V1 prototype. Build Week work includes the portable test maker, browser checker, narrower V2 fixtures, and saved-run comparison; the [before-and-after ledger](docs/BUILD_WEEK_PROVENANCE.md) separates old and new work.
 
 ## Safety and privacy
 

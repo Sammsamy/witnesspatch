@@ -1743,6 +1743,7 @@ a:focus-visible {
 
 .local-sample-downloads {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -1840,10 +1841,12 @@ a:focus-visible {
 
 .local-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
 }
 
+.local-inspect-button,
 .local-compile-button,
 .local-export-button {
   min-height: 42px;
@@ -1857,9 +1860,176 @@ a:focus-visible {
   font-weight: 720;
 }
 
+.local-inspect-button {
+  border-color: var(--line-strong);
+  background: var(--paper);
+  color: var(--green-dark);
+}
+
+.local-inspect-button:disabled,
 .local-compile-button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+.local-trace-comparison {
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+
+.local-trace-comparison-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr);
+  align-items: end;
+  gap: 24px;
+}
+
+.local-trace-comparison-header h2,
+.local-trace-comparison-header p {
+  margin: 0;
+}
+
+.local-trace-comparison-header h2 {
+  margin-top: 5px;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+
+.local-trace-comparison-header > p {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.local-trace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.local-trace-option {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 11px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  padding: 16px 16px 15px 42px;
+  text-align: left;
+}
+
+.local-trace-option:hover:not(.invalid) {
+  border-color: var(--green);
+}
+
+.local-trace-option:focus-within {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.local-trace-option.selected {
+  border-color: var(--green-dark);
+  background: var(--green-pale);
+  box-shadow: inset 0 0 0 1px var(--green-dark);
+}
+
+.local-trace-option.invalid {
+  border-color: #ebc4c0;
+  cursor: default;
+  opacity: 0.68;
+}
+
+.local-trace-native-radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.local-trace-radio {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  width: 13px;
+  height: 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.local-trace-option.selected .local-trace-radio {
+  border: 4px solid var(--green-dark);
+}
+
+.local-trace-model {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  font-weight: 760;
+}
+
+.local-trace-effort,
+.local-trace-meta,
+.local-trace-attribution,
+.local-trace-result,
+.local-trace-error {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.local-trace-score {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 720;
+}
+
+.local-trace-score small,
+.local-trace-meta small {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 620;
+}
+
+.local-trace-meta {
+  display: grid;
+  font-family: var(--font-mono);
+}
+
+.local-trace-attribution {
+  border-top: 1px solid rgba(24, 67, 51, 0.16);
+  margin-top: 3px;
+  padding-top: 8px;
+  color: var(--ink-soft);
+  font-weight: 660;
+}
+
+.local-trace-result {
+  color: var(--green-dark);
+  font-weight: 700;
+}
+
+.local-trace-error {
+  color: var(--red-dark);
+}
+
+.local-trace-boundary {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.55;
 }
 
 .local-error {
@@ -2181,7 +2351,12 @@ a:focus-visible {
   .local-boundary,
   .local-sample-tools,
   .local-file-fields,
+  .local-trace-comparison-header,
   .local-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .local-trace-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2202,6 +2377,7 @@ a:focus-visible {
     flex-direction: column;
   }
 
+  .local-inspect-button,
   .local-compile-button,
   .local-clear-button,
   .local-export-button,

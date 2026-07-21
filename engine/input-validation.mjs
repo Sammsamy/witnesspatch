@@ -441,6 +441,20 @@ export function assertRunInputAgainstFingerprint(
     "Run provenance needs generation_mode."
   );
   requireValue(typeof runInput.provenance.model_invocation_logged === "boolean", "Run provenance needs model_invocation_logged boolean.");
+  for (const [key, label] of [
+    ["model_config_requested", "model_config_requested"],
+    ["reasoning_effort_requested", "reasoning_effort_requested"],
+    ["honesty_note", "honesty_note"]
+  ]) {
+    if (runInput.provenance[key] !== undefined) {
+      assertNonEmptyString(runInput.provenance[key], `Run provenance ${label}`);
+    }
+  }
+  requireValue(
+    runInput.provenance.model_invocation_logged === false ||
+      runInput.provenance.model_config_requested !== undefined,
+    "Logged model invocations must declare model_config_requested."
+  );
   requireValue(runInput.provenance.contains_real_patient_data === false, "Run inputs must explicitly declare that they contain no real patient data.");
   requireValue(runInput.provenance.clinician_validation === "pending", "Run inputs must keep clinician_validation pending.");
   requireValue(typeof runInput.provenance.api_key_required === "boolean", "Run provenance needs api_key_required boolean.");

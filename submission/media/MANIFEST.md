@@ -1,6 +1,6 @@
 # Devpost media manifest
 
-Recaptured on July 20, 2026 from the authorized no-physician-review production candidate identified by the exact source hashes below. The images bind those source bytes directly; the receipt frame was captured at asserted `scrollX = 0`. Static-release checkpoint `7dd4df9275d5df75f6da4bc4c3722fdc92a2138e` has successful exact-commit CI and 51-file byte-matched deployment evidence recorded in `docs/CLEAN_CHECKOUT_RECEIPT.md`; the final freeze will recheck the then-current tip after the video and `/feedback` fields are frozen.
+Recaptured on July 20, 2026 from the current local production build after the plain-language and run-comparison update. The images bind the exact source bytes below. They are not proof of a public deployment or final-commit CI. Public release remains blocked until the current tip is committed, checked by CI, deployed, and paired with the final video.
 
 ## Source state
 
@@ -8,12 +8,12 @@ The hashes below match the source bytes used for the five final captures. Every 
 
 | Rendered or computed source | SHA-256 at capture |
 | --- | --- |
-| `app/components/witnesspatch-lab.tsx` | `a3d16d39e4565b8ac7650c6c49098f7ca1e1c4e9a82b43dcf3c264b4e0dc1332` |
-| `app/components/local-witness-compiler.tsx` | `7a8f12ac3a066d075f5a0eb533ad7648e8d4fd8a890ad441608584d51f1d4525` |
-| `app/globals.css` | `e4735f730d5886720a1ccb5ee3fff608931124fe5acb68e8c0c7ec56104234ab` |
-| `app/layout.tsx` | `4509d3b35e05ee1496ab1f01badf29570b759f0ca61ed2ad54e04d22cdf916c2` |
-| `app/page.tsx` | `076fab55c786882ce786014207a6f69a933c8091f7302c09bf845769ed25f4d1` |
-| `engine/browser-witness-compiler.mjs` | `dbd398387c13607083c76e0335768e3ededb6a332d8ca09c320f005607ccab1f` |
+| `app/components/witnesspatch-lab.tsx` | `afed540dc72026fffeaf1fee0ebab50d634d1efd9a4f1af128ca11fc70e649cc` |
+| `app/components/local-witness-compiler.tsx` | `60324468123bcead7566a71522b5eaab64597caa60f11676bbf35aebf17239aa` |
+| `app/globals.css` | `ab17f19ec133a65445318193957a3ba595ddfbacbaa8c454b701c5b468cc4e6b` |
+| `app/layout.tsx` | `bb9450c4204bad86f0ed9b4cdc378b704aeadffc1a702ba8925e434366331013` |
+| `app/page.tsx` | `c2eaa4d27f54d044c6b8040ef6054a73226efc3e7d00569af2e98bc596ac53ee` |
+| `engine/browser-witness-compiler.mjs` | `88ebe6637387793e58c2878b455d354e340f734dd6a299135da0626e9d93ed8f` |
 | `engine/browser-verifier.mjs` | `5223b8a99b9f643f3a1430740afc18dd9c2c85e0f0186f1673c9465c82273473` |
 | `public/runs/v2/clinical-scope.json` | `025fb0040461e9aabc199ff177a2cf191811b24b2a17b2b8991530ec082b8de7` |
 | `public/runs/v2/manifest.json` | `3e72fd8cf8edc0a00bbc513eb6bf498d24a550f8717d9df24d2837350f608541` |
@@ -24,34 +24,34 @@ The hashes below match the source bytes used for the five final captures. Every 
 
 ## Capture method
 
-1. Built the candidate source state for production and verified that the public deployment's static bytes matched the reviewed client fingerprint. Each frame was captured from that byte-matched deployment or the same exact source-bound production build.
-2. Used fresh Playwright Chromium sessions at exactly `1200 x 800` CSS pixels without account state, cookies, credentials, or unrelated tabs, and asserted `scrollX = 0` for offset-sensitive frames.
+1. Built the current source state for production and served that exact local static export.
+2. Used a fresh named Playwright Chromium session at exactly `1200 x 800` CSS pixels without account state, credentials, or unrelated tabs.
 3. Captured direct viewport PNGs. No image was cropped, padded, scaled, retouched, or regenerated after capture.
-4. For the local-input frame, used **Load included sample** to fetch the exact same-origin public V2 case and baseline files, waited until both loaded filenames appeared, affirmed the visible synthetic-data declaration, and compiled the result locally.
-5. For the reference frames, ran the manifest-bound compiler and then the locked verifier before selecting the named artifact view.
-6. Repeated any capture that showed a browser compositor artifact, then inspected the final replacement at original resolution.
+4. For the comparison frame, used **Load included sample**, affirmed the synthetic-data declaration, and checked both complete saved runs against the same case.
+5. For the reference frames, selected **Turn failure into test**, then **Check example repair**, before capturing the generated test, repair checks, and receipt.
+6. Inspected all five images at original resolution. The browser session recorded zero console errors and zero console warnings.
 
 ## Assets
 
 | File | Caption | Capture state | Dimensions | Bytes | SHA-256 |
 | --- | --- | --- | ---: | ---: | --- |
-| `01-thumbnail-failure.png` | At T+02, the agent had the warning-sign facts—and still waited. | Fresh reference page before any action: fully synthetic baseline at `50/100`, two critical breaches, earliest critical deadline `T+02`, `9 → 3` facts, locked evaluation contracts, and **Compile failure** available. | 1200 x 800 | 237752 | `89a7215a12e38bdad8b20f68bcaa5e1213854eb029f0753708821e5aee486633` |
-| `02-local-input-compiled-red.png` | Load one included synthetic failure; get a nine-file red regression locally. | The included exact public case and failing run were loaded in the isolated local workspace before the synthetic-data declaration and compile: fresh `50/100`, `INV-02` and `INV-03`, failure known at `T+02`, `9 → 3` facts, nine files, `2` hashes computed, `0` externally verified, and ZIP export available. | 1200 x 800 | 93542 | `ea776cd9ea2cfb4585768171f547f57b65349f4deb3bae31c73e6461bcebb1cf` |
-| `03-reference-compiled-red.png` | A manifest-bound reference failure becomes a portable RED test. | After **Compile failure**, with the judge-readable nine-file bundle map visible: this browser session verified `2/2` exact manifest inputs and generated nine files for `INV-02` at `T+02`; the baseline remains RED and the portable ZIP deliberately carries no external-manifest or publisher attestation. | 1200 x 800 | 135868 | `65d4a36bb46bc9f1b198eea829655b172f65a52d2e8c3166a0d035cba1c27e78` |
-| `04-reference-verified-receipt.png` | Locked verification—not the model—owns the pass. | After **Verify retained repair**, with **Audit receipt** selected and horizontal position asserted at zero: the full product brand and sidebar retain **Baseline red · repair passes**, while the receipt shows retained reference `100/100`, `23/23` hashes, `2/2` regrades, `4/4` reference holdouts, fresh candidate quarantined and not installed, no patient data, no API key, licensed-physician fixture/wording review not performed, and clinical validation not claimed. | 1200 x 800 | 196192 | `abffffc42a85ebafecb643c3e7f290cc844ad74ede2e106333116701f3dd7761` |
-| `05-reference-success-closure.png` | The original stays red; the scoped repair passes without escalating everything. | After **Compile failure** and **Verify retained repair**, with **Repair diff** selected: the original baseline remains RED at `50/100`, the retained repair passes at `100/100`, the exact-fact control stays at `100/100`, the always-escalate mutant is rejected at `25/100`, and `4/4` reference holdout checks pass. | 1200 x 800 | 143118 | `959b5442cbdb8b4543b3c0da921fda148311fde27976da2d11dd911780a5d4ad` |
+| `01-thumbnail-failure.png` | The agent waited after the minute two deadline. | Fresh synthetic reference before any action: failed run `50/100`, two required actions missed, first missed deadline `T+02`, and **Turn failure into test** ready. | 1200 x 800 | 165010 | `cb0d679bfd196b5e3d7f6c240b4f3ff1f4b01c077db973f2b0cf4f7e2bed55b1` |
+| `02-model-run-comparison.png` | Compare complete saved runs with the same rules. | The included authored failed and repaired runs are both visible. The selected failed run scores `50/100`; the repaired run scores `100/100`. The screen states that model names are unverified and that real cross-model use requires one saved run from each model. | 1200 x 800 | 138828 | `1ea323424dcd5585a06179c4bc56e90f37e23b59c6362a7292e3767ab1266e8d` |
+| `03-reference-compiled-test.png` | The missed action becomes a portable Node test. | After **Turn failure into test**, the nine-file package is visible. The original run still fails, the first missed rule is `INV-02` at `T+02`, and three of nine recorded facts show the miss. | 1200 x 800 | 137881 | `d509189f69e3ccb2f66902a73d07a51bf87d20b281f5df79ebb6d0280dcfa7c9` |
+| `04-reference-verified-receipt.png` | The app, not the model, checks the repair. | After **Check example repair**, the receipt shows `23/23` files matched, both saved runs recalculated, and `4/4` extra checks passed. The Sol setting is labeled as requested, and the screen states the clinical and publisher limits. | 1200 x 800 | 192331 | `1e3bd10f91d847c6b99de90570b624125a0595348ea9dd9ab3f9a9f017a7cdec` |
+| `05-reference-success-closure.png` | The original run still fails; the repair passes; overreaction is rejected. | With **Repair diff** selected, the original run remains `50/100`, the example repair passes at `100/100`, the authored comparison case passes at `100/100`, and the version that treats everything as urgent fails at `25/100`. | 1200 x 800 | 129745 | `abc9f12f3cfdf13b21fe79c28f8cad0671c8e949913b60e8b49627a9aa2ab399` |
 
 Each PNG is 8-bit RGB, non-interlaced, exact `3:2`, and below Devpost's 5 MB per-image limit.
 
-**Recommended Devpost gallery order:** `01 → 05 → 03 → 04 → 02`. This leads with the missed-deadline problem, immediately proves scoped red/green closure, then shows compiler and receipt detail; the denser local-input workspace remains available last for technical judges.
+**Recommended Devpost gallery order:** `01 → 02 → 03 → 05 → 04`. This shows the problem, run comparison, generated test, repair check, and receipt in the same order a judge can replay them.
 
 ## Truthful scope
 
 - Every case shown is fully synthetic; these images contain no patient, account, or production data.
 - The local checkbox records a declaration. It is not a PHI scanner, does not detect undisclosed patient data, and does not prove de-identification.
-- `50/100` and `100/100` are bounded software-contract fixture scores, not clinical-performance scores or evidence of patient outcomes.
+- `50/100` and `100/100` are scores for authored software rules, not clinical-performance scores or evidence of patient outcomes.
 - The static `9 → 3` reduction holds recorded decisions fixed. It is not target-in-the-loop, counterfactual, semantic, or clinically minimal.
-- The reference browser session verifies exact inputs against this app's manifest. The detached bundle deliberately retains only computed hashes and an unverified-input declaration so byte-identical CLI/local output does not masquerade as portable publisher provenance.
+- The reference browser checks exact inputs against the file list shipped with this app. A downloaded package records hashes but does not prove who published it.
 - The receipt's hashes establish integrity against the same app build, not publisher identity or a cryptographic signature.
 - The recorded `gpt-5.6-sol` and `ultra` fields describe the requested configuration retained by the project; they are not independent served-model attestation.
 - WitnessPatch is developer safety tooling, not clinical decision support. No physician fixture/wording review or clinical validation was performed; clinical validation is not claimed.
@@ -59,6 +59,6 @@ Each PNG is 8-bit RGB, non-interlaced, exact `3:2`, and below Devpost's 5 MB per
 ## Verification
 
 - All five final files were visually inspected at original resolution after export. No black or redaction artifacts, unintended clipping, browser chrome, account details, credentials, local paths, or personally identifying information are present.
-- The fresh production-browser reference and local-input QA recorded zero console errors and zero console warnings. Same-page controls emitted no `/.rsc` or `404` requests. Aside from same-origin application chunks and the included sample's two expected JSON fetches, the local workflow made no API or external-network requests; compilation made no further data request.
+- The fresh local production-build session recorded zero console errors and zero console warnings. Every recorded request was same-origin. The run comparison fetched the three included JSON files; the reference check fetched only the static files listed by this app. No API or external-network request was made.
 - The local ZIP passed archive integrity; all nine browser files were byte-identical to the shipped CLI output, the default regression exited red, and the supplied repaired candidate exited green.
 - The automated submission gate recomputes every image byte count/hash, PNG geometry, and source fingerprint above.

@@ -4,69 +4,72 @@ This file preserves the exact public project copy aligned to the published [Open
 
 ## Exact project overview fields
 
-**Project name — 57/60 characters**
+**Project name**
 
-> WitnessPatch: Time-Fenced Contracts for Healthcare Agents
+> WitnessPatch: Turn Late Agent Actions Into Tests
 
-**Elevator pitch — 178/200 characters**
+**Elevator pitch**
 
-> Turn one synthetic missed deadline into a portable red test: freeze what the agent knew, check whether action happened on time, then verify any repair offline before trusting it.
+> When an AI agent acts too late, WitnessPatch saves the missed deadline as a Node test that teams can rerun against imported WitnessPatch run files before every release.
 
 **Category**
 
-> Developer Tools. WitnessPatch is a portable red-test compiler for time-critical AI agents: it binds authored facts to reveal times and required actions to deadlines, then exports the observed miss as an offline `node:test` bundle—not patient-facing advice or an automated medical decision.
+> Developer Tools. WitnessPatch takes a synthetic, timestamped agent trace, finds the first required action it missed, and exports that exact failure as a Node test. It does not provide patient advice or make clinical decisions.
 
 <!-- DEVPOST_STORY_START -->
 
 ## Inspiration
 
-AI agents can give a reasonable answer and still act too late.
+An AI agent can eventually give the right answer and still fail because it acted too late.
 
-The intended user is Maya, a healthcare-agent evaluation engineer preparing an agent for release. In one fully synthetic postpartum test, the agent produces a plausible response but misses an authored action deadline at T+02. A more severe fact arrives at T+06, but that later information must not retroactively earn the agent credit—or change what the evaluator says the agent knew when the earlier deadline passed.
+The demo uses a fully synthetic healthcare scenario. At two minutes, the agent has enough authored facts to trigger a required action, but it tells the user to wait. A later fact arrives at six minutes. That later fact cannot change what the agent knew when the earlier deadline passed.
 
-That gap is easy to lose: screenshots and model-written critiques do not preserve the exact visible facts, locked rule, deadline, and executable evidence—and can let the model judge its own output.
+A screenshot records the mistake but cannot catch it again. A model-written critique may let a model judge its own output. Developers need a test they can keep.
 
-[OpenAI HealthBench](https://openai.com/index/healthbench/) underscores realistic scenarios, expert expectations, and worst-case reliability. WitnessPatch handles the developer handoff after an authored contract fails—not clinical evaluation.
+[OpenAI HealthBench](https://openai.com/index/healthbench/) shows why realistic scenarios and worst-case reliability matter. WitnessPatch handles engineering after an authored failure; it does not perform clinical evaluation.
 
-I am a third-year medical student, which motivated the healthcare-agent setting. That background is not licensed clinical authority. I built WitnessPatch as developer tooling for one narrow job: turn an already-observed synthetic missed deadline into a portable regression before trusting any repair.
+I am a third-year medical student, which motivated the healthcare setting. I am not a licensed physician, and no physician reviewed this project. WitnessPatch does one narrow job: turn a synthetic missed deadline into a test before anyone trusts a repair.
 
 ## Approach
 
-WitnessPatch follows three steps:
+WitnessPatch follows four steps:
 
-1. **Freeze and regrade.** It records which authored facts were visible at each timestamp, holds the agent's recorded decisions fixed, and deterministically checks whether each required action occurred before its declared deadline.
-2. **Compile the miss.** It selects the earliest failed critical contract and exports a conventional nine-file Node test package containing the failing prefix, static contract witness, original inputs, receipt, manifest, and red regression.
-3. **Verify a separate repair.** It keeps the original regression visibly red while testing an inspectable, human-gated retained repair against the unchanged grader, the urgent case, an exact-fact negative control, and an intentionally bad always-escalate mutation.
+1. **Read the timeline.** It records which authored facts were visible when the agent made each decision.
+2. **Find the first miss.** Locked code checks whether every required action happened before its deadline.
+3. **Make a real test.** The first missed action becomes a standard nine-file Node test package with the original inputs, evidence, receipt, and failing test.
+4. **Compare and repair.** Teams can load up to six WitnessPatch run files tagged with different model names and check each one against the same rules. A separate repair must pass the original test and extra checks for overreaction.
 
 ## Why this is different
 
-Replay, evaluation, and repair tools already exist. WitnessPatch targets the handoff between them: it turns a missed action deadline into a conventional red `node:test` using only facts available by that deadline, keeps the failure red, and checks a separate repair against the unchanged contract plus an overreach control.
+Replay, evaluation, and repair tools already exist. WitnessPatch focuses on a narrower handoff. It takes a failure that happened at a specific deadline and turns it into an ordinary test file developers can keep in CI.
 
-Maya can run the reference or compile the included synthetic pair locally. The browser validates and regrades the inputs before exporting the same bundle; its receipt says `2 hashes computed · 0 externally verified` because hashes prove byte identity, not source or clinical meaning. The result is a CI-ready artifact Maya can attach to repair review and rerun without an account, API key, model call, or original-target access.
+The test belongs to the failure, not one model vendor. Users can import several structured run files and apply the same rules to each one. Selecting another run changes the file being checked, not just its label.
+
+The package and CLI run offline without an account, API key, model call, or original agent. The hosted demo checks and compiles files in the browser. Imported model names and reasoning settings are unverified declarations.
 
 ## How I built it
 
-A pre-start V1 prototype already existed. Build Week added the portable compiler, fail-closed browser verifier, narrower V2, and fresh model record; only those extensions are claimed as Build Week work.
+A V1 prototype existed before Build Week. Build Week additions are the portable test maker, browser checker, narrower V2 suite, saved-run comparison, and a new receipt from a workflow that requested GPT-5.6. The repository labels V1 separately.
 
-During Build Week, Codex helped implement and adversarially test the compiler, browser grader, detached verifier, and release path, exposing path traversal, stale evaluation, schema drift, truncation, and browser tampering. Deterministic code owns every verdict.
+Codex helped build the test maker, comparison screen, browser grader, and release checks. Tests caught path traversal, stale results, malformed or truncated files, and browser tampering.
 
-GPT-5.6 contributed through a separate post-start Codex workflow that requested GPT-5.6 Sol with Ultra reasoning. It received the baseline and two authored contracts and returned schema-constrained declarative repair data. Fixed code compiled that data into a distinct candidate and evaluated it against withheld software holdouts. The candidate remains quarantined and was never installed. Its receipt records the requested configuration; it does not independently prove which model was served.
+In a separate Codex run, I requested GPT-5.6 Sol with Ultra reasoning to propose a repair as JSON. Software tested the proposal on four checks the model had not received and kept it separate from the example repair. The receipt records requested settings, not which model actually answered.
 
-GPT-5.6 proposes bounded logic; locked code owns grading. The exported bundle and CLI work offline. The hosted demo fetches static assets but requires no API key, request-time model call, database, account, or target rerun.
+The app never calls a model at runtime or lets a model grade itself.
 
-## Proof, not a green badge
+## What the demo proves
 
-The synthetic baseline scores 50/100 with two critical breaches. WitnessPatch compiles the earliest breach, INV-02 at T+02, into a regression that exits red on the baseline and green only when pointed at the supplied repaired run. The retained repair scores 100/100 with zero critical failures, while the baseline remains red beside it.
+The failed run scores 50 out of 100 because it misses two required actions. WitnessPatch turns the first miss at minute two into a test that fails on the original run and passes on the example repair.
 
-The browser then checks 23/23 retained artifact files, recomputes 2/2 reference grades, and executes 4/4 scoped holdouts. The exact-fact control still passes; the always-escalate mutant fails. That closure matters because a policy that labels everything urgent can appear to fix the original example while destroying nearby behavior.
+Four extra checks reject an overreacting version that treats every situation as urgent. The original run stays visible, so a passing repair cannot hide the failure that created the test.
 
 ## Challenges
 
-The hardest problem was temporal leakage: an evaluator seeing T+06 can accidentally rewrite the T+02 verdict. Next came browser/CLI reproducibility while failing closed on changed, missing, extra, linked, or malformed files—and resisting a persuasive but overbroad repair.
+The hardest problem was preventing future information from changing an earlier verdict. The next challenge was making the browser and CLI produce the same result while safely rejecting changed, missing, extra, linked, or malformed files. The repair also had to survive a test designed to catch overreaction.
 
 ## What I learned
 
-I learned that hashes prove sameness, not truth or provenance, and that a green repaired example is weak evidence without a preserved red baseline and a nearby control. I also learned that healthcare framing demands unusually explicit limits.
+I learned that a hash can prove two files are the same, but it cannot prove that their claims are true. I also learned that a passing repair means little unless the original failure stays visible and a nearby control catches overreaction.
 
 ## Safety boundary
 
@@ -84,26 +87,26 @@ Do not add `OpenAI API`; the product does not use it.
 
 ## What is different
 
-Failure-to-regression and agent-verification workflows are established: Trajectly, ORP, Braintrust, Promptfoo, AgentRx, and public Build Week repositories including Ouroboros, OutcomeLoop, Remnic Relay, PatchPilot, and Sieve cover substantial parts of replay, repair, external verification, human approval, red/green closure, evidence receipts, provenance, or CI. WitnessPatch does not claim those primitives. Its narrower demonstrated wedge is a **portable red-test compiler for missed action deadlines**: most evals ask whether an answer was acceptable; WitnessPatch asks whether the required action happened before its declared deadline using only the authored facts available then, and emits the red test before any separate repair is trusted.
+Most evaluation tools report that a run failed. WitnessPatch takes a recorded action that happened too late and turns it into a Node test. The package includes the case, failed run, evidence, and receipt. It works offline and can test a separate repair.
 
-- **Time-fenced action deadlines:** the grader checks which authored facts were visible at every decision and whether the required action occurred before its declared deadline.
-- **Portable conventional-test handoff:** a known failure plus an authored action contract becomes a nine-file `node:test` package with a documented WitnessPatch CLI dependency rather than only a platform dataset row or dashboard result.
-- **Model-independent verdict:** GPT-5.6 helps build and author; it cannot edit the runtime grader, artifact hashes, or expected holdouts.
-- **Executable handoff and closure:** judges receive the already-observed miss as a conventional red test, then can inspect a separate target diff and prove that the scoped repair turns it green.
-- **Fail-closed browser and detached-bundle proof:** browser tampering, truncation, redirects, unsafe paths, evaluation drift, holdout drift, or missing WebCrypto keep the failing baseline active; `witnesspatch verify --bundle PATH` separately rejects changed, missing, extra, linked, schema-invalid, or non-reproducible bundle files.
-- **Scoped overreach control:** an exact complete fact set rejects one always-escalate mutation. It is intentionally not labeled clinically benign.
-- **No API dependency for judging:** replay and deterministic verification need no API key, billing, model call, database, or server secret.
-- **Visible clinical boundary:** blood-pressure classifications are fixture-supplied only at `118/74` and `168/112`; no numeric threshold, middle, borderline, discordant, or repeat-reading behavior is inferred or tested.
+Existing tools such as Trajectly, ORP, Braintrust, Promptfoo, and AgentRx already cover replay, repair, evaluation, or CI. WitnessPatch claims one narrower contribution: it preserves what the agent knew when the deadline passed, then creates the test before a repair is trusted.
+
+- **Checks the deadline:** the grader uses only facts that were visible when the agent acted.
+- **Creates a normal test:** the exported nine-file package includes a standard `node:test` file that teams can keep in CI.
+- **Uses the same rules for every run:** model names come from imported files and remain unverified; the software owns the result.
+- **Keeps the original failure visible:** the old run stays red while a separate repair is checked.
+- **Rejects changed files:** the browser and downloaded bundle stop when required files are missing, changed, linked, malformed, or inconsistent.
+- **Checks for overreaction:** an authored control rejects one version that treats every situation as urgent.
+- **Needs no API key for judging:** the demo and downloaded test run without billing, a database, or a model call.
+- **Keeps a narrow clinical boundary:** the fixture supplies only two blood pressure examples. The software does not infer other thresholds.
 
 ## OpenAI technology
 
-The default Codex workflow is configured to request GPT-5.6 Sol with Ultra reasoning and was used for post-start implementation, adversarial tests, claim audits, and V2 fixture/repair authoring. Codex accelerated the portable compiler, browser-safe grading kernel, attack tests, and V2 compatibility audit; deterministic code owns every public pass/fail result.
+Codex helped implement and test the Build Week additions. A separate workflow requested GPT-5.6 Sol with Ultra reasoning and returned a restricted JSON proposal. WitnessPatch turned it into a separate candidate, tested it against two cases plus four checks the model had not received, and did not install it. Software, not the model, calculated every published result.
 
 The unchanged pre-start V1 Sol policy candidate is preserved as lineage and deliberately tested against V2. It fails the urgent V2 contract at `85/100` and has no executable branch for the exact-fact negative control, so it is rejected and not relabeled as current model evidence.
 
-A fresh post-start Codex CLI run requested `gpt-5.6-sol` with `ultra` reasoning; the retained local receipt records ChatGPT-plan authentication. The run received the baseline and two authored contracts, not the four-check holdout definition or checked-in repair. Fixed code compiled its schema-constrained JSON proposal into a distinct candidate; the candidate remains quarantined and was not installed. Browser-safe IR interpretation and Node execution both match the exact two-case and four-holdout software signature. The receipt records the requested configuration and retained local workflow, not independent served-model identity or clinical validity. Its empty credential-scrub list means no matching variables were present to remove.
-
-The retained reference repair remains separate from the fresh candidate. Deterministic software, not either policy or a model, owns the verdict.
+The receipt records the requested settings, not which model actually answered. The example repair remains separate from that proposal. Software, not either file or a model, owns the verdict.
 
 ## Current V2 proof
 
@@ -119,8 +122,9 @@ The retained reference repair remains separate from the fresh candidate. Determi
 - Fresh post-start candidate: `validated_candidate`, quarantined, not installed; browser-safe JSON-IR interpretation and Node execution each match `2/2` case and `4/4` holdout signatures.
 - Static witness: the encoded `INV-02` predicate is reduced from 9 T+02 facts to 3 with recorded decisions held fixed.
 - Local release verification: exact candidate `87dee97` passed `npm ci` and `npm run verify:release` from fresh clones on macOS 26.5.2 arm64/Node 24.14.0 and a local Debian 12 arm64 container/Node 22.23.1. macOS passed `158/158` aggregate test executions; Debian passed `157/158`, with only the expected case-insensitive-filesystem test skipped. Both passed `136` discovered core tests, `6/6` rendered checks, `1/1` real development-server HTTP smoke, `9/9` submission-package checks, `6/6` deployment-rendered checks, the zero-argument judge proof, detached-bundle verification coverage, the threat-model boundary check, build, lint, typecheck, the distribution-license gate, byte-identical bundled third-party notices, and a 59-asset Wrangler dry run; their physical 55-file `dist/client` snapshots matched byte-for-byte with canonical manifest SHA-256 `1133339d1b372491084a06f889acd97399f2de2988d6267eb13baa48dd4b3721`.
-- Current authorized no-physician-review candidate: 55-file static fingerprint `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`; exact static-release checkpoint CI and 51 deployed public files passed, and the final freeze rechecks the then-current tip after the real video and `/feedback` fields exist.
-- Current source-bound real-Chrome QA: the reference path visibly completed `50 → compile nine-file RED bundle → 100`, `2/2` compiler inputs, `23/23` retained artifacts, reference `2/2` plus `4/4`, fresh IR `2/2` plus `4/4`, and the four-case baseline/repair/control/mutant closure. The local path loaded the included pair and produced a nine-file `50/100` red bundle with `2` hashes computed and `0` externally verified, exact CLI byte parity, red/green executable closure, and no requests after the two expected sample fetches. Both paths recorded zero console errors or warnings; same-page controls produced no `/.rsc` or `404` requests. Exact 390 x 844 reference and local replays had no horizontal overflow.
+- Prior deployed checkpoint: 55-file static fingerprint `9238879c5d87b96557f0988af01c0998fb185dbe56ff533b1e6e5605e60e595a`; exact checkpoint CI and 51 deployed public files passed.
+- Current plain-language working tree: 55-file local static fingerprint `4a5bc546ef3b55c76b48b7901432cbe17f6c5b4c192d8eee5259aacb4931e509`. This is not public-deployment or current-CI evidence; the final freeze must recheck the committed tip after the video and `/feedback` fields exist.
+- Current local production-Chrome QA: the reference path visibly completed `50 → create nine-file test → 100`, `2/2` compiler inputs, `23/23` retained artifacts, and all four extra checks. The saved-run path fetched the three included JSON files, compared both complete runs, switched the selected file, and created the nine-file test from the failed one. The final desktop flow recorded zero console errors or warnings. Exact `390 x 844` reference and saved-run checks had no horizontal overflow. This is local evidence; current public CI and deployment matching remain pending.
 - Bidirectional message/action checking rejects urgent wording hidden behind safe labels.
 - A numeric-inference contradiction marker fails even when the supplied-classification action label is present.
 
@@ -128,7 +132,7 @@ This is strong implementation evidence for one synthetic software oracle, not ev
 
 ## Build Week before/after disclosure
 
-WitnessPatch began as a pre-existing local V1 prototype. Its original evaluator, static UI, 16-file artifact bundle, 13 checks, and captured Sol candidate predate the official July 13 submission start and are not claimed as Build Week work. The portable compiler, fail-closed browser verifier, clinically narrower V2 namespace, and fresh post-start candidate proof are the meaningful extensions. Timestamped Codex records, the before/after ledger, separate V1/V2 manifests, and first dated checkpoint `21405c8` preserve that distinction locally. Because the root commit contains both disclosed lineage and extensions, it is a checkpoint rather than independent proof of every file's creation time.
+WitnessPatch began as a V1 prototype before July 13 and does not claim that work as part of Build Week. Build Week additions are the portable test maker, browser checker, narrower V2 files, saved-run comparison, and new requested-model receipt. The linked ledger records the before-and-after evidence.
 
 ## Entrant
 
@@ -145,12 +149,14 @@ No account, API key, payment, database, or model call is required.
 ### Fast live test
 
 1. Open the submitted **Try it** URL in desktop Chrome.
-2. Select **Compile failure**.
+2. Select **Turn failure into test**.
 3. Confirm `2/2 exact inputs`, `BASELINE RED`, nine generated files, `INV-02` at T+02, and the `9 → 3` recorded-decision witness. The baseline remains `50/100`.
 4. Optionally select **Export complete 9-file ZIP**.
-5. Select **Verify retained repair**.
+5. Select **Check example repair**.
 6. Confirm `23/23` exact retained artifacts, reference `2/2` regrades plus `4/4` holdouts, and fresh-candidate JSON-IR `2/2` regrades plus `4/4` mutation checks.
-7. The final display should show `100/100` and `baseline RED · retained repair PASS`. The compiled baseline regression intentionally remains red; the separate retained repair passes.
+7. The final display should show `100/100` while the original failed run remains red.
+8. Select **Compare your runs**, load the included sample, confirm the synthetic data declaration, and select **Compare saved runs**.
+9. Confirm that both included runs show their file-provided model labels, scores, and file fingerprints. Choose the failed run and create its nine-file test.
 
 ### Local verification
 
@@ -168,10 +174,32 @@ Open `http://localhost:3000`. The local release path and hydrated browser flow a
 
 - **Try it URL:** https://witnesspatch.ankigpt.workers.dev
 - **Repository URL:** https://github.com/Sammsamy/witnesspatch
-- **Video boundary:** the submitted public demo must remain shorter than three minutes, explain the product plus Codex and GPT-5.6 use, and include audio. The Apple System Voice rehearsal is not licensed for public sharing and cannot be submitted. The replacement candidate uses Piper 1.5.0 with the `en_US-ljspeech-high` voice from an MIT-declared repository; its pinned voice card records training from scratch on the public-domain LJ Speech Dataset. No voice cloning was performed. The delivered video identifies the AI narration in its opening cue, and the prepared YouTube description explicitly identifies the synthetic Piper voice. The entrant must still watch and listen to the complete uploaded cut before final freeze.
+- **Video boundary:** the submitted public demo must remain shorter than three minutes, explain the product plus Codex and GPT-5.6 use, and include audio. The current reviewed asset is a 167-second silent founder screen master. No final narrated video exists yet. The older Apple System Voice and Piper candidates show superseded interfaces and must not be uploaded. The entrant must record, assemble, watch, and listen to the complete founder-narrated cut before final freeze.
 - **Validation boundary:** no external builder review, physician fixture review, or clinical validation is claimed without a retained participant-confirmed record.
 
-## Prepared public video description
+## Prepared public video descriptions
+
+The updated interface requires a new video. Use exactly one narration route. The founder voice route is preferred because Fuzlullah plans to appear on camera. Do not publish either description until the new video has been recorded and reviewed in full.
+
+### Founder voice route
+
+**YouTube title:** `WitnessPatch: Turn a Missed Agent Deadline into a Test | OpenAI Build Week`
+
+> WitnessPatch turns one fully synthetic missed deadline into a Node test, then checks a separate example repair against the same rules.
+>
+> I built WitnessPatch during OpenAI Build Week with Codex. In a separate development workflow, I requested GPT-5.6 Sol with Ultra reasoning to return a repair in a restricted JSON format. The software, not the model, calculated every result shown in the demo.
+>
+> The included failed and repaired runs are authored examples, not captured model responses. Imported model names are marked as unverified.
+>
+> Narrated by Fuzlullah Syed. No patient data. No clinical use. No physician review. No clinical validation.
+>
+> Live demo: https://witnesspatch.ankigpt.workers.dev
+>
+> Source: https://github.com/Sammsamy/witnesspatch
+
+### Piper fallback only
+
+Use this fallback only if the final video actually uses the disclosed Piper voice. Do not use it for founder narration.
 
 **YouTube title:** `WitnessPatch: Turn a Missed Agent Deadline into a Red Test | OpenAI Build Week`
 

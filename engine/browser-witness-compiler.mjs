@@ -310,6 +310,111 @@ function buildAuditLog(caseData, normalizedRun, evaluation) {
   return events;
 }
 
+function evaluatedRunFromGrade(caseData, caseFingerprint, normalizedRun, evaluation) {
+  return {
+    schema_version: "1.0.0",
+    run_id: normalizedRun.run_id,
+    case_id: caseData.id,
+    case_sha256: caseFingerprint,
+    variant: normalizedRun.variant,
+    provenance_verification: "unverified_input_declaration",
+    provenance: normalizedRun.provenance,
+    decisions: normalizedRun.decisions,
+    evaluation,
+    audit_log: buildAuditLog(caseData, normalizedRun, evaluation)
+  };
+}
+
+function errorDetail(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.replace(/^Browser compilation failed:\s*/u, "");
+}
+
+function inspectCompilationEligibility({
+  caseData,
+  caseFingerprint,
+  normalizedRun,
+  evaluation,
+  targetRuleId,
+  startingFactScope
+}) {
+  let selectedTarget = null;
+  let selectionBlocker = null;
+  try {
+    selectedTarget = selectFailedActionInvariant(
+      caseData,
+      evaluation,
+      targetRuleId
+    );
+  } catch (error) {
+    selectionBlocker = errorDetail(error);
+  }
+
+  if (evaluation.status !== "fail") {
+    return {
+      canCompileFailure: false,
+      compileBlocker: "The fresh evaluation passes.",
+      evaluatedRun: null,
+      selectedTarget
+    };
+  }
+  if (normalizedRun.variant === "repaired") {
+    return {
+      canCompileFailure: false,
+      compileBlocker:
+        "A run declared as repaired cannot be compiled as the source failure.",
+      evaluatedRun: null,
+      selectedTarget
+    };
+  }
+
+  let evaluatedRun;
+  try {
+    evaluatedRun = evaluatedRunFromGrade(
+      caseData,
+      caseFingerprint,
+      normalizedRun,
+      evaluation
+    );
+    assertRunSchema(evaluatedRun);
+  } catch (error) {
+    return {
+      canCompileFailure: false,
+      compileBlocker: errorDetail(error),
+      evaluatedRun: null,
+      selectedTarget
+    };
+  }
+
+  if (!selectedTarget) {
+    return {
+      canCompileFailure: false,
+      compileBlocker:
+        selectionBlocker ?? "No missed action deadline can be compiled.",
+      evaluatedRun,
+      selectedTarget: null
+    };
+  }
+
+  try {
+    assertBrowserReductionBudget(caseData, selectedTarget, startingFactScope);
+  } catch (error) {
+    return {
+      canCompileFailure: false,
+      compileBlocker: errorDetail(error),
+      evaluatedRun,
+      selectedTarget
+    };
+  }
+
+  return {
+    canCompileFailure: true,
+    compileBlocker: null,
+    evaluatedRun,
+    selectedTarget
+  };
+}
+
 function assertStaticWitnessBoundary(witness) {
   assertCompiledWitnessSchema(witness);
   requireValue(
@@ -381,29 +486,20 @@ async function compileValidatedInputPair({
       "the supplied evaluated artifact disagrees with a fresh deterministic grade."
     );
   }
-  requireValue(
-    evaluation.status === "fail",
-    "the supplied run is not a compilable failure."
-  );
-  const evaluatedRun = {
-    schema_version: "1.0.0",
-    run_id: normalizedRun.run_id,
-    case_id: caseData.id,
-    case_sha256: caseFingerprint,
-    variant: normalizedRun.variant,
-    provenance_verification: "unverified_input_declaration",
-    provenance: normalizedRun.provenance,
-    decisions: normalizedRun.decisions,
-    evaluation,
-    audit_log: buildAuditLog(caseData, normalizedRun, evaluation)
-  };
-  assertRunSchema(evaluatedRun);
-  const selectedTarget = selectFailedActionInvariant(
+  const eligibility = inspectCompilationEligibility({
     caseData,
+    caseFingerprint,
+    normalizedRun,
     evaluation,
-    targetRuleId
+    targetRuleId,
+    startingFactScope
+  });
+  requireValue(
+    eligibility.canCompileFailure,
+    eligibility.compileBlocker ?? "the supplied run is not a compilable failure."
   );
-  assertBrowserReductionBudget(caseData, selectedTarget, startingFactScope);
+  const evaluatedRun = eligibility.evaluatedRun;
+  const selectedTarget = eligibility.selectedTarget;
   const identityHash = (
     await sha256Text(
       stableStringify({
@@ -454,7 +550,15 @@ async function compileValidatedInputPair({
     bundle_id: bundle.bundleId,
     case_id: caseData.id,
     case_title: caseData.title,
+    input_case_sha256: caseDigest,
+    input_run_sha256: runDigest,
     source_run_id: normalizedRun.run_id,
+    source_requested_model:
+      normalizedRun.provenance.model_config_requested ?? null,
+    source_requested_reasoning_effort:
+      normalizedRun.provenance.reasoning_effort_requested ?? null,
+    source_model_invocation_logged:
+      normalizedRun.provenance.model_invocation_logged,
     target_rule_id: bundle.targetRuleId,
     fresh_evaluation: evaluation,
     file_count: bundle.files.size,
@@ -561,6 +665,84 @@ export async function compileBrowserWitnessFromBytes({
       external_manifest_verified: false
     },
     trustBoundary:
-      "The browser hashed, validated, and freshly graded two locally selected synthetic inputs, then generated a static recorded-decision software witness. Neither this session nor the portable bundle verified the inputs against an external manifest. WitnessPatch cannot detect undisclosed patient data or prove de-identification. It did not upload files, rerun a target, invoke a model, establish clinical correctness, or install a repair."
+      "The browser hashed two selected files, checked their declared synthetic-data fields, and freshly graded the recorded run. Neither this session nor the portable bundle verified the inputs against an external manifest. WitnessPatch cannot detect patient data or prove de-identification. It did not upload files, rerun an agent, call a model, establish clinical correctness, or install a repair."
   });
+}
+
+export async function inspectBrowserRunFromBytes({
+  caseBytes,
+  runBytes,
+  subtle
+}) {
+  requireValue(subtle && typeof subtle.digest === "function", "WebCrypto is unavailable.");
+  const normalizedCaseBytes = normalizeLocalBytes(caseBytes, "case.json");
+  const normalizedRunBytes = normalizeLocalBytes(runBytes, "run.json");
+  const caseData = parseJsonArtifact(normalizedCaseBytes, "case.json");
+  const runInput = parseJsonArtifact(normalizedRunBytes, "run.json");
+  assertJsonShapeBudget(caseData, "case.json");
+  assertJsonShapeBudget(runInput, "run.json");
+  assertCaseInput(caseData);
+  assertBrowserStructureBudget(caseData);
+
+  const [caseDigest, runDigest, caseFingerprint] = await Promise.all([
+    sha256Bytes(normalizedCaseBytes, subtle),
+    sha256Bytes(normalizedRunBytes, subtle),
+    sha256Text(stableStringify(caseData), subtle)
+  ]);
+  if (isArtifactShaped(runInput)) {
+    assertRunSchema(runInput);
+  }
+  assertRunInputAgainstFingerprint(caseData, runInput, caseFingerprint);
+  const normalizedRun = normalizeWitnessRunInput(runInput);
+  const evaluation = gradeRunKernel(caseData, normalizedRun);
+  if (isArtifactShaped(runInput)) {
+    requireValue(
+      stableStringify(evaluation) === stableStringify(runInput.evaluation),
+      "the supplied evaluated artifact disagrees with a fresh deterministic grade."
+    );
+  }
+
+  const eligibility = inspectCompilationEligibility({
+    caseData,
+    caseFingerprint,
+    normalizedRun,
+    evaluation,
+    targetRuleId: undefined,
+    startingFactScope: "failure_prefix"
+  });
+  const firstMiss = eligibility.selectedTarget;
+
+  return {
+    status: "inspected",
+    case_id: caseData.id,
+    case_title: caseData.title,
+    case_input_sha256: caseDigest,
+    run_input_sha256: runDigest,
+    source_run_id: normalizedRun.run_id,
+    variant: normalizedRun.variant,
+    requested_model:
+      normalizedRun.provenance.model_config_requested ?? null,
+    requested_reasoning_effort:
+      normalizedRun.provenance.reasoning_effort_requested ?? null,
+    model_invocation_logged:
+      normalizedRun.provenance.model_invocation_logged,
+    generation_mode: normalizedRun.provenance.generation_mode,
+    honesty_note: normalizedRun.provenance.honesty_note ?? null,
+    evaluation: {
+      status: evaluation.status,
+      score: evaluation.score,
+      critical_failures: evaluation.critical_failures,
+      first_missed_contract: firstMiss
+        ? {
+            id: firstMiss.id,
+            deadline_minute: firstMiss.deadline_minute,
+            critical: firstMiss.critical
+          }
+        : null
+    },
+    can_compile_failure: eligibility.canCompileFailure,
+    compile_blocker: eligibility.compileBlocker,
+    trust_boundary:
+      "WitnessPatch checked the file's synthetic-data declaration and freshly graded the recorded run in the browser. It cannot detect patient data or prove de-identification. Model names and reasoning settings are declarations from the file, not proof of the model that produced it."
+  };
 }
